@@ -1,0 +1,14 @@
+# Bilibili
+.biliapi.com
+.biliapi.net
+.bilibili.com
+.biligame.com
+.biligame.net
+.bilivideo.com
+.hdslb.com
+
+# Bstar International
+.bilibili.tv
+.biliintl.com
+.bstarstatic.com
+pic-bstarstatic.akamaized.net

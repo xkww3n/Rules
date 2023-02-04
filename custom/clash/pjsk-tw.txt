@@ -1,0 +1,6 @@
+payload:
+  - '+.bytedgame.com'
+  - '+.bytegsdk.com'
+  - '+.byteoversea.com'
+  - '+.isnssdk.com'
+  - 'act.sgsnssdk.com'

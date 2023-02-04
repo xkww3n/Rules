@@ -1,0 +1,13 @@
+.hoyoverse.com
+appledemoglobaldispatch.yuanshen.com
+autopatchhk.yuanshen.com
+autopatchhkakamai.yuanshen.com
+autopatchhkcloudflare.yuanshen.com
+autopatchhktx.yuanshen.com
+awsoschtdispatch.yuanshen.com
+dispatchosglobal.yuanshen.com
+examosdispatch.yuanshen.com
+osasiadispatch.yuanshen.com
+oschtdispatch.yuanshen.com
+oseurodispatch.yuanshen.com
+osusadispatch.yuanshen.com
