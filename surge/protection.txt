@@ -567,7 +567,6 @@
 .androidtvwatsonfe-pa.googleapis.com
 .angryme.cn
 .aniview.com
-.anorrecenturybr.com
 .antivi.xyz
 .antivirushub.co
 .anzu.io
@@ -708,7 +707,6 @@
 .bannerwall.herewetest.com
 .bannerwall.s3.appcnt.com
 .bannery.hledejceny.cz
-.baptun.com
 .bartinkizogrenciyurdu.com
 .bayctrk.com
 .bayirksrap.com
@@ -728,7 +726,6 @@
 .begun.ru
 .behacdn.ksmobile.net
 .behance.vo.llnwd.net
-.beinri.com
 .beiven.pw
 .belazyelephant.com
 .belbenback.live
@@ -1049,7 +1046,6 @@
 .currentaccountadv.com
 .cutopporting.com
 .cwchmb.com
-.cwejnszakvvvu.com
 .cwmlm.com
 .cxdcn9c.fjshxjs.cn
 .d.6xw.com
@@ -1103,7 +1099,6 @@
 .deqwas.net
 .designslicensedeep.com
 .despicablereporthusband.com
-.despik.com
 .destroyedspear.com
 .detailyesgrip.com
 .dev.appboy.com
@@ -1213,7 +1208,6 @@
 .entsconsesi.top
 .eo.sdahxz.xyz
 .ep.umobile.pl
-.eparil.com
 .epom.com
 .epom.com
 .eppmedia.si
@@ -1258,7 +1252,6 @@
 .feed.4wnet.com
 .fensough.xyz
 .fgo22.info
-.fiberedvaleryl.com
 .fiercedental.com
 .fikccnef.top
 .fiksu.com
@@ -1344,7 +1337,6 @@
 .glzyw.com
 .gme-trking.com
 .gmossp-sp.jp
-.gnenuelnn.com
 .go.admost.com
 .go.gotourls.bid
 .go.mobstitial.com
@@ -1544,7 +1536,6 @@
 .irtyd.com
 .itad.linetv.tw
 .itadapi.ithome.com.tw
-.itecoust.com
 .itgear.jp
 .ithyourretye.xyz
 .iumlidwsvpm.com
@@ -1576,13 +1567,11 @@
 .jioads.akamaized.net
 .jiphihizi.com
 .jmp9.com
-.jmpcfxhkpf.com
 .joggingavenge.com
 .join.xlgirls.com
 .joinads.me
 .jokoshep.com
 .jomtingi.net
-.jooptibi.net
 .joowkijejv.com
 .jotpoolwarren.com
 .jpivxtsxpkn.com
@@ -1615,7 +1604,6 @@
 .justad.mobi
 .jutyledu.pro
 .k2n0f.cn
-.kablic.com
 .kaffnet.com
 .katelinna.m.biqubao.com
 .kavanga.ru
@@ -1625,7 +1613,6 @@
 .ketchapp.org
 .keydot.net
 .kgnpwdf.cn
-.khment.com
 .kihudevo.pro
 .kindnessmarshalping.com
 .kinqibpwun.com
@@ -1635,7 +1622,6 @@
 .kmmsfoqbhc.xyz
 .kmu.gwmrb.cn
 .kmyamhowpj.com
-.koabouch.net
 .kochava.com
 .kok.eroterest.net
 .kolsh.cn
@@ -1768,7 +1754,6 @@
 .maio.jp
 .maist.jp
 .makemyvids.com
-.makqfcvs.com
 .manage.com
 .managedweb.net
 .maphuahin.com
@@ -1951,8 +1936,6 @@
 .nearbyad.com
 .nearestaxe.com
 .neekstore.com
-.neeladou.net
-.neeladou.net
 .nend.net
 .nend.net
 .neofield.click
@@ -2030,12 +2013,10 @@
 .one.impact-ad.jp
 .one.toumppk.cn
 .onedrive.su
-.oneegrou.net
 .onemerelyingisr.club
 .onetouch8.info
 .online-prod.zenmxapps.com
 .onlineapi.youappi.com
-.oobuthie.net
 .oodrampi.com
 .ookris.oferty-kredytowe.pl
 .oolraimt.net
@@ -2064,7 +2045,6 @@
 .ovgzbnjj.com
 .owap.su
 .owkuwquf.com
-.oxlfhifzfynll.com
 .oxu24.com
 .oyvyxj.cn
 .p-behacdn.ksmobile.net
@@ -2225,7 +2205,6 @@
 .pubnative.net
 .pubpowerplatform.io
 .puhtml.com
-.pumpaiss.net
 .punosy.com
 .punosy.top
 .purebushesprop.com
@@ -2549,7 +2528,6 @@
 .swinity.com
 .switchadhub.com
 .sx.fakjkwp.cn
-.syncbanjo.com
 .syndication.exoclick.com
 .syndication.exosrv.com
 .syndication.jsadapi.com
@@ -2566,7 +2544,6 @@
 .t.yzwr588.com
 .t0p0ff3rs.com
 .t7z.cupid.iqiyi.com
-.taaqhr6axacd2um.com
 .taboizo.mom
 .tafimedia.com
 .tag.nifty.com
@@ -2597,7 +2574,6 @@
 .targaubs.com
 .targetpush.co.kr
 .targetspot.com
-.tauwoumo.net
 .tccbanner.com
 .tcs-asp.net
 .tczzzlwpss.com
@@ -2888,7 +2864,6 @@
 .winnerprizezona.info
 .wisehowronspar.com
 .wmhlch.com
-.wmzrmmlgqe.com
 .wokm8isd4zit.com
 .wolverdonfilmes.ml
 .wonderful-day.club
@@ -2967,7 +2942,6 @@
 .yesadvertising.com
 .yessearches.com
 .yfetyg.com
-.yfupfhqxmwvu.com
 .yhdichan.com
 .yicha.jp
 .yieldkit.com
