@@ -1,17 +1,13 @@
 import re, requests
-LOCAL_MODE=1
-domain_list_base_online = 'https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/'
-domain_list_base_local = './domain-list-community/data/'
+domain_list_base = './domain-list-community/data/'
+
 def import_processor(src, exclusion=None):
     import_regex = '^include\:(\S*)$'
     content = []
     for line in src:
         import_flag = re.match(import_regex, line)
         if import_flag and import_flag.group(1) != exclusion:
-            if LOCAL_MODE:
-                import_file = open(domain_list_base_local + import_flag.group(1), mode='r').read().split('\n')
-            else:
-                import_file = requests.get(domain_list_base_online + import_flag.group(1)).text.split('\n')
+            import_file = open(domain_list_base + import_flag.group(1), mode='r').read().split('\n')
             for line in import_processor(import_file, exclusion):
                 content.append(line)
         content.append(line)
@@ -58,9 +54,7 @@ def batch_convert(targets, tools, exclusions=[]):
     for tool in tools:
         for target in targets:
             for exclusion in exclusions:
-                if LOCAL_MODE:
-                    o_file = open(domain_list_base_local + target, mode='r').read().split('\n')
-                o_file = requests.get(domain_list_base_online + target).text.split('\n')
+                o_file = open(domain_list_base + target, mode='r').read().split('\n')
                 dist = open("./dists/" + tool + "/" + target + ".txt", mode='w')
                 o_content = import_processor(o_file, exclusion)
                 list = convert(o_content, tool)
@@ -79,34 +73,30 @@ url_mobile = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/maste
 url_extend = 'https://raw.githubusercontent.com/VeleSila/yhosts/master/hosts'
 dist_surge = open('./dists/surge/protection.txt', mode='w')
 dist_clash = open('./dists/clash/protection.txt', mode='w')
-content_base = requests.get(url_base).text
-content_cn = requests.get(url_cn).text
-content_jp = requests.get(url_jp).text
-content_mobile = requests.get(url_mobile).text
-content_extend = requests.get(url_extend).text
 
-content_full = (content_base + content_cn + content_jp + content_mobile + content_extend).split('\n')
-list_surge = []
-list_clash = []
-for line in content_full:
+content = (
+    requests.get(url_base).text + 
+    requests.get(url_cn).text + 
+    requests.get(url_jp).text + 
+    requests.get(url_mobile).text + 
+    requests.get(url_extend).text
+    ).split('\n')
+
+for line in content:
     url = re.match(regex, line)
     hosts = re.match(regex_hosts, line)
     ip = re.search(regex_ip, line)
     ## Wildcard rules aren't supported by Surge or Surfboard and shouldn't be added.
     if url and not ip and line.find('*') == -1:
         # Adblock format rules should be treated as domain suffixes.
-        list_surge.append('.' + url[1])
-        list_clash.append("  - '+." + url[1] + "'")
+        dist_surge.writelines('.' + url[1] + '\n')
+        dist_clash.writelines("  - '+." + url[1] + "'" + '\n')
     if hosts:
         # Hosts format rules are all exact domains.
-        list_surge.append(hosts[1])
-        list_clash.append("  - '" + hosts[1] + "'")
+        dist_surge.writelines(hosts[1] + '\n')
+        dist_clash.writelines("  - '" + hosts[1] + "'" + '\n')
 
-for line in list_surge:
-    dist_surge.writelines(line + '\n')
 dist_surge.close()
-for line in list_clash:
-    dist_clash.writelines(line + '\n')
 dist_clash.close()
 # Stage 1 finished.
 
@@ -186,7 +176,7 @@ exceptions_list_surge.sort()
 exceptions_list_clash.sort()
 exceptions_list_clash.insert(0, "payload:")
 for line in exceptions_list_surge:
-    if line.find('*') == -1:
+    if line.find('*') == -1: ## Wildcard rules aren't supported
         dist_surge.writelines(line + '\n')
 for line in exceptions_list_clash:
     dist_clash.writelines(line + '\n')
@@ -203,12 +193,9 @@ batch_convert(to_convert, ['surge', 'clash'], exclusion)
 # Stage 5: Remove CN domains with Chinese TLDs.
 cntld = "https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/tld-cn"
 cntld_regex = "^([a-zA-Z0-9-]*(?:\.\S*)?)( #.*)?$"
+
 cntld_list = []
-if LOCAL_MODE:
-    data = open(domain_list_base_local + "tld-cn", mode='r').read().split('\n')
-else:
-    data = requests.get(cntld).text.split('\n')
-for line in data:
+for line in open(domain_list_base + "tld-cn", mode='r').read().split('\n'):
     istld = re.match(cntld_regex, line)
     if istld and istld[1] != '':
         cntld_list.append('.' + istld[1])
@@ -239,5 +226,6 @@ for line in list_domain_surge:
 for line in list_domain_clash:
     if line != '':
         dist_clash.writelines(line + '\n')
+
 dist_surge.close()
 dist_clash.close()
