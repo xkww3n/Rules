@@ -1383,6 +1383,7 @@
 .gumgum.com
 .guroshied.com
 .gurynyce.com
+.gusion.space
 .gwallet.com
 .gwrtdp-tn690BFAdt.tclclouds.com
 .gynax.com
@@ -2327,7 +2328,6 @@
 .rtbpopd.com
 .rtpdn12.com
 .ru6sapasgs8tror.com
-.rubiconproject.com
 .rubird.ru
 .run-syndicate.com
 .rz261.cn
@@ -2645,6 +2645,7 @@
 .topblockchainsolutions.nl
 .topflownews.com
 .torimochi-ad.net
+.toromclick.com
 .townlife-aff.com
 .tp4sul.jwzd.com.cn
 .tpbid.com
@@ -3453,6 +3454,7 @@ ads.oneway.mobi
 ads.passiontimes.hk
 ads.playboy.com
 ads.reader.yueyouxs.com
+ads.rubiconproject.com
 ads.service.kugou.com
 ads.static.madserving.com
 ads.taboola.com
@@ -4884,6 +4886,7 @@ etl-xlmc-ssl.xunlei.com
 etl.xlmc.sandai.net
 etl.xlmc.sec.miui.com
 eu.vortex-win.data.microsoft.com
+eus.rubiconproject.com
 event.ksosoft.com
 event.mackeeper.com
 eventlog.beacon.qq.com
@@ -6302,6 +6305,7 @@ openrcv.baidu.com
 openstat.net
 openstorage.ad.cmvideo.cn
 opgirl-tmp.adbxb.cn
+optimized-by.rubiconproject.com
 optimus-ads.amap.com
 optimus.ipinyou.com
 opus.analytics.yahoo.com
@@ -6479,6 +6483,7 @@ pix04.revsci.net
 pixel-hk.pixelinteractivemedia.com
 pixel.mathtag.com
 pixel.quantserve.com
+pixel.rubiconproject.com
 pixel.vihub.ru
 pixiu.shangshufang.ksosoft.com
 pj.u5m4.cn
@@ -6904,6 +6909,7 @@ se.api.agrantsem.com
 sea.napi.ucweb.com
 seavideo-ak.espn.go.com
 secgw-na61-na62.wagbridge.advertisement.tanx.com
+secure-assets.rubiconproject.com
 secure.dsp.com
 secure.quantserve.com
 secure.statcounter.com
@@ -7348,6 +7354,7 @@ tnc3-aliec2.snssdk.com
 toateeli.net
 tob-cms.bj.bcebos.com
 toblog.ctobsnssdk.com
+token.rubiconproject.com
 tongji.bohe.cn
 tongji.coccccc.cc
 tongji.eastday.com
@@ -8119,6 +8126,7 @@ www.qinchugudao.com
 www.qumi.com
 www.qwupoq.com
 www.rannabio.com
+www.rubiconproject.com
 www.sa909.com
 www.schborg.com
 www.seerpiu002.com
