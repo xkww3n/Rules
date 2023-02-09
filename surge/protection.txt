@@ -757,6 +757,7 @@
 .biggestplayer.cachefly.net
 .bigmobileads.com
 .bigyapan.hamropatro.com
+.biocdn.net
 .bional-dested.icu
 .bit-ad.com
 .bitcoadz.pw
@@ -1687,6 +1688,7 @@
 .liftoff.io
 .ligatus.com
 .lightningbarrelwretch.com
+.link-a.net
 .link-ag.net
 .link-trade.net
 .linker.ba
