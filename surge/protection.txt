@@ -1148,6 +1148,7 @@
 .download.350.com
 .download.jword.jp
 .dowtyler.com
+.dpipel.com
 .dpstack.com
 .dr.atwoodubre.com
 .dr.mlcuzee.cn
@@ -1287,6 +1288,7 @@
 .fout.jp
 .freewheel-mtgx-tv.akamaized.net
 .friendlyduck.com
+.frocogue.store
 .fromjoytohappiness.com
 .frtyo.com
 .frwslristg.com
@@ -1321,6 +1323,7 @@
 .geocdn.unityads.unity3d.com
 .geoloc.yospace.com
 .geotg.jp
+.gervasdonatee.guru
 .get-partner.life
 .getadfinity.com
 .getmackeepersoftpro.xyz
@@ -1683,6 +1686,7 @@
 .liadm.com
 .librateam.net
 .lifeimpressions.net
+.lifesoonersoar.org
 .liftdna.com
 .liftoff-creatives.io
 .liftoff.io
@@ -2129,6 +2133,7 @@
 .polyad.net
 .polymorphicads.jp
 .polymorphicads.jp
+.pompass.net
 .ponchowafesargb.com
 .pontiflex.com
 .pop.dojo.cc
@@ -2308,6 +2313,7 @@
 .reyormis.site
 .rg.yottos.com
 .rgverkqcpahaqcqtmpksxicmtno.com
+.rhoeomanid.space
 .richmediaads.com
 .richpays.com
 .risausso.com
@@ -2590,6 +2596,7 @@
 .teads.tv
 .tegronews.com
 .telemetryverification.net
+.tembetachasmic.guru
 .temphilltop.net
 .temporarilybrancheshideous.com
 .teracreative.com
@@ -2772,6 +2779,7 @@
 .v.tgslww.cn
 .v.tlscqw.cn
 .v.tysjkw.cn
+.v2st.shinobi.jp
 .v4dwkcv.com
 .valid-dad.com
 .valshara.com
@@ -2941,6 +2949,7 @@
 .y0urf1rstd0wnl0ad.com
 .y2ax5.y0tf2wp.online
 .y5wflt0xibmoufuvsayg1efy80yq0ystkjncf76cqm.com
+.yads.c.yimg.jp
 .yallarec.com
 .yandexadexchange.net
 .yarlnk.com
@@ -8325,7 +8334,6 @@ y.unilz588.com
 y71.ylems.club
 y76.ylems.club
 y7jq.cn
-yads.c.yimg.jp
 yads.yahoo.co.jp
 yahafda.qivsod.com
 yam.adsbro.com
