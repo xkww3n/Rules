@@ -204,8 +204,8 @@ for line in parse_filterlist(content_exceptions):
     and not line.options):
         domain = line.text.replace('@','').replace('^','').replace('|','')
         if not domain.startswith('-'):
-            exceptions_list_surge.append(domain)
-            exceptions_list_clash.append("  - '" + domain + "'")
+            exceptions_list_surge.append('.' + domain)
+            exceptions_list_clash.append("  - '+." + domain + "'")
 
 exceptions_list_surge = list(set(exceptions_list_surge))
 exceptions_list_clash = list(set(exceptions_list_clash))
@@ -258,11 +258,9 @@ for domain in list_domain_clash[:]:
             break
 
 for line in list_domain_surge:
-    if line != '':
-        dist_surge.writelines(line + '\n')
+    dist_surge.writelines(line + '\n')
 for line in list_domain_clash:
-    if line != '':
-        dist_clash.writelines(line + '\n')
+    dist_clash.writelines(line + '\n')
 
 dist_surge.close()
 dist_clash.close()
