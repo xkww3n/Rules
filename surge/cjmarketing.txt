@@ -1,7 +1,9 @@
 .4009997658.com
+.6xigema.com
 .abbyychina.com
 .alienskins.cn
 .anydeskchina.cn
+.appscan.net.cn
 .bartender.cc
 .betterzip.net
 .betterzipcn.com
@@ -28,6 +30,7 @@
 .hypeapp.cn
 .hypersnap.net
 .iconworkshop.cn
+.idapro.net.cn
 .idmchina.net
 .imazingchina.com
 .imindmap.cc
@@ -56,12 +59,14 @@
 .pdfexpert.cc
 .pdffactorychina.cn
 .photozoomchina.com
+.prodad.cn
 portraiture.ps-chajian.com
 .rayfirechina.com
 .shankejingling.com
 .studioonechina.cn
 .toupin.net.cn
 .vegaschina.cn
+.vfxforce.net.cn
 .xitongqingli.com
 .yuanchengxiezuo.com
 .zbrushcn.com
