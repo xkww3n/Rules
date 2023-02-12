@@ -1,4 +1,5 @@
 import re, requests
+from abp.filters import parse_filterlist
 domain_list_base = './domain-list-community/data/'
 
 def import_processor(src, exclusion=None):
@@ -62,39 +63,60 @@ def batch_convert(targets, tools, exclusions=[]):
                     dist.writelines(line + '\n')
                 dist.close()
 
-# Stage 1: Sync advertisements blocking and privacy protection rules with AdGuard Base, CN, JP, Mobile filters and yhosts.
-regex = '^(?:\|\||\|)(\S*)\^(?:\$all|\$third-party)?$'
-regex_hosts = '^0\.0\.0\.0 (\S*)$'
+# Stage 1: Sync advertisements blocking and privacy protection rules with AdGuard Base, CN, JP, Mobile filters and EasyList China.
 regex_ip = '((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}' ## IP addresses shouldn't be added.
 url_base = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt'
 url_cn = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/ChineseFilter/sections/adservers.txt'
 url_jp = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/JapaneseFilter/sections/adservers.txt'
 url_mobile = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt'
-url_extend = 'https://raw.githubusercontent.com/VeleSila/yhosts/master/hosts'
+url_extend = 'https://easylist-downloads.adblockplus.org/easylistchina.txt'
 dist_surge = open('./dists/surge/protection.txt', mode='w')
 dist_clash = open('./dists/clash/protection.txt', mode='w')
 
 content = (
-    requests.get(url_base).text + 
-    requests.get(url_cn).text + 
-    requests.get(url_jp).text + 
-    requests.get(url_mobile).text + 
+    requests.get(url_base).text +
+    requests.get(url_cn).text +
+    requests.get(url_jp).text +
+    requests.get(url_mobile).text +
     requests.get(url_extend).text
-    ).split('\n')
+    ).splitlines()
 
-for line in content:
-    url = re.match(regex, line)
-    hosts = re.match(regex_hosts, line)
-    ip = re.search(regex_ip, line)
-    ## Wildcard rules aren't supported by Surge or Surfboard and shouldn't be added.
-    if url and not ip and line.find('*') == -1:
-        # Adblock format rules should be treated as domain suffixes.
-        dist_surge.writelines('.' + url[1] + '\n')
-        dist_clash.writelines("  - '+." + url[1] + "'" + '\n')
-    if hosts:
-        # Hosts format rules are all exact domains.
-        dist_surge.writelines(hosts[1] + '\n')
-        dist_clash.writelines("  - '" + hosts[1] + "'" + '\n')
+exceptions = []
+
+for line in parse_filterlist(content):
+    if (line.type == 'filter'
+    and line.action == 'block'
+    and line.selector['type'] == 'url-pattern'
+    and line.text.find('/') == -1
+    and line.text.find('*') == -1
+    and line.text.find('=') == -1
+    and line.text.find('~') == -1
+    and not re.search(regex_ip, line.text)
+    and not line.text.startswith('_')
+    and not line.text.endswith('.')
+    and not line.text.endswith('_')
+    and not line.options):
+        if line.text.startswith('.'):
+            domain = line.text.replace('.', '').replace('^', '')
+            dist_surge.writelines('.' + domain + '\n')
+            dist_clash.writelines("  - '+." + domain + "'" + '\n')
+        else:
+            domain = line.text.replace("||", '').replace('^', '')
+            dist_surge.writelines('.' + domain + '\n')
+            dist_clash.writelines("  - '+." + domain + "'" + '\n')
+    if (line.type == 'filter'
+    and line.action == 'allow'
+    and line.selector['type'] == 'url-pattern'
+    and line.text.find('/') == -1
+    and line.text.find('*') == -1
+    and line.text.find('=') == -1
+    and line.text.find('~') == -1
+    and not re.search(regex_ip, line.text)
+    and not line.text.startswith('_')
+    and not line.text.endswith('.')
+    and not line.text.endswith('_')
+    and not line.options):
+        exceptions.append(line.text)
 
 dist_surge.close()
 dist_clash.close()
@@ -103,8 +125,8 @@ dist_clash.close()
 # Stage 2: Remove redundant rules.
 dist_surge = open('./dists/surge/protection.txt', mode='r')
 dist_clash = open('./dists/clash/protection.txt', mode='r')
-list_domain_surge = dist_surge.read().split('\n')
-list_domain_clash = dist_clash.read().split('\n')
+list_domain_surge = dist_surge.read().splitlines()
+list_domain_clash = dist_clash.read().splitlines()
 ## After loading temporary rules, reopen rule files as write mode.
 dist_surge.close()
 dist_surge = open('./dists/surge/protection.txt', mode='w')
@@ -146,38 +168,53 @@ for line in list_domain_surge:
     content_surge.append(line)
 for line in list_domain_clash:
     content_clash.append(line)
+
+content_surge = list(set(content_surge))
+content_clash = list(set(content_clash))
 content_surge.sort()
 content_clash.sort()
 content_clash.insert(0, "payload:")
+
 for line in content_surge:
-    if line != '':
-        dist_surge.writelines(line + '\n')
+    dist_surge.writelines(line + '\n')
 for line in content_clash:
-    if line != '':
-        dist_clash.writelines(line + '\n')
+    dist_clash.writelines(line + '\n')
 dist_surge.close()
 dist_clash.close()
 # Stage 2 finished.
 
 # Stage 3: Sync exceptions with AdGuard.
-regex_exceptions = '^@@(?:\|\||\|)(\S*)(?:\^)(?:\|)?$'
-url_exceptions = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt'
+url_exceptions_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt'
+url_exceptions_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
 dist_surge = open('./dists/surge/exceptions.txt', mode='w')
 dist_clash = open('./dists/clash/exceptions.txt', mode='w')
-content_exceptions = requests.get(url_exceptions).text.split('\n')
+content_exceptions = (requests.get(url_exceptions_1).text + requests.get(url_exceptions_2).text).splitlines() + exceptions
 exceptions_list_surge = []
 exceptions_list_clash = []
-for line in content_exceptions:
-    url = re.match(regex_exceptions, line)
-    if url:
-        exceptions_list_surge.append(url[1])
-        exceptions_list_clash.append("  - '" + url[1] + "'")
+for line in parse_filterlist(content_exceptions):
+    if (line.type == 'filter'
+    and line.selector['type'] == 'url-pattern'
+    and line.text.find('/') == -1
+    and line.text.find('*') == -1
+    and line.text.find('=') == -1
+    and not re.search('((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}', line.text)
+    and not line.text.startswith('_')
+    and not line.text.endswith('.')
+    and not line.text.endswith('_')
+    and not line.options):
+        domain = line.text.replace('@','').replace('^','').replace('|','')
+        if not domain.startswith('-'):
+            exceptions_list_surge.append(domain)
+            exceptions_list_clash.append("  - '" + domain + "'")
+
+exceptions_list_surge = list(set(exceptions_list_surge))
+exceptions_list_clash = list(set(exceptions_list_clash))
 exceptions_list_surge.sort()
 exceptions_list_clash.sort()
 exceptions_list_clash.insert(0, "payload:")
+
 for line in exceptions_list_surge:
-    if line.find('*') == -1: ## Wildcard rules aren't supported
-        dist_surge.writelines(line + '\n')
+    dist_surge.writelines(line + '\n')
 for line in exceptions_list_clash:
     dist_clash.writelines(line + '\n')
 dist_surge.close()
@@ -201,8 +238,8 @@ for line in open(domain_list_base + "tld-cn", mode='r').read().split('\n'):
         cntld_list.append('.' + istld[1])
 dist_surge = open('./dists/surge/geolocation-cn.txt', mode='r')
 dist_clash = open('./dists/clash/geolocation-cn.txt', mode='r')
-list_domain_surge = dist_surge.read().split('\n')
-list_domain_clash = dist_clash.read().split('\n')
+list_domain_surge = dist_surge.read().splitlines()
+list_domain_clash = dist_clash.read().splitlines()
 ## After loading temporary rules, reopen rule files as write mode.
 dist_surge.close()
 dist_surge = open('./dists/surge/geolocation-cn.txt', mode='w')
