@@ -60,6 +60,7 @@
 .api.docodoco.jp
 .api.ipify.org
 .app-advertise.zhihuishu.com
+.app-cdn.minepi.com
 .app.adjust.com
 .app.appsflyer.com
 .app.crazyegg.com
