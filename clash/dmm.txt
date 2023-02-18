@@ -4,5 +4,4 @@ payload:
   - '+.dmm.com'
   - '+.dmmapis.com'
   - '+.dmmrex.com'
-  - '+.dmmrex.com'
   - 'api-p.videomarket.jp'
