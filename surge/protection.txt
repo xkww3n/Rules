@@ -1763,6 +1763,7 @@
 .bdcode.qinglm.com
 .bdcode.youke.com
 .bdcse.xyz
+.bddwm.com
 .bdgg.qjy168.com
 .bdhcpll.cn
 .bdjg.xyz
@@ -9104,7 +9105,6 @@
 .ys3g.top
 .ys9mw1u.cn
 .ysclub.top
-.ysdm.ys137.com.cn
 .ysgekq.xyz
 .ysjkbk.com
 .ysjwj.com
