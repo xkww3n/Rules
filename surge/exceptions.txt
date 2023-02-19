@@ -1,3 +1,4 @@
+.17173im.allyes.com
 .2ip.ua
 .2mdn.net
 .5471782.fls.doubleclick.net
@@ -9,9 +10,12 @@
 .a.sellpoint.net
 .a2z.com
 .ac.ebis.ne.jp
+.ad-gone.com
 .ad-shield.io
 .ad.10010.com
 .ad.abchina.com
+.ad.azure.com
+.ad.ext.azure.com
 .ad.kazakinfo.com
 .ad.nwi.jp
 .ad.ourgame.com
@@ -78,15 +82,19 @@
 .bamgrid.com
 .bannerconnect.com
 .bat.bing.com
+.battle.net
 .beta.affiliates.adsterra.com
+.beta.bugly.qq.com
 .beta.partners.adsterra.com
 .beta.publishers.adsterra.com
 .bigmir.net
 .blog.logrocket.com
 .bnc.lt
+.bnet.163.com
 .bpmonline.com
 .brahe.apptimize.com
 .branch.io
+.browser.cloud.ucweb.com
 .browser.events.data.microsoft.com
 .bugherd.com
 .bugsnag.com
@@ -102,6 +110,7 @@
 .cdnbc-wup.hsbc.com.hk
 .cedexis.net
 .check.ddos-guard.net
+.chinatelecom.com.cn
 .chtbl.com
 .cifraclub.com.br
 .cindyholbrook.lpages.co
@@ -148,6 +157,7 @@
 .digidip.net
 .digits.com
 .docodoco.jp
+.download.jumpw.com
 .dpbolvw.net
 .durasite.net
 .dw.cbsi.com
@@ -157,6 +167,7 @@
 .easylist.club
 .easysol.net
 .eboundservices.com
+.ecitic.com
 .edigitalsurvey.com
 .eksiup.com
 .email.awscloud.com
@@ -181,6 +192,7 @@
 .ezoic.net
 .fastly-analytics.com
 .feed.adrelayer.com
+.feed.mix.sina.com.cn
 .firebaselogging-pa.googleapis.com
 .fireworkapi.com
 .fireworktv.com
@@ -191,10 +203,13 @@
 .forexprostools.com
 .forum.notebookreview.com
 .freegeoip.net
+.front-go.lemall.com
 .ftp.bmp.ovh
 .fwmrm.net
 .g.msn.com
+.g.tbcdn.cn
 .g17media.com
+.gamediad.com:7990
 .gate.hockeyapp.net
 .geni.us
 .geo.ngtv.io
@@ -208,6 +223,7 @@
 .googletagservices.com
 .goto.target.com
 .goto.walmart.com
+.gotunnel.org
 .grabo.bg
 .group-ib.ru
 .grp07.ias.rakuten.co.jp
@@ -231,6 +247,7 @@
 .ia.hit.interia.pl
 .id.i2i.jp
 .iesnare.com
+.image.coolapk.com
 .imasdk.googleapis.com
 .img.ads.tvb.com
 .impact-ad.jp
@@ -265,6 +282,7 @@
 .kqzyfj.com
 .kumascans.com
 .lasagneandands.com
+.lemon.baidu.com
 .link.morningbrew.com
 .linkifier.com
 .links.e.theatlantic.com
@@ -282,6 +300,7 @@
 .login.sendpulse.com
 .loginfra.com
 .logs.datadoghq.com
+.ltzn.9377.com
 .ma135-r.analytics.edgekey.net
 .macromill.com
 .magnetmail1.net
@@ -293,15 +312,18 @@
 .meatballsandads.com
 .mediametrics.ru
 .metricool.com
+.mi.cn
 .micpn.com
 .middleware.p7s1.io
 .minexmr.com
+.minigame.qq.com
 .mixpanel.com
 .monitor.azure.com
 .mql5.com
 .mradx.net
 .msgfocus.com
 .msgs.jp
+.msn.wrating.com
 .my.tealiumiq.com
 .mybannermaker.com
 .mybluemix.net
@@ -345,6 +367,7 @@
 .pdst.fm
 .pega.com
 .perfops.net
+.phs.tanx.com
 .pi.pardot.com
 .piguiqproxy.com
 .ping-admin.ru
@@ -422,6 +445,7 @@
 .society6.com
 .sojern.com
 .sp-prod.net
+.speedtest.net
 .sphdigital.com
 .ssp.rambler.ru
 .stash.roistat.com
@@ -439,6 +463,7 @@
 .support-widget.nakanohito.jp
 .surveymyopinion.researchnow.com
 .sv.aq.qq.com
+.swjoy.com
 .t.appsflyer.com
 .tag.aticdn.net
 .tags.crwdcntrl.net
@@ -470,6 +495,7 @@
 .trust-provider.com
 .trust.zone
 .try.abtasty.com
+.tuhu.cn
 .tw.cx
 .uim.tifbs.net
 .unpkg.com
@@ -481,6 +507,7 @@
 .v3cdn.net
 .validate.perfdrive.com
 .vcentry3.valuecommerce.ne.jp
+.vd.l.qq.com
 .vectorstock.com
 .videoplaza.tv
 .viglink.com
@@ -493,12 +520,15 @@
 .wup-7b4df495.santander.cl
 .www.anrdoezrs.net
 .www.googleadservices.com
+.www.gsxt.gov.cn
 .www.jdoqocy.com
 .www.npttech.com
 .xg4ken.com
 .xiti.com
+.xmxing.net
 .youbora.com
 .za.zdn.vn
+.zbj.com
 .zdbb.net
 .zenaps.com
 .ziffdavis.com
