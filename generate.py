@@ -1,4 +1,5 @@
-import re, requests
+import re
+from requests import get
 from abp.filters import parse_filterlist
 domain_list_base = './domain-list-community/data/'
 
@@ -82,11 +83,11 @@ dist_clash = open('./dists/clash/protection.txt', mode='w')
 dist_clash.writelines("payload:\n")
 
 content = (
-    requests.get(url_base).text +
-    requests.get(url_cn).text +
-    requests.get(url_jp).text +
-    requests.get(url_mobile).text +
-    requests.get(url_cn_extend).text
+    get(url_base).text +
+    get(url_cn).text +
+    get(url_jp).text +
+    get(url_mobile).text +
+    get(url_cn_extend).text
     ).splitlines()
 
 list_block = []
@@ -164,7 +165,7 @@ url_exceptions_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFil
 url_exceptions_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
 dist_surge = open('./dists/surge/exceptions.txt', mode='w')
 dist_clash = open('./dists/clash/exceptions.txt', mode='w')
-content_exceptions = (requests.get(url_exceptions_1).text + requests.get(url_exceptions_2).text).splitlines() + list_exceptions
+content_exceptions = (get(url_exceptions_1).text + get(url_exceptions_2).text).splitlines() + list_exceptions
 list_exceptions = []
 for line in parse_filterlist(content_exceptions):
     if (line.type == 'filter'
