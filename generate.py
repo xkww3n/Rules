@@ -8,9 +8,9 @@ def import_processor(src, exclusion=None):
     for line in src:
         import_flag = import_regex.match(line)
         if import_flag and import_flag.group(1) != exclusion:
-            import_file = open(domain_list_base + import_flag.group(1), mode='r').read().split('\n')
-            for line in import_processor(import_file, exclusion):
-                content.append(line)
+            import_file = open(domain_list_base + import_flag.group(1), mode='r').read().splitlines()
+            content += import_processor(import_file)
+            continue
         content.append(line)
     return content
 
@@ -55,7 +55,7 @@ def batch_convert(targets, tools, exclusions=[]):
     for tool in tools:
         for target in targets:
             for exclusion in exclusions:
-                o_file = open(domain_list_base + target, mode='r').read().split('\n')
+                o_file = open(domain_list_base + target, mode='r').read().splitlines()
                 dist = open("./dists/" + tool + "/" + target + ".txt", mode='w')
                 o_content = import_processor(o_file, exclusion)
                 list = convert(o_content, tool)
