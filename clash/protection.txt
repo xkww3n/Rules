@@ -213,6 +213,7 @@ payload:
   - '+.131377.com'
   - '+.133u.com'
   - '+.133uu.com'
+  - '+.1368999.com'
   - '+.13bt.info'
   - '+.13owamwp6c.cn'
   - '+.150075.com'
