@@ -644,7 +644,6 @@ payload:
   - '+.5555nt.com'
   - '+.559gp.com'
   - '+.55zzz.cn'
-  - '+.56.com##.xiu_mm,#appBanner'
   - '+.5603.net'
   - '+.560378.com'
   - '+.565882.com'
