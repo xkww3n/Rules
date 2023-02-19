@@ -42,13 +42,20 @@ def convert(src, target):
                 list.append(line)
             elif invaild:
                 pass
+        elif target == 'plain':
+            if fulldomain:
+                list.append(fulldomain.group(1))
+            elif subdomain and subdomain.group(1) != '':
+                list.append("." + subdomain.group(1))
+            elif invaild:
+                pass
         else:
             raise TypeError("Target type unsupported, only accept 'surge' or 'clash'.")
-    if target == 'surge':
-        list.sort()
-    else:
+    if target == 'clash':
         list.sort()
         list.insert(0, "payload:")
+    else:
+        list.sort()
     return list
 
 def batch_convert(targets, tools, exclusions=[]):
@@ -66,10 +73,10 @@ def batch_convert(targets, tools, exclusions=[]):
 # Stage 1: Sync advertisements blocking and privacy protection rules with AdGuard Base, CN, JP, Mobile filters and EasyList China.
 regex_ip = re.compile('((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}') ## IP addresses shouldn't be added.
 url_base = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt'
-url_cn = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/ChineseFilter/sections/adservers.txt'
-url_jp = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/JapaneseFilter/sections/adservers.txt'
+url_cn = 'https://easylist-downloads.adblockplus.org/easylistchina.txt'
+url_jp = 'https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi_filter.txt'
 url_mobile = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt'
-url_extend = 'https://easylist-downloads.adblockplus.org/easylistchina.txt'
+url_cn_extend = 'https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt'
 dist_surge = open('./dists/surge/protection.txt', mode='w')
 dist_clash = open('./dists/clash/protection.txt', mode='w')
 dist_clash.writelines("payload:\n")
@@ -79,7 +86,7 @@ content = (
     requests.get(url_cn).text +
     requests.get(url_jp).text +
     requests.get(url_mobile).text +
-    requests.get(url_extend).text
+    requests.get(url_cn_extend).text
     ).splitlines()
 
 list_block = []
@@ -93,15 +100,23 @@ for line in parse_filterlist(content):
     and line.text.find('*') == -1
     and line.text.find('=') == -1
     and line.text.find('~') == -1
+    and line.text.find('?') == -1
+    and not line.text.find('.') == -1
     and not regex_ip.search(line.text)
     and not line.text.startswith('_')
+    and not line.text.startswith('-')
+    and not line.text.startswith('^')
+    and not line.text.startswith('[')
     and not line.text.endswith('.')
     and not line.text.endswith('_')
+    and not line.text.endswith('|')
+    and not line.text.endswith(']')
+    and not line.text.endswith(';')
     and not line.options):
         if line.text.startswith('.'):
-            list_block.append(line.text.replace('.', '').replace('^', ''))
+            list_block.append(line.text.replace('^', ''))
         else:
-            list_block.append(line.text.replace("||", '').replace('^', ''))
+            list_block.append(line.text.replace("||", '.').replace('^', ''))
     if (line.type == 'filter'
     and line.action == 'allow'
     and line.selector['type'] == 'url-pattern'
@@ -109,19 +124,32 @@ for line in parse_filterlist(content):
     and line.text.find('*') == -1
     and line.text.find('=') == -1
     and line.text.find('~') == -1
+    and line.text.find('?') == -1
+    and not line.text.find('.') == -1
     and not re.search(regex_ip, line.text)
     and not line.text.startswith('_')
+    and not line.text.startswith('-')
+    and not line.text.startswith('^')
+    and not line.text.startswith('[')
     and not line.text.endswith('.')
     and not line.text.endswith('_')
+    and not line.text.endswith('|')
+    and not line.text.endswith(']')
+    and not line.text.endswith(';')
     and not line.options):
         list_exceptions.append(line.text)
 
+v2fly_ads = open(domain_list_base + "category-ads-all", mode='r')
+list_block += convert(import_processor(v2fly_ads), "plain")
 list_block = list(set(list_block))
 list_block.sort()
 
 for domain in list_block:
-    dist_surge.writelines('.' + domain + '\n')
-    dist_clash.writelines("  - '+." + domain + "'" + '\n')
+    dist_surge.writelines(domain + '\n')
+    if domain.startswith('.'):
+        dist_clash.writelines("  - '+" + domain + "'\n")
+    else:
+        dist_clash.writelines("  - '" + domain + "'\n")
 
 dist_surge.close()
 dist_clash.close()
