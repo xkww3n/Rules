@@ -101,6 +101,8 @@ for line in parse_filterlist(content):
     and line.text.find('=') == -1
     and line.text.find('~') == -1
     and line.text.find('?') == -1
+    and line.text.find('#') == -1
+    and line.text.find(',') == -1
     and not line.text.find('.') == -1
     and not regex_ip.search(line.text)
     and not line.text.startswith('_')
@@ -125,6 +127,8 @@ for line in parse_filterlist(content):
     and line.text.find('=') == -1
     and line.text.find('~') == -1
     and line.text.find('?') == -1
+    and line.text.find('#') == -1
+    and line.text.find(',') == -1
     and not line.text.find('.') == -1
     and not re.search(regex_ip, line.text)
     and not line.text.startswith('_')
