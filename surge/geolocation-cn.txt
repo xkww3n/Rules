@@ -1800,8 +1800,6 @@
 .letvimg.com
 .lf-rc1.yhgfb-cn-static.com
 .lf-rc1.yhgfb-cn-static.com
-.lf-rc1.yhgfb-cn-static.com
-.lf-rc1.yhgfb-cn-static.com
 .lgstatic.com
 .lhzq.com
 .liangxinyao.com
@@ -2180,7 +2178,6 @@
 .qianxun.com
 .qianzhan.com
 .qiaobutang.com
-.qichacha.com
 .qichacha.com
 .qichacha.com
 .qichamao.com
@@ -2803,7 +2800,6 @@
 .xuexi365.com
 .xuexi365.net
 .xuexicha.com
-.xueyuanjun.com
 .xueyuanjun.com
 .xundupdf.com
 .xunlei.com
