@@ -4504,6 +4504,7 @@
 .fuhaimuye.cn
 .fuigixk.cn
 .fujbjb.xyz
+.fujifood.hk
 .fujincenter.com
 .fumeiti.cc
 .fuoo1.top
@@ -6423,6 +6424,7 @@
 .keqii.com
 .keqvfip.cn
 .kerlou.ltd
+.keshidianhua.xyz
 .ketchapp.org
 .ketianguanye.com
 .ketwo2acea.icu
@@ -6703,6 +6705,7 @@
 .lapsebreak.com
 .lapsmnl.cyou
 .laratlacrestot.pro
+.larbcc.xyz
 .launcher.us.yeshen.com
 .laura.fun
 .lawful.wang
@@ -8882,6 +8885,7 @@
 .r5h6.icu
 .rabbitcloud.ltd
 .rabc1.iteye.com
+.raisentotic.uno
 .rakutenmarketing.com
 .randolph.love
 .ranlisgz.fun
@@ -8906,6 +8910,7 @@
 .rdance.cn
 .rdbd.xsread.com
 .rdjnjz.xyz
+.rdnucrn.cn
 .rdoybkd.cn
 .rdsmod.cc
 .rdsvsh.com
@@ -10900,6 +10905,7 @@
 .watbo.top
 .watbt.top
 .watch-video.net
+.watchnewvids.today
 .watchsk.com
 .waterfairy.xyz
 .watson.microsoft.com

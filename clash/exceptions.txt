@@ -84,6 +84,7 @@ payload:
   - '+.bannerconnect.com'
   - '+.bat.bing.com'
   - '+.battle.net'
+  - '+.beanstock.com'
   - '+.beta.affiliates.adsterra.com'
   - '+.beta.bugly.qq.com'
   - '+.beta.partners.adsterra.com'
