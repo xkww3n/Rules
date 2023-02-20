@@ -25,33 +25,22 @@ def convert(src, target):
         fulldomain = regex_fulldomain.match(line)
         subdomain = regex_subdomain.match(line)
         invaild = regex_invaild.match(line)
-        if target == 'surge':
+        if target == 'surge' or target == 'plain':
             if fulldomain:
-                line = fulldomain.group(1)
-                list.append(line)
+                list.append(fulldomain.group(1))
             elif subdomain and subdomain.group(1) != '':
-                line = subdomain.group(1)
-                list.append('.' + line)
+                list.append('.' + subdomain.group(1))
             elif invaild:
                 pass
         elif target == 'clash':
             if fulldomain:
-                line = "  - '" + fulldomain.group(1) + "'"
-                list.append(line)
+                list.append("  - '" + fulldomain.group(1) + "'")
             elif subdomain and subdomain.group(1) != '':
-                line = "  - '+." + subdomain.group(1) + "'"
-                list.append(line)
-            elif invaild:
-                pass
-        elif target == 'plain':
-            if fulldomain:
-                list.append(fulldomain.group(1))
-            elif subdomain and subdomain.group(1) != '':
-                list.append("." + subdomain.group(1))
+                list.append("  - '+." + subdomain.group(1) + "'")
             elif invaild:
                 pass
         else:
-            raise TypeError("Target type unsupported, only accept 'surge' or 'clash'.")
+            raise TypeError("Target type unsupported, only accept 'surge', 'clash' or 'plain'.")
     if target == 'clash':
         list.sort()
         list.insert(0, "payload:")
@@ -66,17 +55,21 @@ def batch_convert(targets, tools, exclusions=[]):
                 o_file = open(domain_list_base + target, mode='r').read().splitlines()
                 dist = open("./dists/" + tool + "/" + target + ".txt", mode='w')
                 o_content = import_processor(o_file, exclusion)
-                list = convert(o_content, tool)
-                for line in list:
+                for line in convert(o_content, tool):
                     dist.writelines(line + '\n')
                 dist.close()
 
-# Stage 1: Sync advertisements blocking and privacy protection rules with AdGuard Base, CN, JP, Mobile filters and EasyList China.
+# Stage 1: Sync advertisements blocking and privacy protection rules.
 regex_ip = re.compile('((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}') ## IP addresses shouldn't be added.
+## AdGuard Base Filter
 url_base = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt'
+## Easylist China
 url_cn = 'https://easylist-downloads.adblockplus.org/easylistchina.txt'
+## もちフィルタ
 url_jp = 'https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi_filter.txt'
+## AdGuard Mobile Filter
 url_mobile = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt'
+## ADgk
 url_cn_extend = 'https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt'
 dist_surge = open('./dists/surge/protection.txt', mode='w')
 dist_clash = open('./dists/clash/protection.txt', mode='w')
@@ -173,10 +166,20 @@ for line in parse_filterlist(content_exceptions):
     and line.text.find('/') == -1
     and line.text.find('*') == -1
     and line.text.find('=') == -1
-    and not regex_ip.search(line.text)
+    and line.text.find('~') == -1
+    and line.text.find('?') == -1
+    and line.text.find('#') == -1
+    and line.text.find(',') == -1
+    and not line.text.find('.') == -1
+    and not re.search(regex_ip, line.text)
     and not line.text.startswith('_')
+    and not line.text.startswith('-')
+    and not line.text.startswith('^')
+    and not line.text.startswith('[')
     and not line.text.endswith('.')
     and not line.text.endswith('_')
+    and not line.text.endswith(']')
+    and not line.text.endswith(';')
     and not line.options):
         domain = line.text.replace('@','').replace('^','').replace('|','')
         if not domain.startswith('-'):
