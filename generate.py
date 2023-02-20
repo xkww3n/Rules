@@ -4,16 +4,16 @@ from abp.filters import parse_filterlist
 domain_list_base = './domain-list-community/data/'
 
 def import_processor(src, exclusion=None):
-    import_regex = re.compile('^include\:(\S*)$')
-    content = []
+    regex_import = re.compile('^include\:(\S*)$')
+    list = []
     for line in src:
-        import_flag = import_regex.match(line)
-        if import_flag and import_flag.group(1) != exclusion:
-            import_file = open(domain_list_base + import_flag.group(1), mode='r').read().splitlines()
-            content += import_processor(import_file)
+        flag_import = regex_import.match(line)
+        if flag_import and flag_import.group(1) != exclusion:
+            file_import = open(domain_list_base + flag_import.group(1), mode='r').read().splitlines()
+            list += import_processor(file_import)
             continue
-        content.append(line)
-    return content
+        list.append(line)
+    return list
 
 def convert(src, target):
     # The following 2 regexes' group 1 matches domains without "@cn" directive.
@@ -52,41 +52,41 @@ def batch_convert(targets, tools, exclusions=[]):
     for tool in tools:
         for target in targets:
             for exclusion in exclusions:
-                o_file = open(domain_list_base + target, mode='r').read().splitlines()
+                file_orig = open(domain_list_base + target, mode='r').read().splitlines()
                 dist = open("./dists/" + tool + "/" + target + ".txt", mode='w')
-                o_content = import_processor(o_file, exclusion)
-                for line in convert(o_content, tool):
+                content_orig = import_processor(file_orig, exclusion)
+                for line in convert(content_orig, tool):
                     dist.writelines(line + '\n')
                 dist.close()
 
 # Stage 1: Sync advertisements blocking and privacy protection rules.
 regex_ip = re.compile('((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}') ## IP addresses shouldn't be added.
 ## AdGuard Base Filter
-url_base = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt'
+src_base = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt'
 ## Easylist China
-url_cn = 'https://easylist-downloads.adblockplus.org/easylistchina.txt'
+src_cn = 'https://easylist-downloads.adblockplus.org/easylistchina.txt'
 ## もちフィルタ
-url_jp = 'https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi_filter.txt'
+src_jp = 'https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi_filter.txt'
 ## AdGuard Mobile Filter
-url_mobile = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt'
+src_mobile = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt'
 ## ADgk
-url_cn_extend = 'https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt'
+src_cn_extend = 'https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt'
 dist_surge = open('./dists/surge/protection.txt', mode='w')
 dist_clash = open('./dists/clash/protection.txt', mode='w')
 dist_clash.writelines("payload:\n")
 
-content = (
-    get(url_base).text +
-    get(url_cn).text +
-    get(url_jp).text +
-    get(url_mobile).text +
-    get(url_cn_extend).text
+content_block = (
+    get(src_base).text +
+    get(src_cn).text +
+    get(src_jp).text +
+    get(src_mobile).text +
+    get(src_cn_extend).text
     ).splitlines()
 
 list_block = []
 list_exceptions = []
 
-for line in parse_filterlist(content):
+for line in parse_filterlist(content_block):
     if (line.type == 'filter'
     and line.action == 'block'
     and line.selector['type'] == 'url-pattern'
@@ -137,8 +137,8 @@ for line in parse_filterlist(content):
     and not line.options):
         list_exceptions.append(line.text)
 
-v2fly_ads = open(domain_list_base + "category-ads-all", mode='r')
-list_block += convert(import_processor(v2fly_ads), "plain")
+block_v2fly = open(domain_list_base + "category-ads-all", mode='r')
+list_block += convert(import_processor(block_v2fly), "plain")
 list_block = list(set(list_block))
 list_block.sort()
 
@@ -154,11 +154,11 @@ dist_clash.close()
 # Stage 1 finished.
 
 # Stage 2: Sync exceptions with AdGuard.
-url_exceptions_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt'
-url_exceptions_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
+src_exceptions_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt'
+src_exceptions_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
 dist_surge = open('./dists/surge/exceptions.txt', mode='w')
 dist_clash = open('./dists/clash/exceptions.txt', mode='w')
-content_exceptions = (get(url_exceptions_1).text + get(url_exceptions_2).text).splitlines() + list_exceptions
+content_exceptions = (get(src_exceptions_1).text + get(src_exceptions_2).text).splitlines() + list_exceptions
 list_exceptions = []
 for line in parse_filterlist(content_exceptions):
     if (line.type == 'filter'
@@ -204,7 +204,6 @@ batch_convert(to_convert, ['surge', 'clash'], exclusion)
 # Stage 3 finished.
 
 # Stage 4: Remove CN domains with Chinese TLDs.
-cntld = "https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/tld-cn"
 regex_cntld = re.compile('^([a-zA-Z0-9-]*(?:\.\S*)?)( #.*)?$')
 
 list_cntld = []
