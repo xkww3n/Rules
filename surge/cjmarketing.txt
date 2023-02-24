@@ -9,8 +9,8 @@
 .betterzipcn.com
 .beyondcompare.cc
 .bingdianhuanyuan.cn
-.borisfx.com.cn
 .boom3dformac.cn
+.borisfx.com.cn
 .chemdraw.com.cn
 .cjmakeding.com
 .cjmkt.com
@@ -60,7 +60,6 @@
 .pdffactorychina.cn
 .photozoomchina.com
 .prodad.cn
-portraiture.ps-chajian.com
 .rayfirechina.com
 .shankejingling.com
 .studioonechina.cn
@@ -71,3 +70,4 @@ portraiture.ps-chajian.com
 .yuanchengxiezuo.com
 .zbrushcn.com
 .zhzzx.com
+portraiture.ps-chajian.com

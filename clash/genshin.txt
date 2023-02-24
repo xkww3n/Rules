@@ -7,7 +7,6 @@ payload:
   - 'awsoschtdispatch.yuanshen.com'
   - 'dispatchosglobal.yuanshen.com'
   - 'osasiadispatch.yuanshen.com'
-  - 'osasiadispatch.yuanshen.com'
   - 'oschtdispatch.yuanshen.com'
   - 'oseurodispatch.yuanshen.com'
   - 'osusadispatch.yuanshen.com'

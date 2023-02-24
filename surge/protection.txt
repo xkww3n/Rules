@@ -5216,6 +5216,7 @@
 .hgbvtax.cn
 .hggtt.top
 .hgibbei.cyou
+.hgsly.buzz
 .hguas.com
 .hh.jiankang.com
 .hh6666.com
@@ -6924,6 +6925,7 @@
 .ljrtb.cn
 .ljth.hk
 .ljwckj.love
+.lkdhlp.xyz
 .lkjrx.xyz
 .lknmnnr.xyz
 .lksdj.com
@@ -7713,6 +7715,7 @@
 .n0399.com
 .n0488.com
 .n0499.com
+.n0544.com
 .n0566.com
 .n0622.com
 .n0633.com
@@ -7760,6 +7763,7 @@
 .nbojiajiao.bid
 .nbrecsys.4paradigm.com
 .nbsdk-baichuan.alicdn.com
+.nccaer.xyz
 .nchap.com
 .nchte.com
 .ncoeqz.today
@@ -7804,6 +7808,7 @@
 .nexac.com
 .nexage.com
 .nextclickadv.com
+.nexyzh.com
 .nezuel.com
 .nfiuerwtftasnuk.com
 .nginx-auction-prd-gcp.adsx.unityads.unity3d.com
@@ -7997,6 +8002,7 @@
 .o06.xyz
 .o091i.com
 .o0dn.icu
+.o0pvw.cn
 .o1.jyjyj.cn
 .o2o.api.xiaomi.com
 .o2vcb5uw.site
@@ -8079,6 +8085,7 @@
 .okokw.com
 .okwan.cn
 .okwfx.cn
+.okwg.top
 .oladyip.cn
 .olcdn.com
 .oldart.shop
@@ -8863,6 +8870,7 @@
 .qujishu.com
 .quldu.com
 .qumi.com
+.qunaw.cyou
 .qutyan8848.com
 .qvbwras.cn
 .qvfkiwf.cn
@@ -9828,6 +9836,7 @@
 .swadakesb.cyou
 .swc.weather.com.cn
 .swelen.com
+.swicgq.xyz
 .swill.icu
 .switchadhub.com
 .swlmd.com
@@ -12209,9 +12218,11 @@
 .zbpx.xyz
 .zbqmsc.com
 .zbzbzzz.top
+.zcck60eqyw.world
 .zcdsp.com
 .zcfhi.cn.com
 .zchange.xyz
+.zchkz.cn
 .zcmnffq.cn
 .zcnnn.com
 .zconfig.alibabausercontent.com
