@@ -1,7 +1,11 @@
 import re
-from requests import get
 from abp.filters import parse_filterlist
-domain_list_base = './domain-list-community/data/'
+from os import listdir
+from requests import get
+from time import time_ns
+
+DOMAIN_LIST_PREFIX = './domain-list-community/data/'
+CUSTOM_PREFIX = './custom/'
 
 def import_processor(src, exclusion=None):
     regex_import = re.compile('^include\:(\S*)$')
@@ -9,7 +13,7 @@ def import_processor(src, exclusion=None):
     for line in src:
         flag_import = regex_import.match(line)
         if flag_import and flag_import.group(1) != exclusion:
-            file_import = open(domain_list_base + flag_import.group(1), mode='r').read().splitlines()
+            file_import = open(DOMAIN_LIST_PREFIX + flag_import.group(1), mode='r').read().splitlines()
             list += import_processor(file_import)
             continue
         list.append(line)
@@ -52,7 +56,7 @@ def batch_convert(targets, tools, exclusions=[]):
     for tool in tools:
         for target in targets:
             for exclusion in exclusions:
-                file_orig = open(domain_list_base + target, mode='r').read().splitlines()
+                file_orig = open(DOMAIN_LIST_PREFIX + target, mode='r').read().splitlines()
                 dist = open("./dists/" + tool + "/" + target + ".txt", mode='w')
                 content_orig = import_processor(file_orig, exclusion)
                 for line in convert(content_orig, tool):
@@ -60,6 +64,8 @@ def batch_convert(targets, tools, exclusions=[]):
                 dist.close()
 
 # Stage 1: Sync advertisements blocking and privacy protection rules.
+print("START Stage 1: Sync advertisements blocking and privacy protection rules.")
+START_TIME = time_ns()
 regex_ip = re.compile('((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}') ## IP addresses shouldn't be added.
 ## AdGuard Base Filter
 src_base = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt'
@@ -137,7 +143,7 @@ for line in parse_filterlist(content_block):
     and not line.options):
         list_exceptions.append(line.text)
 
-block_v2fly = open(domain_list_base + "category-ads-all", mode='r')
+block_v2fly = open(DOMAIN_LIST_PREFIX + "category-ads-all", mode='r')
 list_block += convert(import_processor(block_v2fly), "plain")
 list_block = list(set(list_block))
 list_block.sort()
@@ -151,9 +157,14 @@ for domain in list_block:
 
 dist_surge.close()
 dist_clash.close()
+
+END_TIME = time_ns()
+print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 # Stage 1 finished.
 
 # Stage 2: Sync exceptions with AdGuard.
+print("START Stage 2: Sync exceptions with AdGuard.")
+START_TIME = time_ns()
 src_exceptions_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt'
 src_exceptions_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
 dist_surge = open('./dists/surge/exceptions.txt', mode='w')
@@ -195,19 +206,27 @@ for line in list_exceptions:
     dist_clash.writelines("  - '+." + line + "'\n")
 dist_surge.close()
 dist_clash.close()
+END_TIME = time_ns()
+print("FINISHED Stage 2\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 # Stage 2 finished.
 
 # Stage 3: Sync Bahamut, CN, DMM, Google FCM, Microsoft, niconico, PayPal and YouTube domains with v2fly community.
+print("START Stage 3: Sync Bahamut, CN, DMM, Google FCM, Microsoft, niconico, PayPal and YouTube domains with v2fly community.")
+START_TIME = time_ns()
 to_convert = ['bahamut', 'geolocation-cn', 'dmm', 'googlefcm', 'microsoft', 'niconico', 'paypal', 'youtube']
 exclusion = ['github'] ## GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
 batch_convert(to_convert, ['surge', 'clash'], exclusion)
+END_TIME = time_ns()
+print("FINISHED Stage 4.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 # Stage 3 finished.
 
 # Stage 4: Remove CN domains with Chinese TLDs.
+print("START Stage 4: Remove CN domains with Chinese TLDs.")
+START_TIME = time_ns()
 regex_cntld = re.compile('^([a-zA-Z0-9-]*(?:\.\S*)?)( #.*)?$')
 
 list_cntld = []
-for line in open(domain_list_base + "tld-cn", mode='r').read().splitlines():
+for line in open(DOMAIN_LIST_PREFIX + "tld-cn", mode='r').readlines():
     istld = regex_cntld.match(line)
     if istld and istld[1] != '':
         list_cntld.append('.' + istld[1])
@@ -239,4 +258,31 @@ for line in list_domain_clash:
 
 dist_surge.close()
 dist_clash.close()
+END_TIME = time_ns()
+print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 ## Stage 4 finished.
+
+## Stage 5: Build custom rules.
+print("START Stage 5: Build custom rules.")
+START_TIME = time_ns()
+list_custom = listdir(CUSTOM_PREFIX)
+for filename in list_custom:
+    file_custom = open(CUSTOM_PREFIX + filename, mode='r')
+    content_custom = file_custom.read().splitlines()
+    content_custom.sort()
+    dist_surge = open('./dists/surge/' + filename, mode='w')
+    dist_clash = open('./dists/clash/' + filename, mode='w')
+    dist_clash.writelines("payload:\n")
+    for line in content_custom:
+        if not line.startswith('#'):
+            dist_surge.writelines(line + '\n')
+            if line.startswith('.'):
+                dist_clash.writelines("  - '+" + line + "'\n")
+            else:
+                dist_clash.writelines("  - '" + line + "'\n")
+    file_custom.close()
+    dist_surge.close()
+    dist_clash.close()
+END_TIME = time_ns()
+print("FINISHED Stage 5\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+## Stage 5 finished

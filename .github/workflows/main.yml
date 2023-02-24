@@ -30,10 +30,6 @@ jobs:
           path: 'domain-list-community'
       - name: Generate rules
         run: python generate.py
-      - name: Copy custom rules to dists directories
-        run: |
-          cp custom/clash/* dists/clash/
-          cp custom/surge/* dists/surge/
       - name: Deploy to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v3
         with:
