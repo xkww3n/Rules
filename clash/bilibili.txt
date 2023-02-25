@@ -1,5 +1,4 @@
 payload:
-  - ''
   - '+.biliapi.com'
   - '+.biliapi.net'
   - '+.bilibili.com'

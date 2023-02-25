@@ -528,10 +528,8 @@ crl.microsoft.com
 ctldl.windowsupdate.com
 default.exp-tas.com
 developer.microsoft.com
-developer.microsoft.com
 docs.microsoft.com
 download.microsoft.com
-download.visualstudio.microsoft.com
 download.visualstudio.microsoft.com
 dtlgalleryint.cloudapp.net
 emoi-cncdn.bing.com
