@@ -9,48 +9,45 @@ CUSTOM_PREFIX = './custom/'
 
 def import_processor(src, exclusion=None):
     regex_import = re.compile('^include\:(\S*)$')
-    list = []
+    list_converted = []
     for line in src:
         flag_import = regex_import.match(line)
         if flag_import and flag_import.group(1) != exclusion:
             file_import = open(DOMAIN_LIST_PREFIX + flag_import.group(1), mode='r').read().splitlines()
-            list += import_processor(file_import)
+            list_converted += import_processor(file_import)
             continue
-        list.append(line)
-    return list
+        list_converted.append(line)
+    return list_converted
 
 def convert(src, target):
     # The following 2 regexes' group 1 matches domains without "@cn" directive.
     regex_fulldomain = re.compile('^full\:(\S*)(?: @cn)?$')
     regex_subdomain = re.compile('^([a-zA-Z0-9-]*(?:\.\S*)?)(?: @cn)?$')
-    regex_invaild = re.compile('^(?:regexp\:|keyword\:).*$')
-    list = []
+    list_converted = []
     for line in src:
-        fulldomain = regex_fulldomain.match(line)
-        subdomain = regex_subdomain.match(line)
-        invaild = regex_invaild.match(line)
-        if target == 'surge' or target == 'plain':
-            if fulldomain:
-                list.append(fulldomain.group(1))
-            elif subdomain and subdomain.group(1) != '':
-                list.append('.' + subdomain.group(1))
-            elif invaild:
-                pass
-        elif target == 'clash':
-            if fulldomain:
-                list.append("  - '" + fulldomain.group(1) + "'")
-            elif subdomain and subdomain.group(1) != '':
-                list.append("  - '+." + subdomain.group(1) + "'")
-            elif invaild:
-                pass
-        else:
-            raise TypeError("Target type unsupported, only accept 'surge', 'clash' or 'plain'.")
+        if not line.startswith("regexp:") or line.startswith("keyword:") or line.startswith("#"):
+            fulldomain = regex_fulldomain.match(line)
+            subdomain = regex_subdomain.match(line)
+            if target == 'surge' or target == 'plain':
+                if fulldomain:
+                    list_converted.append(fulldomain.group(1))
+                elif subdomain and subdomain.group(1) != '':
+                    list_converted.append('.' + subdomain.group(1))
+            elif target == 'clash':
+                if fulldomain:
+                    list_converted.append("  - '" + fulldomain.group(1) + "'")
+                elif subdomain and subdomain.group(1) != '':
+                    list_converted.append("  - '+." + subdomain.group(1) + "'")
+            else:
+                raise TypeError("Target type unsupported, only accept 'surge', 'clash' or 'plain'.")
     if target == 'clash':
-        list.sort()
-        list.insert(0, "payload:")
+        list_converted = list(set(list_converted))
+        list_converted.sort()
+        list_converted.insert(0, "payload:")
     else:
-        list.sort()
-    return list
+        list_converted = list(set(list_converted))
+        list_converted.sort()
+    return list_converted
 
 def batch_convert(targets, tools, exclusions=[]):
     for tool in tools:
@@ -220,50 +217,8 @@ END_TIME = time_ns()
 print("FINISHED Stage 4.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 # Stage 3 finished.
 
-# Stage 4: Remove CN domains with Chinese TLDs.
-print("START Stage 4: Remove CN domains with Chinese TLDs.")
-START_TIME = time_ns()
-regex_cntld = re.compile('^([a-zA-Z0-9-]*(?:\.\S*)?)( #.*)?$')
-
-list_cntld = []
-for line in open(DOMAIN_LIST_PREFIX + "tld-cn", mode='r').readlines():
-    istld = regex_cntld.match(line)
-    if istld and istld[1] != '':
-        list_cntld.append('.' + istld[1])
-dist_surge = open('./dists/surge/geolocation-cn.txt', mode='r')
-dist_clash = open('./dists/clash/geolocation-cn.txt', mode='r')
-list_domain_surge = dist_surge.read().splitlines()
-list_domain_clash = dist_clash.read().splitlines()
-## After loading temporary rules, reopen rule files as write mode.
-dist_surge.close()
-dist_surge = open('./dists/surge/geolocation-cn.txt', mode='w')
-dist_clash.close()
-dist_clash = open('./dists/clash/geolocation-cn.txt', mode='w')
-
-for domain in list_domain_surge[:]:
-    for tld in list_cntld:
-        if domain.find(tld) != -1:
-            list_domain_surge.remove(domain)
-            break
-for domain in list_domain_clash[:]:
-    for tld in list_cntld:
-        if domain.find(tld) != -1:
-            list_domain_clash.remove(domain)
-            break
-
-for line in list_domain_surge:
-    dist_surge.writelines(line + '\n')
-for line in list_domain_clash:
-    dist_clash.writelines(line + '\n')
-
-dist_surge.close()
-dist_clash.close()
-END_TIME = time_ns()
-print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
-## Stage 4 finished.
-
-## Stage 5: Build custom rules.
-print("START Stage 5: Build custom rules.")
+## Stage 4: Build custom rules.
+print("START Stage 4: Build custom rules.")
 START_TIME = time_ns()
 list_custom = listdir(CUSTOM_PREFIX)
 for filename in list_custom:
@@ -274,7 +229,7 @@ for filename in list_custom:
     dist_clash = open('./dists/clash/' + filename, mode='w')
     dist_clash.writelines("payload:\n")
     for line in content_custom:
-        if not line.startswith('#'):
+        if line and not line.startswith('#'):
             dist_surge.writelines(line + '\n')
             if line.startswith('.'):
                 dist_clash.writelines("  - '+" + line + "'\n")
@@ -284,5 +239,5 @@ for filename in list_custom:
     dist_surge.close()
     dist_clash.close()
 END_TIME = time_ns()
-print("FINISHED Stage 5\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
-## Stage 5 finished
+print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+## Stage 4 finished
