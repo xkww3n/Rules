@@ -3211,6 +3211,7 @@
 .cnoufangfeng.cn
 .cnpask.com
 .cnscdj.com
+.cnshiw2.com
 .cnt.fout.jp
 .cnt.my
 .cnwav.com
@@ -3274,6 +3275,7 @@
 .coolguang.com
 .coolguy.store
 .cooltool.cc
+.coope.cyou
 .coqcjbk.cn
 .corlsblt.cyou
 .cornplus.cn
@@ -5309,6 +5311,7 @@
 .hmma.baidu.com
 .hmmob.com
 .hmong-miaojiuyi.com
+.hmpubc.xyz
 .hmreuj.com
 .hmttoly.com
 .hmwebs.top
@@ -5842,6 +5845,7 @@
 .ipssss.com
 .ipxjps.cn
 .ipyud.cn
+.iqmbao.xyz
 .iqn.world
 .iquue.com
 .iqzt3ec.cn
@@ -5856,6 +5860,7 @@
 .is0v39c.cn
 .is686.com
 .iscrv.com
+.isdfbvkvsc.xyz
 .isgow.com
 .ishanggao.com
 .ishoutu.net
@@ -7578,6 +7583,7 @@
 .mopub.com
 .moquanad.com
 .morgdm.ru
+.mori.ink
 .morlsbli.cyou
 .morningglory101.io
 .mosa86.com
@@ -8106,6 +8112,7 @@
 .okmjd.com
 .okmwfq.xyz
 .okokw.com
+.okoy.top
 .okwa.top
 .okwan.cn
 .okwfx.cn
@@ -10067,6 +10074,7 @@
 .techgcr.cn
 .ted-club.com
 .tegronews.com
+.tehgfn.xyz
 .tel-kod.ru
 .telemetryverification.net
 .telinteredlmewhl.xyz
@@ -10221,6 +10229,7 @@
 .tomboy.lol
 .tomuwlf.cn
 .tonefuse.com
+.tonganserried.life
 .tongdianku.com
 .tonger.online
 .tongfanglianhe.com
@@ -10377,6 +10386,7 @@
 .tunion-api.m.taobao.com
 .tuoshi168.com
 .tuotianxia.top
+.tupo.link
 .turbo.adsbynimbus.com
 .turbonews.biz
 .turn.com
@@ -11518,6 +11528,7 @@
 .xifatime.com
 .xifuquan.com
 .xigeng0375.com
+.xihongshi.love
 .xihuangdushu.com
 .xihufe.com
 .xiji-express.com
