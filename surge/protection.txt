@@ -1134,6 +1134,7 @@
 .9eu7c.top
 .9f11.win
 .9f1i3az.cn
+.9fh6m.cn
 .9go.mobi
 .9h1111.com
 .9ipin.cn
@@ -1147,6 +1148,7 @@
 .9xg2.fun
 .9xu.com
 .9yad.com
+.a-ads.com
 .a-cn.duoyi.com
 .a.10tianqi.com
 .a.320981a9244924ef86ebdbb9eb877e9f21ce83f1e3cc89b2c5e7c3ff.com
@@ -1293,7 +1295,6 @@
 .aasyy.com
 .aawcky.xyz
 .aaxads.com
-.ab.advertiserurl.com
 .ab.cnbanbao.com
 .ab.pincai.com
 .ab.rejushe.com
@@ -1340,7 +1341,6 @@
 .acs86.com
 .act.vip.iqiyi.com
 .activity.browser.intl.miui.com
-.actyle.com
 .acvps.cn
 .acxiom-online.com
 .acys.fun
@@ -1694,7 +1694,6 @@
 .adservice.tohsoft.com
 .adserviceretry.kugou.com
 .adserwer.xwords.pl
-.adsexo.com
 .adsfactor.net
 .adsfs-sdkconfig.heytapimage.com
 .adsgard.aprod.scopely.io
@@ -1819,7 +1818,6 @@
 .afd.baidu.com
 .afdplay.xyz
 .aff.i-mobile.co.jp
-.affelseaeinera.org
 .affiliate6.com
 .affinity.com
 .affiz.net
@@ -2209,6 +2207,7 @@
 .atkins.vo.llnwd.net
 .atljkcq.cn
 .atm.youku.com
+.atnnf.xyz
 .ato.mx
 .atrace.chelaile.net.cn
 .att.stargame.com
@@ -2795,6 +2794,7 @@
 .bvnvx.xyz
 .bvpaovs.cn
 .bvwxfok.cn
+.bvzkkjqeuijpy.com
 .bwin2808.com
 .bwogldv.top
 .bwsvftq.cn
@@ -2952,7 +2952,6 @@
 .cdn-xinghuatupian-cdn.com
 .cdn.88-f.net
 .cdn.adbert.info
-.cdn.adclerks.com
 .cdn.adk2.com
 .cdn.ads.fotoable.net
 .cdn.advertserve.com
@@ -3359,7 +3358,6 @@
 .crosspromotion-us.avosapps.us
 .crosspromotion.weplayer.cc
 .crossrider.com
-.crowbarorchat.uno
 .crs.baidu.com
 .cruiseeagle.hk
 .crwan.applinzi.com
@@ -3547,7 +3545,6 @@
 .daisiyao.love
 .daisycontroversy.com
 .daitianyu.vip
-.daiwheew.com
 .daiwofei2019.top
 .daixishuai.pw
 .daizhangguanjia.com.cn
@@ -3603,7 +3600,6 @@
 .datatechonert.com
 .datax.baidu.com
 .datouniao.com
-.daurifek.net
 .dawangde.me
 .daxiu01.oss-accelerate.aliyuncs.com
 .daxuetong.zone
@@ -3644,7 +3640,6 @@
 .de.pandora.xiaomi.com
 .dealtbroodconstitutional.com
 .debojuagug1sf.cloudfront.net
-.declarcercket.org
 .dedcrfvdj.xyz
 .deeginews.com
 .deeplearning.red
@@ -3779,7 +3774,6 @@
 .dkfmhv.xyz
 .dkgmgj.xyz
 .dklkxb.xyz
-.dkohudoflh.com
 .dkqapp.cn
 .dktoo.site
 .dkudnwb.cn
@@ -4169,7 +4163,6 @@
 .ent1.12584.cn
 .ent1.qunchua.cn
 .ent1.qunchua.com
-.entailresponded.com
 .entry.baidu.com
 .envkrev.cn
 .enyayinxiang.com
@@ -4456,7 +4449,6 @@
 .fktkwb.cn
 .flan.fun
 .flat-ads.com
-.flaxim.com
 .flctbg.com
 .fleraprt.com
 .flowcodeapp.com
@@ -4797,7 +4789,6 @@
 .gkspde.cn
 .gl1e.top
 .glczys.xyz
-.glefeesh.net
 .global.appnext.com
 .globalso.biz
 .glores2.lanzoui.com
@@ -5824,7 +5815,6 @@
 .intentionscommunity.com
 .interactive-circle.jp
 .intermarkets.net
-.internal-heart.pro
 .internalpound.com
 .into4g.mobi
 .intowow.com
@@ -6274,7 +6264,6 @@
 .jsapi.html5.qq.com
 .jsb.qianzhan.com
 .jsboom.cn
-.jsc.adskeeper.co.uk
 .jsc.marketgid.com
 .jscdn.yieldbird.com
 .jscode.acg68.com
@@ -6805,7 +6794,6 @@
 .lee2code.com
 .lee789.com
 .leeyuo.com
-.leftnetarenning.pro
 .lega.store
 .legitimate.wang
 .legou361.com
@@ -6888,7 +6876,6 @@
 .lifu11.com
 .lifuguan.cn
 .ligatus.com
-.lightningbarrelwretch.com
 .lihongyu.xyz
 .lihuan.store
 .lijb.site
@@ -6998,7 +6985,6 @@
 .lnzangcha.com
 .lo83cs.space
 .lo9b.top
-.lockdowncautionmentally.com
 .loclog.cn
 .log-api.pangolin-sdk-toutiao.com
 .log-stats.weathercn.com
@@ -7035,7 +7021,6 @@
 .longdehua.com
 .look.kfiopkln.com
 .looktt.xyz
-.loolowhy.com
 .loopanews.com
 .loopme.me
 .lopostone.com
@@ -7265,7 +7250,6 @@
 .mapping.fun
 .maqiang520.online
 .marcianice.com
-.maritaltrousersidle.com
 .market.178.com
 .market.21cn.com
 .market.duowan.com
@@ -7414,7 +7398,6 @@
 .mhhsa.xyz
 .mhi9da.cn
 .mhivqcu.cn
-.mhrokfsdv.com
 .mhsksgj.cn
 .mhtrt.com
 .mi.gdt.qq.com
@@ -7560,7 +7543,6 @@
 .mobotoolpush.moboapps.io
 .mobpartner.mobi
 .mobpowertech.com
-.mobpushup.com
 .mobrkbb.com
 .mobytrks.com
 .mocean.mobi
@@ -7769,7 +7751,6 @@
 .n7181.com
 .n8kt7gf.cn
 .na7.cc
-.nableemblems.com
 .nabucuo.com
 .nadvideo.baidu.com
 .nadvideo2.baidu.com
@@ -8121,6 +8102,7 @@
 .okmgy.cn
 .okmjd.com
 .okmwfq.xyz
+.okod.top
 .okokw.com
 .okoy.top
 .okwa.top
@@ -8288,7 +8270,6 @@
 .p8u.hinet.net
 .pa.afreecatv.com
 .packsss.com
-.padsabs.com
 .padsdel.com
 .pafcpd.xyz
 .pagead2.googlesyndication.com
@@ -8356,6 +8337,7 @@
 .pdsvrtb.cn
 .pdtqjd.cn
 .pdxubxc.cn
+.pe5a.top
 .pedailyu.com
 .pee.cn
 .pehlvl.xyz
@@ -8365,6 +8347,7 @@
 .penxiangge.com
 .peoir.cyou
 .pep929.mom
+.pepperysergeantrisky.com
 .pepsico.com.cn
 .perf-events.cloud.unity3d.com
 .perfect999.site
@@ -8400,6 +8383,7 @@
 .picnewsss.com
 .pics.xgo-img.com.cn
 .pigewang.com.cn
+.pigwin.net
 .piilvhtu.cn
 .pilgrimarduouscorruption.com
 .piliangzhuce.cn
@@ -8458,7 +8442,6 @@
 .plkjia.top
 .plkmd.com
 .plokr.com
-.plqbxvnjxq92.com
 .plugin.mobopay.baidu.com
 .plugrush.com
 .plumposterity.com
@@ -8478,6 +8461,7 @@
 .po18.in
 .poae2klya.icu
 .podaaec.cyou
+.poeid.cyou
 .poereawer.top
 .poewage.top
 .pofang.com
@@ -8505,6 +8489,7 @@
 .porjjhu.cn
 .porlsbll.cyou
 .pos.baidu.com
+.posawaj.com
 .poster.weather.com.cn
 .postrelease.com
 .pothouse.cn
@@ -8730,6 +8715,7 @@
 .qhonzpl.cn
 .qhres2.com
 .qhrixol.cn
+.qianbaobbs.net
 .qianchengwenhua.xyz
 .qianduoduo.fit
 .qianggou8.top
@@ -8804,6 +8790,7 @@
 .qkkgish.cn
 .qkobbgs.cyou
 .qkoio.cyou
+.qkqasu.xyz
 .ql.uzuzuz.com
 .qliiom.xyz
 .qling.com
@@ -8828,7 +8815,6 @@
 .qoisocrldvnesni.ru
 .qomdf.top
 .qongsonw.uno
-.qontent.powvibeo.me
 .qopeqi13913fjajba123nfd1344.top
 .qopj.xyz
 .qorlsbls.cyou
@@ -8961,7 +8947,6 @@
 .r5h6.icu
 .rabbitcloud.ltd
 .rabc1.iteye.com
-.raisentotic.uno
 .rakutenmarketing.com
 .randolph.love
 .ranlisgz.fun
@@ -9156,7 +9141,6 @@
 .rsmdlk.cn
 .rsnignsz.xyz
 .rsnoownmz.fun
-.rsntcgoowyxsu.com
 .rss9f.top
 .rssblgb.cn
 .rst2.y3600.cn
@@ -9177,7 +9161,6 @@
 .rtrete.store
 .rtycgmz.cn
 .rtzhao.site
-.ru6sapasgs8tror.com
 .ruan.cn
 .ruan88.com
 .rubiconproject.com
@@ -9658,7 +9641,6 @@
 .snmi.cn
 .snobdomobeyeo.com
 .snow001.com
-.snowmiracles.com
 .snsjiq.xyz
 .snuoen.com
 .snyu.com
@@ -9768,11 +9750,9 @@
 .ssum-sec.casalemedia.com
 .ssznrs.com
 .st-n.pc3ads.com
-.st-n.pc5ads.com
 .st123.info
 .stab.thench.net
 .stadig.ifeng.com
-.stannyltatusia.com
 .star-seo.oss-ap-northeast-1.aliyuncs.com
 .star8.net
 .starfish.pandora.xiaomi.com
@@ -9876,7 +9856,6 @@
 .svm6ryo.cn
 .svnfgib.cn
 .swadakesb.cyou
-.swanbxca.com
 .swc.weather.com.cn
 .swelen.com
 .swicgq.xyz
@@ -9954,6 +9933,7 @@
 .szpgzn.com
 .szpl0.com
 .szqifu.com
+.szsxy.vip
 .szwyyl.com
 .szycvkt.cn
 .szzb.xyz
@@ -10238,7 +10218,6 @@
 .tomboy.lol
 .tomuwlf.cn
 .tonefuse.com
-.tonganserried.life
 .tongdianku.com
 .tonger.online
 .tongfanglianhe.com
@@ -10309,7 +10288,6 @@
 .tradeadexchange.com
 .tradplusad.com
 .traff10wap.com
-.trafficbass.com
 .trafficfactory.biz
 .trafficforce.com
 .trafficjunky.net
@@ -10325,7 +10303,6 @@
 .tribalfusion.com
 .trk-cdpetl.emdlz.com.cn
 .trk.glispa.com
-.trklvs.com
 .troxa.xyz
 .trqhf.xyz
 .trqpfc.cn
@@ -10392,7 +10369,6 @@
 .tumblebit.com
 .tumgcmu.cn
 .tumnxwvd.ink
-.tumultmarten.com
 .tunion-api.m.taobao.com
 .tuoshi168.com
 .tuotianxia.top
@@ -10500,6 +10476,7 @@
 .u5fsqf.com
 .u5ree6.com
 .u644.fun
+.u66099.com
 .u756fvjp.cn
 .u7z5fgj3k9c0vkah2v8zj1zj7v6gkm2f8zjc9j2vk6o9p2zks3a6sjc2mj6h.me
 .u8ad.com
@@ -10677,7 +10654,6 @@
 .usbvhzg.cn
 .uscdn.top
 .usd.appius-dae.com
-.usedaifi.xyz
 .usejj.wangkl.com
 .usekahuna.com
 .usingde.com
@@ -10687,7 +10663,6 @@
 .usnignst.xyz
 .usnoownmt.fun
 .usp1.baidu.com
-.ussive.com
 .usst.store
 .usually.wang
 .utci9.cn
@@ -10802,7 +10777,6 @@
 .vgvjkw.com
 .vgxhvt.xyz
 .vh5g.top
-.vheahvgaqwux.com
 .vhlret.cn
 .vhpxa.top
 .vhullfc.cn
@@ -11004,10 +10978,10 @@
 .wapuad.com
 .wapx.cn
 .wapx.com
+.warlockstallioniso.com
 .watbo.top
 .watbt.top
 .watch-video.net
-.watchnewvids.today
 .watchsk.com
 .waterfairy.xyz
 .watson.microsoft.com
@@ -11265,6 +11239,7 @@
 .wru795e.cn
 .ws.wenshenxiu.com
 .wschao.xyz
+.wsdd11.com
 .wsdof.xyz
 .wsds.cn
 .wsgblw.com
@@ -11642,7 +11617,6 @@
 .xmshqh.com
 .xmsqz.com
 .xmsrd.com
-.xmvftaoz.com
 .xmwn.shop
 .xmyejun.cn
 .xmysinter.com
@@ -11950,6 +11924,7 @@
 .yijikm.com
 .yijiuningyia.gushiwen.org
 .yijuxie.com
+.yimao20230217.live
 .yimi1818.xyz
 .yin1.zgpingshu.com
 .yingjiawm.com
@@ -12263,7 +12238,6 @@
 .zantainet.com
 .zaoyx.jrchiji.cn
 .zasjfget.xyz
-.zatuzwydzhteaj.com
 .zawqwpajq.club
 .zax01.com
 .zazhipu.com
