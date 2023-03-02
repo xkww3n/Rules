@@ -1134,6 +1134,7 @@
 .9f11.win
 .9f1i3az.cn
 .9fh6m.cn
+.9fum.ifeng.com
 .9go.mobi
 .9h1111.com
 .9ipin.cn
@@ -2493,6 +2494,7 @@
 .beacon.tingyun.com
 .bearsg.cn
 .beatbase.live
+.beatricecathy.com
 .beatsightcab.com
 .bebi.com
 .becode.xiao84.com
@@ -3746,6 +3748,7 @@
 .dingon.com.cn
 .dinyqgv.cn
 .dipan.com
+.diqizu.xyz
 .direct.wap.zol.com.cn
 .directpaper.name
 .directrev.com
@@ -4121,6 +4124,7 @@
 .ejktj.com
 .ejnjapw.cn
 .ejunshi.com
+.ejyvgq.xyz
 .ekcsqzo.cn
 .ekdbfu.cn
 .ekhnbwe.cn
@@ -5291,6 +5295,7 @@
 .hk6kn.cn
 .hk9600.com
 .hkbmsb.fun
+.hkbzl.hk
 .hkedve.cn
 .hkfuy.com
 .hklst.top
@@ -5622,7 +5627,9 @@
 .ibgdd67.top
 .ibgksw.xyz
 .ibjkafefertt.xyz
+.ibjkdwsdko.com
 .iblimq.xyz
+.ibqswjdkpo.com
 .ibzgcrusher.com
 .icast.cn
 .icdazoy.cn
@@ -6061,6 +6068,7 @@
 .jiaoben.jucanw.com
 .jiaoben.webkaka.com
 .jiaohezhen.com
+.jiape.cyou
 .jiaruntian.com
 .jiasheng-china.cn
 .jiatang.club
@@ -6424,6 +6432,7 @@
 .kaqweqrdf.com
 .kasdwergv.com
 .katlacw.cn
+.katynplum.ltd
 .kavanga.ru
 .kawa11.space
 .kazigua.top
@@ -8091,6 +8100,7 @@
 .oicode.com
 .oicvvnm.cn
 .oioiio.top
+.oiqdjksgpo.com
 .oisafnik.space
 .oiuqwppcsdf.com
 .oivgqnt.cn
@@ -8105,6 +8115,7 @@
 .ok-ddjsyuming.com
 .ok-qqzzjsyuming.com
 .ok.432kkk.com
+.okag.top
 .okead.com
 .okew.top
 .okfzopj.cn
@@ -8379,6 +8390,7 @@
 .pghwwjd.com
 .pgl7.cn
 .pgpkrrk.cn
+.pgrjxpd.cn
 .phcoal.com
 .phiriaxi.com
 .phluant.com
@@ -10487,6 +10499,7 @@
 .u23055.com
 .u25011.com
 .u25022.com
+.u33011.com
 .u5fsqf.com
 .u5ree6.com
 .u644.fun
@@ -11055,6 +11068,7 @@
 .weieo.cyou
 .weifengi.xyz
 .weige666.asia
+.weighcb.com
 .weiguanwang888.com
 .weiiii.com
 .weijiakeji.top
@@ -11094,6 +11108,7 @@
 .wfhuzaj.cn
 .wfhxssg.com
 .wfkspcs.cn
+.wfndponfd.com
 .wfpersonal.site
 .wfyqc.com
 .wganilgle.cyou
@@ -11759,6 +11774,7 @@
 .xxp123.live
 .xxrsxs.cn
 .xxsmcps.com
+.xxtalp.xyz
 .xxvkwuk.cn
 .xxwd.ltd
 .xxxjmp.com
