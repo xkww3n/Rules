@@ -201,6 +201,7 @@
 .mgmt-azure-api.cn
 .microbit.org
 .microsoft
+.microsoft-falcon.io
 .microsoft-give.com
 .microsoft-int.com
 .microsoft-ppe.com
@@ -252,6 +253,7 @@
 .microsoftadvertising.com
 .microsoftadvertisingregionalawards.com
 .microsoftaffiliates.com
+.microsoftapp.net
 .microsoftazurestatus.cn
 .microsoftcloud.com
 .microsoftcloudsummit.com

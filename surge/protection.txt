@@ -1032,6 +1032,7 @@
 .8gl.com.cn
 .8hdp.cn
 .8hpay.cn
+.8i3158.cn
 .8jkx.com
 .8jrc564wtf.cn
 .8k8k.me
@@ -1142,8 +1143,10 @@
 .9h1111.com
 .9ipin.cn
 .9j1y.cn
+.9j5e.top
 .9js6.icu
 .9mbv.com
+.9odes.ltd
 .9tn.cc
 .9wad.com
 .9wee.com
@@ -4158,6 +4161,7 @@
 .eneverals.biz
 .enews10.yxlady.net
 .engpeng.cn
+.ennde.cyou
 .enohb.com
 .enrosr.cn
 .ent1.12584.cn
@@ -4517,6 +4521,7 @@
 .friendlyduck.com
 .frpns.com
 .frwslristg.com
+.frxcdn.xyz
 .fs0523.com
 .fsdnp.cyou
 .fsgsfaf6.com
@@ -4844,6 +4849,7 @@
 .gomhn.cn
 .gongwuyuan.name
 .gongxifc.com
+.gonpc.com
 .goodadvert.ru
 .goodday21.top
 .goodkee.cn
@@ -5938,6 +5944,7 @@
 .j.imdb.cn
 .j.mmtu.top
 .j.wit.qq.com
+.j00x.top
 .j04.xyz
 .j04r.top
 .j05.xyz
@@ -7316,6 +7323,7 @@
 .mcxsw.xyz
 .md.tvzhe.com
 .mdapp01.com
+.mdcxyo.xyz
 .mdevstat.qqlive.qq.com
 .mdfiaub.cn
 .mdi5k.cn
@@ -8684,6 +8692,7 @@
 .qdglzx.com
 .qdhhdsw.cn
 .qdhyy.cn
+.qdiwbhjpo.com
 .qdsfzz.cn
 .qdutmef.cn
 .qdvideo.xyz
@@ -8713,6 +8722,7 @@
 .qgfwets.cn
 .qgjapp.com
 .qgss8.com
+.qhapp.top
 .qhdbfjx.com
 .qhdjhw.com
 .qhdzljxsb.cn
@@ -9005,6 +9015,7 @@
 .redtram.com
 .reebbwi.cyou
 .reevaipi.com
+.regrfg33.com
 .rek.mobi
 .reklamz.com
 .rekuyy.com
@@ -9410,6 +9421,7 @@
 .sh996.dftoutiao.com
 .shackapple.com
 .shamodesha.com
+.shandiankuaixi.in
 .shandongaosen.cn
 .shangguan.fun
 .shanghuitianxia.cn
@@ -10689,6 +10701,7 @@
 .uxngqd.cn
 .uxpolqk.cn
 .uxszams.cn
+.uygckiy.cn
 .uyjhbawd.xyz
 .uyueread.com
 .uyunad.com
@@ -10928,6 +10941,7 @@
 .w80n.fun
 .wachipho.net
 .wadqfaj.cn
+.wagepulsate.com
 .waiads.com
 .waikuai.vip
 .waituo.ren
