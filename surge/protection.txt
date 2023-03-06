@@ -283,7 +283,6 @@
 .1qwe3r.com
 .1r49n.cn
 .1rongzi.cn
-.1rx.io
 .1sapp.com
 .1so8inqb.cn
 .1tlm.cn
@@ -488,7 +487,6 @@
 .3hbox.com
 .3hgui.com
 .3lga3.cn
-.3lift.com
 .3munion.net
 .3naf.xyz
 .3p-link.com
@@ -1155,6 +1153,7 @@
 .aanqylta.com
 .aasyy.com
 .aawcky.xyz
+.aawulszemel.com
 .aaxads.com
 .ab.cnbanbao.com
 .ab.pincai.com
@@ -1211,7 +1210,6 @@
 .ad-creatives-public.commondatastorage.googleapis.com
 .ad-ettoday.cdn.hinet.net
 .ad-img.diyidan.net
-.ad-maven.com
 .ad-specs.guoshipartners.com
 .ad-srv.net
 .ad-stir.com
@@ -1232,17 +1230,16 @@
 .ad.cdnjm.cn
 .ad.daum.net
 .ad.doubleclick.net
-.ad.doublemax.net
 .ad.duapps.com
 .ad.endpo.in
 .ad.flipboard.com
 .ad.foxnetworks.com
 .ad.fx168api.com
 .ad.gmw.cn
+.ad.gt
 .ad.jorte.com
 .ad.jp.ap.valuecommerce.com
 .ad.kubicad.icu
-.ad.leadbolt.net
 .ad.leadboltapps.net
 .ad.leap.app
 .ad.lomadee.com
@@ -1273,9 +1270,7 @@
 .ad.yieldlab.net
 .ad1.greedland.net
 .ad1.udn.com
-.ad120m.com
 .ad123.ynet.com
-.ad127m.com
 .ad132m.com
 .ad2.udn.com
 .ad3.udn.com
@@ -1305,7 +1300,6 @@
 .adbpfnh.cn
 .adbrau.com
 .adbrite.com
-.adbuddiz.com
 .adbutter.net
 .adcamp.ru
 .adcash.com
@@ -1329,7 +1323,6 @@
 .additionsmiracle.com
 .addthis.com
 .addthisedge.com
-.ade.clmbtech.com
 .adelazanna.com
 .adeng.hpplay.cn
 .adentifi.com
@@ -1425,12 +1418,10 @@
 .adnetworkperformance.com
 .adnium.com
 .adnxs.com
-.adocean.pl
 .adomv.com
 .adonly.com
 .adorazanna.com
 .adotsolution.com
-.adotube.com
 .adp.cnki.net
 .adp.cnool.net
 .adpai.thepaper.cn
@@ -1464,7 +1455,6 @@
 .ads-6686.top
 .ads-api.twitter.com
 .ads-bidder-api.twitter.com
-.ads-brand-postback.unityads.unity3d.com
 .ads-chunks.prod.ihrhls.com
 .ads-cloud.rovio.com
 .ads-game-configuration-master.ads.prd.ie.internal.unity3d.com
@@ -1513,7 +1503,6 @@
 .ads.topsex.cc
 .ads.trafficjunky.net
 .ads.xlxtra.com
-.ads.yahoo.com
 .ads.yap.yahoo.com
 .ads.youtube.com
 .ads360.cn
@@ -1526,7 +1515,6 @@
 .adsapi.snapchat.com
 .adsbro.com
 .adsc.wasu.tv
-.adscale.de
 .adscdn.baidu.com
 .adsclick.qq.com
 .adsclick.yx.js.cn
@@ -1545,7 +1533,6 @@
 .adserver.pandora.com
 .adserver.shadow.snapads.com
 .adserver.ubiyoo.com
-.adserver.unityads.unity3d.com
 .adserver.yahoo.com
 .adservice.google.co.jp
 .adservice.tohsoft.com
@@ -1571,12 +1558,9 @@
 .adsmogo.net
 .adsmogo.org
 .adsmoloco.com
-.adsnative.com
 .adsniper.ru
 .adsp.xunlei.com
-.adspirit.de
 .adspot.tfgapps.com
-.adspynet.com
 .adsqqclick.qq.com
 .adsrich.qq.com
 .adsrv4k.com
@@ -1597,7 +1581,6 @@
 .adt.measure.ameblo.jp
 .adt.xdrig.com
 .adtaily.com
-.adtaily.pl
 .adtdp.com
 .adtech.de
 .adtechjp.com
@@ -1660,7 +1643,6 @@
 .adyun.com
 .adz.mobi
 .adzerk.net
-.adzmedia.com
 .adzmobi.com
 .adzp.cn
 .adzworld.in
@@ -1674,8 +1656,6 @@
 .afdplay.xyz
 .aff.i-mobile.co.jp
 .affiliate6.com
-.affinity.com
-.affiz.net
 .afij001.xyz
 .afj.cc
 .afj0.com
@@ -1822,7 +1802,6 @@
 .alrr.club
 .als.baidu.com
 .alt-ad.mail.ru
-.altitude-arena.com
 .alxsite.com
 .am.szhome.com
 .am15.net
@@ -1852,7 +1831,6 @@
 .analyticsq.com
 .anaxialaphonia.com
 .andmejs.com
-.andomedia.com
 .androidtvchannels-pa.googleapis.com
 .androidtvwatsonfe-pa.googleapis.com
 .anews7.nvwu.com
@@ -1919,9 +1897,7 @@
 .api.kiip.me
 .api.ktplay.com
 .api.kwaizt.com
-.api.leadbolt.net
 .api.mediation.amberweather.com
-.api.mobshark.net
 .api.mobula.ds.duapps.com
 .api.mobula.sdk.duapps.com
 .api.newsfeed.intl.miui.com
@@ -2020,7 +1996,7 @@
 .askfsh.cn
 .asoeasy.cn
 .aspm.jp
-.asrety.com
+.assaystalonic.com
 .assoc-amazon.com
 .assp.sohu.com
 .astrategy.beacon.qq.com
@@ -2035,21 +2011,18 @@
 .atakjyv.cn
 .atanx.alicdn.com
 .atdmt.com
-.atemda.com
 .athena.api.kwalee.com
 .atiws.aipai.com
 .atixxzd.cn
 .atkins.vo.llnwd.net
 .atm.youku.com
 .atnnf.xyz
-.ato.mx
 .atrace.chelaile.net.cn
 .att.stargame.com
 .atti.com
 .atuhi.cyou
 .aty.cp45.ott.cibntv.net
 .au737.com
-.auction.unityads.unity3d.com
 .audioadx.com
 .auqcmkubxjmeeyf.ru
 .autdjng.cn
@@ -2061,14 +2034,12 @@
 .avapp.tv
 .avased6.com
 .avazunativeads.com
-.avazutracking.net
 .avxiytq.cn
 .avz3.xyz
 .aw6s.top
 .awempire.com
 .awfulporetroys.casa
 .awleo.cn
-.awltovhc.com
 .awptlpu.com
 .awsxc.live
 .awtks.com
@@ -2381,7 +2352,6 @@
 .bgjjwl.cn
 .bglbsb.cn
 .bgnlaigv.fun
-.bgrndi.com
 .bh0874.online
 .bh100.com.cn
 .bh2q.fun
@@ -2430,7 +2400,6 @@
 .biz5.sandai.net
 .bizhiku.net
 .bizhub-cloud.cn
-.bizographics.com
 .bj-gov-cn.website
 .bjbdlt.com.cn
 .bjcass.com
@@ -2529,12 +2498,10 @@
 .bqsm.com.cn
 .bqtwbx.xyz
 .braincf.com
-.brainient.com
 .brandadsstatic.vivo.com.cn
 .breakdownreprintsentimental.com
 .brealtime.com
 .bridalplums.com
-.bridgetrack.com
 .brkxgfs.cn
 .brmzopt.cn
 .browserkernel.baidu.com
@@ -2568,7 +2535,6 @@
 .bufan.in
 .bufan.space
 .bugly.qq.com
-.bugs2022.com
 .bujiangjiu123.com
 .bulankk.com
 .buliglss.space
@@ -2737,17 +2703,10 @@
 .cdn-adn.rayjump.com
 .cdn-api.admost.com
 .cdn-cf.postitial.com
-.cdn-creatives-akamai-prd.unityads.unity3d.com
-.cdn-creatives-highwinds-prd.unityads.unity3d.com
-.cdn-creatives-prd.unityads.unity3d.com
 .cdn-go.net
-.cdn-highwinds.unityads.unity3d.com
 .cdn-image.com
 .cdn-ketchapp.akamaized.net
 .cdn-social.janrain.com
-.cdn-store-icons-akamai-prd.unityads.unity3d.com
-.cdn-store-icons-highwinds-prd.unityads.unity3d.com
-.cdn-webview-pge.unityads.unity3d.com
 .cdn-xinghuatupian-cdn.com
 .cdn.88-f.net
 .cdn.adbert.info
@@ -2762,19 +2721,16 @@
 .cdn.cpiera.com
 .cdn.fedsy.xyz
 .cdn.haocaa.com
-.cdn.hdat.xyz
 .cdn.imvkan.com
 .cdn.jampp.com
 .cdn.mobilefuse.com
 .cdn.optmn.cloud
 .cdn.rgrd.xyz
-.cdn.unityads.unity3d.com
 .cdn.wenzhangba.cn
 .cdn.wuyou.ca
 .cdn.xianliao.me
 .cdn1.tvzhe.com
 .cdn2.auditude.com
-.cdn7.rocks
 .cdnads.com
 .cdncont.com
 .cdnfjz.com
@@ -2863,7 +2819,6 @@
 .chicken18.com
 .chidir.com
 .chidsimp.com
-.china-cdn3.unityads.unity3d.com
 .china-india.wang
 .chinaanquan.net
 .chinabiwin.hk
@@ -2874,7 +2829,6 @@
 .chinazmob.com
 .chirui.net
 .chitika.com
-.chitika.net
 .chiuhua.com.cn
 .chiyan.group
 .chlbiz.com
@@ -2996,7 +2950,6 @@
 .cnscdj.com
 .cnshiw2.com
 .cnt.fout.jp
-.cnt.my
 .cnwav.com
 .cnxad.com
 .cnyibs.com
@@ -3036,13 +2989,11 @@
 .config.inmobi.cn
 .config.kuyun.com
 .config.tremorhub.com
-.config.unityads.unity3d.com
 .configuration.ttpsdk.info
 .congsons.uno
 .congtad.com
 .content.ad
 .contentabc.com
-.contextweb.com
 .continuedhostilityequipped.com
 .convenientcertificate.com
 .coodawei.cn
@@ -3078,7 +3029,6 @@
 .cpm10.com
 .cpm360.com
 .cpmchina.co
-.cpmrocket.com
 .cpmstar.com
 .cppwd2ahf.xyz
 .cpro.baidu.com
@@ -3086,7 +3036,6 @@
 .cpro.bdrmb.cn
 .cpro.xixiliya.cn
 .cpro.zol.com.cn
-.cpxinteractive.com
 .cq9119.com
 .cqcvjzf.cn
 .cqdjhj.cn
@@ -3125,7 +3074,6 @@
 .crosspromo.voodoo.io
 .crosspromotion-us.avosapps.us
 .crosspromotion.weplayer.cc
-.crossrider.com
 .crs.baidu.com
 .cruiseeagle.hk
 .crwan.applinzi.com
@@ -3191,6 +3139,7 @@
 .cxbge.xyz
 .cxfzw.cn
 .cxgfq.pinlue.com
+.cxgwsu.xyz
 .cxiwn.xyz
 .cxmygp.xyz
 .cxnre.xyz
@@ -3271,7 +3220,6 @@
 .d8r7.xyz
 .d94gz.cn
 .d9ad.com
-.da-ads.com
 .da.daji.com
 .da.hunantv.com
 .da.mgtv.com
@@ -3507,7 +3455,6 @@
 .discoverethelwaiter.com
 .discuz.fit
 .dispatcher.camera360.com
-.dispatcher.mng-ads.com
 .display.itmemo.cn
 .disqusads.com
 .distf.kankan.com
@@ -3645,7 +3592,6 @@
 .dpjszs.com
 .dpncnct.cn
 .dpqtdkf.cn
-.dpstack.com
 .dq3e.top
 .dq8c.top
 .dqcztxmu.com
@@ -3670,7 +3616,6 @@
 .dsfhr.xyz
 .dsfsdft4324.xyz
 .dshrx.com
-.dsp-endscreens.unityads.unity3d.com
 .dsp-x.jd.com
 .dsp.adfarm1.adition.com
 .dsp.ali213.net
@@ -3782,7 +3727,6 @@
 .ebp.renren.com
 .ebpu2.top
 .ebten.xyz
-.ebz.io
 .ebzqyow.cn
 .ec.yimg.com
 .ecard.shenzhentong.com
@@ -3795,7 +3739,6 @@
 .ecmeilin.xyz
 .eco.taobao.com
 .ecomgxh.kuwo.cn
-.ecpmrocks.com
 .ecuc123.net
 .ecudsc.cn
 .eddjf.com
@@ -3885,7 +3828,6 @@
 .emotionalworld.cn
 .emptz.cyou
 .ems.youku.com
-.emxdgt.com
 .ename.com.cn
 .ename.net
 .enennsa.gushiwen.cn
@@ -3956,7 +3898,6 @@
 .et363.com
 .etahub.com
 .etargetnet.com
-.etcodes.com
 .ete.cn
 .eteun.cn
 .etgameshop.com
@@ -4086,7 +4027,6 @@
 .featured.perfectionholic.com
 .fedlugk.cn
 .feed-image.baidu.com
-.feed.4wnet.com
 .feedback.cn.ronghub.com
 .feelbad.online
 .feesee.com
@@ -4095,6 +4035,7 @@
 .feilan5.cn
 .feisia1.cn
 .feitianma.com
+.feixun.info
 .feiyuchuanmei.love
 .fekivnv.cn
 .felzfr.xyz
@@ -4181,7 +4122,6 @@
 .fmblph.xyz
 .fmfbyfk.cn
 .fmgfqwe.xyz
-.fmpub.net
 .fmzcdvx.cn
 .fmzxing.pw
 .fn9u.fun
@@ -4242,7 +4182,6 @@
 .ftanya.ltd
 .ftdmfxq.cn
 .ftfnewu.cn
-.ftjcfx.com
 .ftrtnr.xyz
 .fublue.com
 .fugufeimaotui.cn
@@ -4254,7 +4193,6 @@
 .fuoo1.top
 .furrnbb.cn
 .fusion.qq.com
-.fusionads.net
 .futengbao.com.cn
 .fuwche.cn
 .fuzhang.xyz
@@ -4386,7 +4324,6 @@
 .genieessp.com
 .gentags.com
 .gentags.net
-.geocdn.unityads.unity3d.com
 .geoloc.yospace.com
 .geomon.top
 .geoparker.net
@@ -4529,9 +4466,7 @@
 .gnsrlki.cn
 .go.admost.com
 .go.hangzhou.com.cn
-.go.mobstitial.com
 .go.mobstitialtag.com
-.go.mobtrks.com
 .go.sohu.com
 .go.vrvm.com
 .go2.global
@@ -4548,7 +4483,6 @@
 .gongwuyuan.name
 .gongxifc.com
 .gonpc.com
-.goodadvert.ru
 .goodday21.top
 .goodkee.cn
 .goods.tudou.com
@@ -4607,7 +4541,6 @@
 .greenxcx.com
 .greetham.net
 .grepr.com
-.greystripe.com
 .gridsum.com
 .gridsumdissector.cn
 .gridsumdissector.com
@@ -4617,7 +4550,6 @@
 .growingio.com
 .growthpic.weishi.qq.com
 .grsea.cn
-.grt02.com
 .grubfast.com
 .gs307.com
 .gscohm.xyz
@@ -4682,7 +4614,6 @@
 .gvqrclx.cn
 .gw.d.ywopt.com
 .gwaaz.cn
-.gwallet.com
 .gwf0.icu
 .gwmeinq.cn
 .gwrtdp-tn690BFAdt.tclclouds.com
@@ -4736,7 +4667,6 @@
 .h08.xyz
 .h1.cfxinxi.cn
 .h1.kukuw.com
-.h12-media.com
 .h12h.fun
 .h1ek.xyz
 .h2n3c.top
@@ -4941,7 +4871,6 @@
 .hijjtiv.cn
 .hikari.website
 .hilltopads.net
-.himediads.com
 .hioqbb99.biqugeso.com
 .hiorange1.jobui.com
 .hiqidi.com
@@ -5096,7 +5025,6 @@
 .html.696157.com
 .html.shibeiou.com
 .httpdns.browser.miui.com
-.httpkafka.unityads.unity3d.com
 .httpool.com
 .hu.xbhy.com
 .hu4c.top
@@ -5271,6 +5199,7 @@
 .iaozwe.xyz
 .iask.qq.com
 .iatf16949.pw
+.iauto.wang
 .ibeating.top
 .ibgdd67.top
 .ibgksw.xyz
@@ -5464,7 +5393,6 @@
 .input.theta.sogou.com
 .inscan.cn
 .insenz.com
-.insightexpressai.com
 .install.yzapi.top
 .instreet.cn
 .inte.sogou.com
@@ -5905,11 +5833,9 @@
 .jsapi.html5.qq.com
 .jsb.qianzhan.com
 .jsboom.cn
-.jsc.marketgid.com
 .jscdn.yieldbird.com
 .jscode.acg68.com
 .jscode.jbzj.com
-.jscount.com
 .jsdelivr.autos
 .jsf.cnlinfo.net
 .jsifaja.com
@@ -5945,10 +5871,8 @@
 .jugboja.cn
 .juhn.cn
 .juhuitongcheng.life
-.juiceadv.com
 .juicyads.com
 .julumob.com
-.jumptap.com
 .jun01.oss-cn-beijing.aliyuncs.com
 .junfull.com
 .junkucm.com
@@ -6048,7 +5972,6 @@
 .kasdwergv.com
 .katlacw.cn
 .katynplum.ltd
-.kavanga.ru
 .kawa11.space
 .kazigua.top
 .kb-render.alicdn.com
@@ -6385,7 +6308,6 @@
 .ldd62n.top
 .lddpgn.cn
 .ldpsfa.com
-.lduhtrp.net
 .le258.cn
 .le4le.com
 .leabd.douguo.com
@@ -6435,7 +6357,6 @@
 .lflili.com
 .lflucky.com
 .lfsenmei.com
-.lfstmedia.com
 .lftxali.fancyapi.com
 .lfzxcp.com
 .lgh2.fun
@@ -6444,7 +6365,6 @@
 .lgl.ink
 .lglady.cn
 .lgnlaigl.fun
-.lgse.com
 .lgugsnp.cn
 .lgxm.cool
 .lh54.top
@@ -6479,15 +6399,14 @@
 .lieying.cn
 .life.html5.qq.com
 .lifesoonersoar.org
-.liftdna.com
 .liftoff-creatives.io
 .liftoff.io
 .lifu11.com
 .lifuguan.cn
-.ligatus.com
 .lihongyu.xyz
 .lihuan.store
 .lijb.site
+.lijie.in
 .likelife.cc
 .liliwoin.top
 .limdarwin.top
@@ -6571,6 +6490,7 @@
 .lm995.com
 .lmbsy.qq.com
 .lmcraft.pw
+.lmgdmwyd.com
 .lmjy.us
 .lmlmvip.com
 .lmmaoo.com
@@ -6618,7 +6538,6 @@
 .look.kfiopkln.com
 .looktt.xyz
 .loopanews.com
-.loopme.me
 .lopostone.com
 .lorlsblh.cyou
 .loupan99.com
@@ -6685,8 +6604,6 @@
 .luotuoma.xin
 .luqafzbdscd.com
 .luronews.com
-.luxadv.com
-.luxup.ru
 .luyouxi.cn
 .luyuheng.love
 .lv-xin.cn
@@ -6736,7 +6653,6 @@
 .lzthjd.cn
 .lzwdq.xyz
 .lzxnhul.cn
-.m-shes.ru
 .m.031177.com
 .m.23txt.com
 .m.58xs.tw
@@ -6808,7 +6724,6 @@
 .maihehd.com
 .mail-ads.google.com
 .main.jiukang.org
-.mainadv.com
 .mainbx.com
 .majiamei.fun
 .major-t-code.com
@@ -6847,7 +6762,6 @@
 .mathmodel.xyz
 .matrix.dailyinnovation.biz
 .matwbp.iask.sina.com.cn
-.maudau.com
 .max-adserv.com
 .maxreturn.cn
 .mayi360.cn
@@ -6902,12 +6816,9 @@
 .mecop.cyou
 .med-api.admost.com
 .media.motrixi.com
-.media6degrees.com
 .media8.cn
-.mediaforge.com
 .medialand.ru
 .mediamodern.biz
-.medleyads.com
 .meendocash.com
 .megpacokjce.bid
 .meibiisheng.com
@@ -6937,7 +6848,6 @@
 .meritiny.top
 .merrrrrry.top
 .metamx.com
-.metavertising.com
 .metheny.cn
 .metosk.com
 .metrics.brightcove.com
@@ -7086,7 +6996,6 @@
 .mobads-logs.baidu.com
 .mobads.baidu.com
 .mobads4app.com
-.mobalert.net
 .mobantong.oss-cn-hangzhou.aliyuncs.com
 .mobclix.com
 .mobfox.com
@@ -7094,10 +7003,8 @@
 .mobi.yanosik.pl
 .mobiads.ru
 .mobiadvert.livesportmedia.eu
-.mobicow.com
 .mobidriven.com
 .mobile-campaigns.avast.com
-.mobile.mng-ads.com
 .mobile333.com
 .mobileads.msn.com
 .mobilecore.com
@@ -7110,11 +7017,8 @@
 .mobnatives.com
 .mobondhrd.appspot.com
 .mobotoolpush.moboapps.io
-.mobpartner.mobi
 .mobpowertech.com
 .mobrkbb.com
-.mobytrks.com
-.mocean.mobi
 .module.youku.com
 .moes3quba.cyou
 .mofox.com
@@ -7125,7 +7029,6 @@
 .mokeylife.cn
 .mommygravelyslime.com
 .mon.snssdk.com
-.monetengine-d.openx.net
 .money.qz828.com
 .mongsonv.uno
 .monitor-uu.play.aiseet.atianqi.com
@@ -7135,13 +7038,11 @@
 .monts.cyou
 .monzexn.cn
 .moogos.com
-.mookie1.com
 .moons.cyou
 .moprujg.cn
 .mopub-win-us-east.bksn.se
 .mopub.com
 .moquanad.com
-.morgdm.ru
 .mori.ink
 .morlsbli.cyou
 .morningglory101.io
@@ -7250,7 +7151,6 @@
 .mxlwmp.cn
 .mxnr.xyz
 .mxowrwb.cn
-.mxtads.com
 .mxttrf.com
 .mxuds.xyz
 .mxvp-ad-config-prod-1.zenmxapps.com
@@ -7270,7 +7170,6 @@
 .myproteincn.com
 .myrtb.net
 .mytanwan.com
-.mythings.com
 .myunion1.qm120.com
 .myunion1.tupians.com
 .myuosid.cn
@@ -7385,7 +7284,6 @@
 .nextclickadv.com
 .nexyzh.com
 .nfiuerwtftasnuk.com
-.nginx-auction-prd-gcp.adsx.unityads.unity3d.com
 .ngmnhc.xyz
 .ngnlaigc.fun
 .nhfpdc.cn
@@ -7449,7 +7347,6 @@
 .nkevca.cn
 .nkgutoa.cn
 .nkis.nikkei.com
-.nkredir.com
 .nkscdn.com
 .nkxrb.xyz
 .nl-rcd.iqiyi.com
@@ -7460,7 +7357,6 @@
 .nlsynmlc.fun
 .nlyekvc.cn
 .nmbtedu.com
-.nmcdn.us
 .nmfww.xyz
 .nmgch.top
 .nmhte.xyz
@@ -7548,7 +7444,6 @@
 .nxl791.com
 .nxlidc.ink
 .nxrxt.com
-.nxtck.com
 .nxwly.com
 .nxxyjn.com
 .nxyerol.cn
@@ -7595,7 +7490,6 @@
 .ocexikc.cn
 .ocive.xyz
 .ockuc.com
-.oclaserver.com
 .oconner.biz
 .octopuspop.com
 .ocwagmlizb.com
@@ -7641,6 +7535,7 @@
 .ok-qqzzjsyuming.com
 .ok.432kkk.com
 .okag.top
+.okcf.top
 .okcy.top
 .okead.com
 .okew.top
@@ -7714,7 +7609,6 @@
 .opt8.co
 .optaim.com
 .optef.xyz
-.optimatic.com
 .optimix.asia
 .optimix.cn
 .opuik.com
@@ -7900,7 +7794,6 @@
 .pg88cdn.com
 .pgccaoy.cn
 .pgdt.gtimg.cn
-.pge.unityads.unity3d.com
 .pghwwjd.com
 .pgl7.cn
 .pgpkrrk.cn
@@ -8004,7 +7897,6 @@
 .policy.video.iqiyi.com
 .polkmerty.xyz
 .polkmnhytgb.com
-.polyad.net
 .polymorphicads.jp
 .pongsone.uno
 .pontiflex.com
@@ -8013,16 +7905,12 @@
 .popander.mobi
 .popcash.net
 .popcashjs.b-cdn.net
-.popmarker.com
 .poppyta.com
-.poptm.com
-.popunderz.com
 .porjjhu.cn
 .porlsbll.cyou
 .pos.baidu.com
 .posawaj.com
 .poster.weather.com.cn
-.postrelease.com
 .pothouse.cn
 .pouitgy.cn
 .pouyao.com
@@ -8045,6 +7933,7 @@
 .ppwrc.xyz
 .ppyibei.com
 .pqfgtp.cn
+.pqjprom.cn
 .pqnnjjpzarpb.com
 .pr.comet.yahoo.com
 .preanalytication.com
@@ -8071,11 +7960,9 @@
 .promotionad.nvcam.net
 .propellerads.com
 .propsad.com
-.prosperent.com
 .proverbnoncommittalvault.com
 .prowesshearing.com
 .prplads.com
-.prre.ru
 .prtgurh.cn
 .prudence.love
 .prxymecb.cn
@@ -8373,7 +8260,6 @@
 .qs9jfd.xyz
 .qsdqyf.cn
 .qsdsejarkznkqa.com
-.qservz.com
 .qsezjy.cn
 .qsixi.com
 .qsj8fd.com
@@ -8475,7 +8361,6 @@
 .rbazhaheiz.top
 .rbgfxxt.cn
 .rbioclv.cn
-.rbnt.org
 .rbywg.com
 .rc.ie13.com
 .rc7e.top
@@ -8500,7 +8385,6 @@
 .readnos.com
 .readysugerfree.top
 .realsrv.com
-.reate.info
 .rebdy.com
 .rebies.xyz
 .rebunb.xyz
@@ -8514,7 +8398,6 @@
 .reevaipi.com
 .regrfg33.com
 .rek.mobi
-.reklamz.com
 .rekuyy.com
 .releasedverge.com
 .relliun.cn
@@ -8529,7 +8412,6 @@
 .reotiedygrf.xyz
 .repbdso.cn
 .reply.lomark.cn
-.reporo.net
 .report.cms.qq.com
 .res.hunantv.com
 .res.pinpai8.cn
@@ -8541,12 +8423,10 @@
 .restonovius.com
 .resu8.hjfile.cn
 .resumes.ren
-.retarget.ssl-services.com
 .retrieval-bd.duote.com
 .revcontent.com
 .revdepo.com
 .revive.outin.cn
-.revmob.com
 .revsci.net
 .rexdt.xyz
 .rexuebi.com
@@ -8658,7 +8538,6 @@
 .rtb.platform.glispa.com
 .rtbapi.douyucdn.cn
 .rtbldisubeignb.com
-.rtbpop.com
 .rtcegcp.cn
 .rthmnj.xyz
 .rtkyvd.xyz
@@ -8857,7 +8736,6 @@
 .seefarger.com
 .segment.com
 .sejlfe.cn
-.sekindo.com
 .selectinstall.cn
 .selenaroberta.com
 .self-study-service.com.cn
@@ -9121,14 +8999,12 @@
 .sobowapso.com
 .socdm.com
 .social-touch.com
-.sociomantic.com
 .sodhef.com
 .sofire.baidu.com
 .sofire.bdstatic.com
 .sofseo.cn
 .sohu999.com
 .sohulink.cc
-.solocpm.com
 .songcx.fun
 .songdongdong.love
 .songlongtech.com
@@ -9163,7 +9039,6 @@
 .splash.appsgeyser.com
 .splicky.com
 .spoilphysiqueteenagers.com
-.sponsorpay.com
 .spotscenered.info
 .spotxchange.com
 .springserve.com
@@ -9259,7 +9134,6 @@
 .stfyygv.cn
 .stg8.com
 .stgowan.com
-.stickyadstv.com
 .stimulateartificial.com
 .store.tv.api.3g.youku.com
 .store.xl.api.3g.youku.com
@@ -9271,7 +9145,6 @@
 .strnguz.cn
 .sttcc.top
 .sttrr.top
-.studcat.infra.systems
 .stunthedge.com
 .stuowq.cn
 .styrianauf.com
@@ -9497,7 +9370,6 @@
 .tdvwmdn.cn
 .te37w.cn
 .teachscape.vo.llnwd.net
-.teads.tv
 .tech.jiukang.org
 .techain.baidu.com
 .techgcr.cn
@@ -9513,9 +9385,8 @@
 .tenoad.com
 .teoopx.cn
 .teoviyf.cn
+.teowa.cyou
 .teqcdnk.cn
-.teracreative.com
-.terraclicks.com
 .tertqm.cn
 .terttalkinhitin.pro
 .teslaamg.obs.cn-east-3.myhuaweicloud.com
@@ -9558,7 +9429,6 @@
 .thishare.com
 .thli43.cn
 .thlnbzi.cn
-.thoughtleadr.com
 .thpte.cn
 .thraerqol.com
 .threzeins.com
@@ -9994,7 +9864,6 @@
 .un.xz6.com
 .un1.lawyernet.cn
 .un1.takefoto.cn
-.underclick.ru
 .underpad.asia
 .understatedworking.com
 .undm.qibulo.com
@@ -10209,20 +10078,16 @@
 .videoplus.vo.llnwd.net
 .vieldeold.xyz
 .view-prod.ad.singular.net
-.viewclc.com
 .viglink.com
 .vilki.cn
-.vindicosuite.com
 .viope.cyou
 .vip.catcs.cn
 .vip.paipaiup.com
 .vip.panggugu.com
-.vipcpms.com
 .vipfanyongwang.com
 .vipvps.shop
 .vipwm.cc
 .vipzhuan.xyz
-.visitweb.com
 .visualtravel.info
 .visvn.cn
 .viswcnb.cn
@@ -10236,6 +10101,7 @@
 .vkoehsx.cn
 .vkygseu.cn
 .vl1m.cn
+.vlbbxt.xyz
 .vliao365.com
 .vlive.qqvideo.tc.qq.com
 .vlogerads.com
@@ -10256,7 +10122,6 @@
 .vodone.com
 .vofiamb.cn
 .vogate.com
-.vogo-vogo.ru
 .voiceads.cn
 .voihkjd.cn
 .vokmhydy.xyz
@@ -10426,7 +10291,6 @@
 .webstd.cn
 .webstudy.fun
 .webterren.com
-.webview.unityads.unity3d.com
 .wecan88.com
 .wechatweb.com.cn
 .wecmaym.cn
@@ -10834,6 +10698,7 @@
 .xfdqxfpm.cn
 .xfkujwt.cn
 .xfwxhyd.cn
+.xfzyun.com
 .xg2car.co
 .xgbqbdp.cn
 .xgckudv.cn
@@ -11254,9 +11119,7 @@
 .yidu.cn
 .yidulu.cn
 .yieldkit.com
-.yieldlab.net
 .yieldmanager.com
-.yieldmanager.net
 .yieldmo.com
 .yifenghuyu.com
 .yigao.com
@@ -11320,7 +11183,6 @@
 .yladm.com
 .ylbb-vipjs.com
 .ylc.ink
-.yldbt.com
 .yleaxs.cn
 .yliabws.cn
 .yljyjadlx.com
@@ -11368,12 +11230,10 @@
 .youhuotiyu.asia
 .youkan.shop
 .youku-crm-product.youku.com
-.youlamedia.com
 .youle55.com
 .youmi.net
 .youpukeji.cn
 .youqumob.com
-.youradexchange.com
 .yourservice.live
 .yousuode.cn
 .youthlaw.name
