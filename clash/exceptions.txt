@@ -71,6 +71,7 @@ payload:
   - '+.app.appsflyer.com'
   - '+.app.crazyegg.com'
   - '+.app.link'
+  - '+.appsflyer-report.honkaiimpact3.com'
   - '+.apptimize.com'
   - '+.artifactory.appodeal.com'
   - '+.atatus.com'
