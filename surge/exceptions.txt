@@ -216,6 +216,7 @@
 .gate.hockeyapp.net
 .geni.us
 .geo.ngtv.io
+.geojs.io
 .georiot.com
 .geotrust.com
 .getdrip.com
@@ -392,6 +393,7 @@
 .publishers.adsterra.com
 .pulsar.ebay.com
 .pushbullet.com
+.pushowl.com
 .pushpushgo.com
 .pvtag.yahoo.co.jp
 .px.a8.net

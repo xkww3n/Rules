@@ -2980,6 +2980,7 @@ payload:
   - '+.titanar.com'
   - '+.tivitv.com'
   - '+.tjjt360.com'
+  - '+.tjstats.com'
   - '+.tkhealthcare.com'
   - '+.tlgslb.cn'
   - '+.tlgslb.com'
