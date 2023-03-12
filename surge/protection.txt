@@ -867,6 +867,7 @@
 .884352.com
 .885741.com
 .885842.com
+.8861202.com
 .8861203.com
 .8866786.com
 .8881img.com
@@ -1605,6 +1606,8 @@
 .adtrack.king.com
 .adtrue.com
 .adttt.com
+.adukwai.com
+
 .adultadworld.com
 .adultfriendfinder.com
 .aduterra.com
@@ -1668,6 +1671,7 @@
 .aff.i-mobile.co.jp
 .affiliate6.com
 .afij001.xyz
+.afitye.xyz
 .afj.cc
 .afj0.com
 .afjk001.xyz
@@ -3043,6 +3047,7 @@
 .cp.qbaobei.com
 .cp2.eastmoney.com
 .cpactions.com
+.cpawe.cyou
 .cpc.9v.cn
 .cpc.cc
 .cpc.sogou.com
@@ -3097,6 +3102,7 @@
 .crosspromo.voodoo.io
 .crosspromotion-us.avosapps.us
 .crosspromotion.weplayer.cc
+.crpvoxl.cn
 .crs.baidu.com
 .cruiseeagle.hk
 .crwan.applinzi.com
@@ -4038,6 +4044,7 @@
 .fbwvly.cn
 .fc-feed.cdn.bcebos.com
 .fcapi.jpush.cn
+.fcgphtr.cn
 .fchio.com
 .fclick.baidu.com
 .fcluqg.cn
@@ -5747,6 +5754,7 @@
 .jiuku.pw
 .jiulela.ltd
 .jiulingdl.cn
+.jiumao20230305.live
 .jiutiao20221212.xyz
 .jiutou20230210.live
 .jiwekawe.top
@@ -6388,6 +6396,7 @@
 .lemoncai.xyz
 .lencool.cn
 .lenzmx.com
+.leopold37.xyz
 .lepjrh.xyz
 .leshu.com
 .letao.com
@@ -6652,6 +6661,7 @@
 .luotuoma.xin
 .luqafzbdscd.com
 .luronews.com
+.luwenhao.ltd
 .luyouxi.cn
 .luyuheng.love
 .lv-xin.cn
@@ -7778,6 +7788,8 @@
 .panel-cn.com
 .pangle.io
 .pangolin-sdk-toutiao-b.com
+.pangolin-sdk-toutiao.com
+
 .pangolin.snssdk.com
 .pangolin16.isnssdk.com
 .pangu.cc
@@ -7852,6 +7864,8 @@
 .pgdt.gtimg.cn
 .pghwwjd.com
 .pgl7.cn
+.pglstatp-toutiao.com
+
 .pgpkrrk.cn
 .pgrjxpd.cn
 .phcoal.com
@@ -7861,6 +7875,7 @@
 .phpad.cqnews.net
 .phsidmk.cn
 .piaososo.co
+.piaozhouyyds.com
 .pic.0597kk.com
 .pic.baihuawen.cn
 .pic.fengniao.com
@@ -9663,6 +9678,7 @@
 .trafficjunky.net
 .trafforsrv.com
 .trafmag.com
+.traktalent.com
 .traktum.com
 .travescorylus.com
 .trax-ad.jp
@@ -9704,6 +9720,7 @@
 .ttbc33.com
 .ttdbj.com
 .ttdds.top
+.ttdydd.xyz
 .ttfkof.xyz
 .ttklg.net
 .ttkong.com
@@ -9838,6 +9855,7 @@
 .u25011.com
 .u25022.com
 .u33011.com
+.u33022.com
 .u5fsqf.com
 .u5ree6.com
 .u644.fun
@@ -11652,6 +11670,7 @@
 .ziedwr.com
 .ziffdavis.com
 .zihuiguochao.top
+.zijieapi.com
 .ziling.ink
 .zimeijk.cn
 .zipeyrp.cn
