@@ -4,8 +4,9 @@ from os import listdir
 from requests import get
 from time import time_ns
 
-DOMAIN_LIST_PREFIX = './domain-list-community/data/'
-CUSTOM_PREFIX = './custom/'
+PREFIX_DOMAIN_LIST = './domain-list-community/data/'
+PREFIX_CUSTOM_BUILD = './custom/build/'
+PREFIX_CUSTOM_EXTRA = './custom/extra/'
 
 def import_processor(src, exclusion=None):
     regex_import = re.compile('^include\:(\S*)$')
@@ -13,7 +14,7 @@ def import_processor(src, exclusion=None):
     for line in src:
         flag_import = regex_import.match(line)
         if flag_import and flag_import.group(1) != exclusion:
-            file_import = open(DOMAIN_LIST_PREFIX + flag_import.group(1), mode='r').read().splitlines()
+            file_import = open(PREFIX_DOMAIN_LIST + flag_import.group(1), mode='r').read().splitlines()
             list_converted += import_processor(file_import)
             continue
         list_converted.append(line)
@@ -53,7 +54,7 @@ def batch_convert(targets, tools, exclusions=[]):
     for tool in tools:
         for target in targets:
             for exclusion in exclusions:
-                file_orig = open(DOMAIN_LIST_PREFIX + target, mode='r').read().splitlines()
+                file_orig = open(PREFIX_DOMAIN_LIST + target, mode='r').read().splitlines()
                 dist = open("./dists/" + tool + "/" + target + ".txt", mode='w')
                 content_orig = import_processor(file_orig, exclusion)
                 for line in convert(content_orig, tool):
@@ -140,8 +141,10 @@ for line in parse_filterlist(content_block):
     and not line.options):
         list_exceptions.append(line.text)
 
-block_v2fly = open(DOMAIN_LIST_PREFIX + "category-ads-all", mode='r')
+block_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r')
 list_block += convert(import_processor(block_v2fly), "plain")
+block_local = open(PREFIX_CUSTOM_EXTRA + "reject.txt", mode='r')
+list_block += list(block_local)
 list_block = list(set(list_block))
 list_block.sort()
 
@@ -220,9 +223,9 @@ print("FINISHED Stage 4.\nTotal time: " + str(format((END_TIME - START_TIME) / 1
 ## Stage 4: Build custom rules.
 print("START Stage 4: Build custom rules.")
 START_TIME = time_ns()
-list_custom = listdir(CUSTOM_PREFIX)
+list_custom = listdir(PREFIX_CUSTOM_BUILD)
 for filename in list_custom:
-    file_custom = open(CUSTOM_PREFIX + filename, mode='r')
+    file_custom = open(PREFIX_CUSTOM_BUILD + filename, mode='r')
     content_custom = file_custom.read().splitlines()
     content_custom.sort()
     dist_surge = open('./dists/surge/' + filename, mode='w')
