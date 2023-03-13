@@ -144,7 +144,7 @@ for line in parse_filterlist(content_block):
 block_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r')
 list_block += convert(import_processor(block_v2fly), "plain")
 block_local = open(PREFIX_CUSTOM_EXTRA + "reject.txt", mode='r')
-list_block += list(block_local)
+list_block += block_local.read().splitlines()
 list_block = list(set(list_block))
 list_block.sort()
 
