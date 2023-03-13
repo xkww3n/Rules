@@ -1608,7 +1608,6 @@
 .adtrue.com
 .adttt.com
 .adukwai.com
-
 .adultadworld.com
 .adultfriendfinder.com
 .aduterra.com
@@ -1681,6 +1680,7 @@
 .afp.chinanews.com
 .afp.m1905.com
 .afrazanna.com
+.afrdaqwukxu.com
 .afryxia.cn
 .afvmusm.cn
 .afx001.pw
@@ -2270,7 +2270,9 @@
 .bdcode1.haodou.com
 .bdcse.xyz
 .bddwm.com
+.bdfe35942f.com
 .bdfpbimg.ifengimg.com
+.bdfwzt.xyz
 .bdgg.qjy168.com
 .bdgg.youbian.com
 .bdhcpll.cn
@@ -4864,6 +4866,7 @@
 .henzhuan.com
 .hepburn.net.cn
 .heptaneleaner.com
+.heqinyyds.com
 .heqishengcai1006.xyz
 .herky.com.cn
 .heroclick.cn
@@ -4913,6 +4916,7 @@
 .hijjtiv.cn
 .hikari.website
 .hilltopads.net
+.hioek.cyou
 .hioqbb99.biqugeso.com
 .hiorange1.jobui.com
 .hiqidi.com
@@ -5468,6 +5472,7 @@
 .iotewq.xyz
 .ioxjce.xyz
 .ip.120ask.com
+.ipkruu.xyz
 .ipndulsempjgb.bid
 .ipqc5ejfe.icu
 .iprpe.cn
@@ -6090,6 +6095,7 @@
 .keyrun.com
 .keysmw.xyz
 .keytui.com
+.kezldfv.cn
 .kf94.club
 .kfejnjs.cn
 .kfnvrt.xyz
@@ -7547,6 +7553,7 @@
 .obgbok.com
 .obj9.cn
 .oblongcondition.com
+.obmnimarmos.com
 .obmpp.com
 .obnpazq.cn
 .oceancode.top
@@ -7790,7 +7797,6 @@
 .pangle.io
 .pangolin-sdk-toutiao-b.com
 .pangolin-sdk-toutiao.com
-
 .pangolin.snssdk.com
 .pangolin16.isnssdk.com
 .pangu.cc
@@ -7866,7 +7872,6 @@
 .pghwwjd.com
 .pgl7.cn
 .pglstatp-toutiao.com
-
 .pgpkrrk.cn
 .pgrjxpd.cn
 .phcoal.com
@@ -10317,6 +10322,7 @@
 .wangkuang.net.cn
 .wangpan.ltd
 .wangqing7.top
+.wangsf.ltd
 .wangxiankang.top
 .wangyc.club
 .wangye.icu
@@ -11009,6 +11015,7 @@
 .xt918.com
 .xtb.ink
 .xtgreat.com
+.xthrdyi.cn
 .xtianqi.com.cn
 .xtioiqa.cn
 .xtojqz.club
