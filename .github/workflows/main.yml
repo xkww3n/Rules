@@ -23,6 +23,8 @@ jobs:
           mkdir dists
           mkdir dists/clash
           mkdir dists/surge
+          mkdir dists/clash/personal
+          mkdir dists/surge/personal
       - name: Pull v2fly community domain list
         uses: actions/checkout@v3
         with:

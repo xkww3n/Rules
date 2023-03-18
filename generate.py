@@ -1,6 +1,5 @@
-import re
+import os, re
 from abp.filters import parse_filterlist
-from os import listdir
 from requests import get
 from time import time_ns
 
@@ -61,6 +60,31 @@ def batch_convert(targets, tools, exclusions=[]):
                     dist.writelines(line + '\n')
                 dist.close()
 
+def is_domain_rule(rule):
+    if (rule.type == 'filter'
+    and rule.selector['type'] == 'url-pattern'
+    and rule.text.find('/') == -1
+    and rule.text.find('*') == -1
+    and rule.text.find('=') == -1
+    and rule.text.find('~') == -1
+    and rule.text.find('?') == -1
+    and rule.text.find('#') == -1
+    and rule.text.find(',') == -1
+    and not rule.text.find('.') == -1
+    and not regex_ip.search(rule.text)
+    and not rule.text.startswith('_')
+    and not rule.text.startswith('-')
+    and not rule.text.startswith('^')
+    and not rule.text.startswith('[')
+    and not rule.text.endswith('.')
+    and not rule.text.endswith('_')
+    and not rule.text.endswith(']')
+    and not rule.text.endswith(';')
+    and not rule.options):
+        return True
+    else:
+        return False
+
 # Stage 1: Sync advertisements blocking and privacy protection rules.
 print("START Stage 1: Sync advertisements blocking and privacy protection rules.")
 START_TIME = time_ns()
@@ -91,60 +115,18 @@ list_block = []
 list_exceptions = []
 
 for line in parse_filterlist(content_block):
-    if (line.type == 'filter'
-    and line.action == 'block'
-    and line.selector['type'] == 'url-pattern'
-    and line.text.find('/') == -1
-    and line.text.find('*') == -1
-    and line.text.find('=') == -1
-    and line.text.find('~') == -1
-    and line.text.find('?') == -1
-    and line.text.find('#') == -1
-    and line.text.find(',') == -1
-    and not line.text.find('.') == -1
-    and not regex_ip.search(line.text)
-    and not line.text.startswith('_')
-    and not line.text.startswith('-')
-    and not line.text.startswith('^')
-    and not line.text.startswith('[')
-    and not line.text.endswith('.')
-    and not line.text.endswith('_')
-    and not line.text.endswith('|')
-    and not line.text.endswith(']')
-    and not line.text.endswith(';')
-    and not line.options):
+    if is_domain_rule(line) and line.action == 'block' and not line.text.endswith('|'):
         if line.text.startswith('.'):
             list_block.append(line.text.replace('^', ''))
         else:
             list_block.append(line.text.replace("||", '.').replace('^', ''))
-    if (line.type == 'filter'
-    and line.action == 'allow'
-    and line.selector['type'] == 'url-pattern'
-    and line.text.find('/') == -1
-    and line.text.find('*') == -1
-    and line.text.find('=') == -1
-    and line.text.find('~') == -1
-    and line.text.find('?') == -1
-    and line.text.find('#') == -1
-    and line.text.find(',') == -1
-    and not line.text.find('.') == -1
-    and not re.search(regex_ip, line.text)
-    and not line.text.startswith('_')
-    and not line.text.startswith('-')
-    and not line.text.startswith('^')
-    and not line.text.startswith('[')
-    and not line.text.endswith('.')
-    and not line.text.endswith('_')
-    and not line.text.endswith('|')
-    and not line.text.endswith(']')
-    and not line.text.endswith(';')
-    and not line.options):
+    if is_domain_rule(line) and line.action == 'allow' and not line.text.endswith('|'):
         list_exceptions.append(line.text)
 
 block_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r')
 list_block += convert(import_processor(block_v2fly), "plain")
-block_local = open(PREFIX_CUSTOM_EXTRA + "reject.txt", mode='r')
-list_block += block_local.read().splitlines()
+block_extra = open(PREFIX_CUSTOM_EXTRA + "reject.txt", mode='r')
+list_block += block_extra.read().splitlines()
 list_block = list(set(list_block))
 list_block.sort()
 
@@ -172,26 +154,7 @@ dist_clash = open('./dists/clash/exceptions.txt', mode='w')
 content_exceptions = (get(src_exceptions_1).text + get(src_exceptions_2).text).splitlines() + list_exceptions
 list_exceptions = []
 for line in parse_filterlist(content_exceptions):
-    if (line.type == 'filter'
-    and line.selector['type'] == 'url-pattern'
-    and line.text.find('/') == -1
-    and line.text.find('*') == -1
-    and line.text.find('=') == -1
-    and line.text.find('~') == -1
-    and line.text.find('?') == -1
-    and line.text.find('#') == -1
-    and line.text.find(',') == -1
-    and not line.text.find('.') == -1
-    and not re.search(regex_ip, line.text)
-    and not line.text.startswith('_')
-    and not line.text.startswith('-')
-    and not line.text.startswith('^')
-    and not line.text.startswith('[')
-    and not line.text.endswith('.')
-    and not line.text.endswith('_')
-    and not line.text.endswith(']')
-    and not line.text.endswith(';')
-    and not line.options):
+    if is_domain_rule(line):
         domain = line.text.replace('@','').replace('^','').replace('|','')
         if not domain.startswith('-'):
             list_exceptions.append(domain)
@@ -223,13 +186,33 @@ print("FINISHED Stage 4.\nTotal time: " + str(format((END_TIME - START_TIME) / 1
 ## Stage 4: Build custom rules.
 print("START Stage 4: Build custom rules.")
 START_TIME = time_ns()
-list_custom = listdir(PREFIX_CUSTOM_BUILD)
+list_custom = os.listdir(PREFIX_CUSTOM_BUILD)
 for filename in list_custom:
-    file_custom = open(PREFIX_CUSTOM_BUILD + filename, mode='r')
+    if os.path.isfile(filename):
+        file_custom = open(PREFIX_CUSTOM_BUILD + filename, mode='r')
+        content_custom = file_custom.read().splitlines()
+        content_custom.sort()
+        dist_surge = open('./dists/surge/' + filename, mode='w')
+        dist_clash = open('./dists/clash/' + filename, mode='w')
+        dist_clash.writelines("payload:\n")
+        for line in content_custom:
+            if line and not line.startswith('#'):
+                dist_surge.writelines(line + '\n')
+                if line.startswith('.'):
+                    dist_clash.writelines("  - '+" + line + "'\n")
+                else:
+                    dist_clash.writelines("  - '" + line + "'\n")
+        file_custom.close()
+        dist_surge.close()
+        dist_clash.close()
+
+list_personal = os.listdir(PREFIX_CUSTOM_BUILD + "personal/")
+for filename in list_personal:
+    file_custom = open(PREFIX_CUSTOM_BUILD + "personal/" + filename, mode='r')
     content_custom = file_custom.read().splitlines()
     content_custom.sort()
-    dist_surge = open('./dists/surge/' + filename, mode='w')
-    dist_clash = open('./dists/clash/' + filename, mode='w')
+    dist_surge = open('./dists/surge/personal/' + filename, mode='w')
+    dist_clash = open('./dists/clash/personal/' + filename, mode='w')
     dist_clash.writelines("payload:\n")
     for line in content_custom:
         if line and not line.startswith('#'):
