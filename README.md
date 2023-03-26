@@ -9,33 +9,22 @@
 Surge:
 
 ```
-
 DOMAIN-SET,https://rules.xkww3n.cyou/surge/reject.txt,REJECT
-
 ```
 
 Clash Premium:
 
 ```
-
 rules:
-
 - RULE-SET,Reject,REJECT
 
 rule-providers:
-
   Reject:
-
     type: http
-
     behavior: domain
-
     url: https://rules.xkww3n.cyou/clash/reject.txt
-
     path: ./Rules/Reject
-
     interval: 86400
-
 ```
 
 - 自动生成
@@ -81,31 +70,21 @@ rule-providers:
 Surge:
 
 ```
-
 DOMAIN-SET,https://rules.xkww3n.cyou/surge/geolocation-cn.txt,*your policy*
-
 ```
 
 Clash Premium:
 
 ```
-
 rules:
-
 - RULE-SET,CN,*your policy*
 
 rule-providers:
-
   CN:
-
     type: http
-
     behavior: domain
-
     url: https://rules.xkww3n.cyou/clash/geolocation-cn.txt
-
     path: ./Rules/CN
-
     interval: 86400
 
 ```
