@@ -64,6 +64,7 @@ rule-providers:
   - 如：拦截规则拦截了 `googleadservices.com` 域名，这个域名的许多子域名都被用于推送广告，因此将这个域名纳入拦截列表完全合理。但是，`www.googleadservices.com` 这个子域名用于 Google 搜索引擎中广告条目的跳转，不应被拦截；所以，此域名被纳入排除规则中。
 - 应当放在**拦截规则列表之前**。
 - 数据来源：
+  - [AdGuard](https://github.com/AdguardTeam/AdguardFilters)
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
 ### 中国大陆网络服务
