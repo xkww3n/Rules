@@ -36,6 +36,7 @@ rule-providers:
   - [banbendalao / ADgk](https://github.com/banbendalao/ADgk/)
   - [EasyList China](https://github.com/easylist/easylistchina)
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
+  - [もちフィルタ](https://eeii0a5l.github.io/mochifilter_homepage/mochi.html)
 
 #### 排除项
 Surge:
