@@ -6,6 +6,38 @@
 ## 规则列表
 
 ### 广告服务与跟踪器拦截
+Surge:
+
+```
+
+DOMAIN-SET,https://rules.xkww3n.cyou/surge/reject.txt,REJECT
+
+```
+
+Clash Premium:
+
+```
+
+rules:
+
+- RULE-SET,Reject,REJECT
+
+rule-providers:
+
+  Reject:
+
+    type: http
+
+    behavior: domain
+
+    url: https://rules.xkww3n.cyou/clash/reject.txt
+
+    path: ./Rules/Reject
+
+    interval: 86400
+
+```
+
 - 自动生成
 - 拦截在中国与日本常见的广告提供商和跟踪服务商的服务域名。
 - **不**拦截这些服务商面向其接入客户的域名（如：官网、控制台）。如果两者相同，将不会拦截。
@@ -17,6 +49,27 @@
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
 #### 排除项
+Surge:
+
+```
+DOMAIN-SET,https://rules.xkww3n.cyou/surge/exclude.txt,*your policy*
+```
+
+Clash Premium:
+
+```
+rules:
+- RULE-SET,Exclude,*your policy*
+
+rule-providers:
+  Exclude:
+    type: http
+    behavior: domain
+    url: https://rules.xkww3n.cyou/clash/exclude.txt
+    path: ./Rules/Exclude
+    interval: 86400
+```
+
 - 自动生成
 - 包含一些不应被拦截规则拦截的域名。
   - 如：拦截规则拦截了 `googleadservices.com` 域名，这个域名的许多子域名都被用于推送广告，因此将这个域名纳入拦截列表完全合理。但是，`www.googleadservices.com` 这个子域名用于 Google 搜索引擎中广告条目的跳转，不应被拦截；所以，此域名被纳入排除规则中。
@@ -25,6 +78,38 @@
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
 ### 中国大陆网络服务
+Surge:
+
+```
+
+DOMAIN-SET,https://rules.xkww3n.cyou/surge/geolocation-cn.txt,*your policy*
+
+```
+
+Clash Premium:
+
+```
+
+rules:
+
+- RULE-SET,CN,*your policy*
+
+rule-providers:
+
+  CN:
+
+    type: http
+
+    behavior: domain
+
+    url: https://rules.xkww3n.cyou/clash/geolocation-cn.txt
+
+    path: ./Rules/CN
+
+    interval: 86400
+
+```
+
 - 自动生成
 - 包含各大中国大陆网络服务提供商的域名。
 - 对于由 [CNNIC](https://www.cnnic.net.cn/) 管理的 TLD（如 `.cn`、`.中国`），无论其对应的服务是否在中国境内运营，都将视为中国服务。
