@@ -4,8 +4,8 @@ from requests import get
 from time import time_ns
 
 PREFIX_DOMAIN_LIST = './domain-list-community/data/'
-PREFIX_CUSTOM_BUILD = './custom/build/'
-PREFIX_CUSTOM_EXTRA = './custom/extra/'
+PREFIX_CUSTOM_SRC = './Source/'
+PREFIX_CUSTOM_ADJUST = './Custom/'
 
 def import_processor(src, exclusion=None):
     regex_import = re.compile('^include\:(\S*)$')
@@ -99,11 +99,11 @@ src_jp = 'https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi
 src_mobile = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt'
 ## ADgk
 src_cn_extend = 'https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt'
-dist_surge = open('./dists/surge/protection.txt', mode='w')
-dist_clash = open('./dists/clash/protection.txt', mode='w')
+dist_surge = open('./dists/surge/reject.txt', mode='w')
+dist_clash = open('./dists/clash/reject.txt', mode='w')
 dist_clash.writelines("payload:\n")
 
-content_block = (
+content_rejections = (
     get(src_base).text +
     get(src_cn).text +
     get(src_jp).text +
@@ -111,32 +111,31 @@ content_block = (
     get(src_cn_extend).text
     ).splitlines()
 
-list_block = []
-list_exceptions = []
+list_rejections = []
+list_exclusions = []
 
-for line in parse_filterlist(content_block):
+for line in parse_filterlist(content_rejections):
     if is_domain_rule(line) and line.action == 'block' and not line.text.endswith('|'):
         if line.text.startswith('.'):
-            list_block.append(line.text.replace('^', ''))
+            list_rejections.append(line.text.replace('^', ''))
         else:
-            list_block.append(line.text.replace("||", '.').replace('^', ''))
+            list_rejections.append(line.text.replace("||", '.').replace('^', ''))
     if is_domain_rule(line) and line.action == 'allow' and not line.text.endswith('|'):
-        list_exceptions.append(line.text)
+        list_exclusions.append(line.text)
 
-block_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r')
-list_block += convert(import_processor(block_v2fly), "plain")
-block_extra = open(PREFIX_CUSTOM_EXTRA + "append-reject.txt", mode='r')
-list_block += block_extra.read().splitlines()
-list_block = list(set(list_block))
-list_block.sort()
+rejections_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r')
+list_rejections += convert(import_processor(rejections_v2fly), "plain")
+rejections_custom = open(PREFIX_CUSTOM_ADJUST + "append-reject.txt", mode='r')
+list_rejections += rejections_custom.read().splitlines()
+list_rejections = list(set(list_rejections))
+list_rejections.sort()
 
-for domain in list_block:
+for domain in list_rejections:
     dist_surge.writelines(domain + '\n')
     if domain.startswith('.'):
         dist_clash.writelines("  - '+" + domain + "'\n")
     else:
         dist_clash.writelines("  - '" + domain + "'\n")
-
 dist_surge.close()
 dist_clash.close()
 
@@ -144,39 +143,40 @@ END_TIME = time_ns()
 print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 # Stage 1 finished.
 
-# Stage 2: Sync exceptions with AdGuard.
-print("START Stage 2: Sync exceptions with AdGuard.")
+# Stage 2: Sync exclusions with AdGuard.
+print("START Stage 2: Sync exclusions with AdGuard.")
 START_TIME = time_ns()
-src_exceptions_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt'
-src_exceptions_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
-dist_surge = open('./dists/surge/exceptions.txt', mode='w')
-dist_clash = open('./dists/clash/exceptions.txt', mode='w')
-content_exceptions = (get(src_exceptions_1).text + get(src_exceptions_2).text).splitlines() + list_exceptions
-list_exceptions = []
-for line in parse_filterlist(content_exceptions):
+
+src_exclusions_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt'
+src_exclusions_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
+dist_surge = open('./dists/surge/exclude.txt', mode='w')
+dist_clash = open('./dists/clash/exclude.txt', mode='w')
+content_exclusions = (get(src_exclusions_1).text + get(src_exclusions_2).text).splitlines() + list_exclusions
+list_exclusions = []
+for line in parse_filterlist(content_exclusions):
     if is_domain_rule(line):
         domain = line.text.replace('@','').replace('^','').replace('|','')
         if not domain.startswith('-'):
-            list_exceptions.append(domain)
+            list_exclusions.append(domain)
 
-block_remove = open(PREFIX_CUSTOM_EXTRA + "remove-reject.txt", mode='r')
-for line in block_remove.read().splitlines():
+rejections_remove = open(PREFIX_CUSTOM_ADJUST + "remove-reject.txt", mode='r')
+for line in rejections_remove.read().splitlines():
     try:
-        list_exceptions.remove(line)
-        list_exceptions.remove('.' + line)
+        list_exclusions.remove(line)
+        list_exclusions.remove('.' + line)
     except ValueError:
         pass
 
-list_exceptions = list(set(list_exceptions))
-list_exceptions.sort()
+list_exclusions = list(set(list_exclusions))
+list_exclusions.sort()
 
 dist_clash.writelines("payload:\n")
-
-for line in list_exceptions:
+for line in list_exclusions:
     dist_surge.writelines("." + line + '\n')
     dist_clash.writelines("  - '+." + line + "'\n")
 dist_surge.close()
 dist_clash.close()
+
 END_TIME = time_ns()
 print("FINISHED Stage 2\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 # Stage 2 finished.
@@ -184,9 +184,11 @@ print("FINISHED Stage 2\nTotal time: " + str(format((END_TIME - START_TIME) / 10
 # Stage 3: Sync Bahamut, CN, DMM, Google FCM, Microsoft, niconico, PayPal and YouTube domains with v2fly community.
 print("START Stage 3: Sync Bahamut, CN, DMM, Google FCM, Microsoft, niconico, PayPal and YouTube domains with v2fly community.")
 START_TIME = time_ns()
-to_convert = ['bahamut', 'geolocation-cn', 'dmm', 'googlefcm', 'microsoft', 'niconico', 'paypal', 'youtube']
-exclusion = ['github'] ## GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
-batch_convert(to_convert, ['surge', 'clash'], exclusion)
+
+target = ['bahamut', 'geolocation-cn', 'dmm', 'googlefcm', 'microsoft', 'niconico', 'paypal', 'youtube']
+exclusions = ['github'] ## GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
+batch_convert(target, ['surge', 'clash'], exclusions)
+
 END_TIME = time_ns()
 print("FINISHED Stage 4.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 # Stage 3 finished.
@@ -194,10 +196,10 @@ print("FINISHED Stage 4.\nTotal time: " + str(format((END_TIME - START_TIME) / 1
 ## Stage 4: Build custom rules.
 print("START Stage 4: Build custom rules.")
 START_TIME = time_ns()
-list_custom = os.listdir(PREFIX_CUSTOM_BUILD)
+list_custom = os.listdir(PREFIX_CUSTOM_SRC)
 for filename in list_custom:
-    if os.path.isfile(filename):
-        file_custom = open(PREFIX_CUSTOM_BUILD + filename, mode='r')
+    if os.path.isfile(PREFIX_CUSTOM_SRC + filename):
+        file_custom = open(PREFIX_CUSTOM_SRC + filename, mode='r')
         content_custom = file_custom.read().splitlines()
         content_custom.sort()
         dist_surge = open('./dists/surge/' + filename, mode='w')
@@ -214,9 +216,9 @@ for filename in list_custom:
         dist_surge.close()
         dist_clash.close()
 
-list_personal = os.listdir(PREFIX_CUSTOM_BUILD + "personal/")
+list_personal = os.listdir(PREFIX_CUSTOM_SRC + "personal/")
 for filename in list_personal:
-    file_custom = open(PREFIX_CUSTOM_BUILD + "personal/" + filename, mode='r')
+    file_custom = open(PREFIX_CUSTOM_SRC + "personal/" + filename, mode='r')
     content_custom = file_custom.read().splitlines()
     content_custom.sort()
     dist_surge = open('./dists/surge/personal/' + filename, mode='w')
@@ -232,6 +234,7 @@ for filename in list_personal:
     file_custom.close()
     dist_surge.close()
     dist_clash.close()
+
 END_TIME = time_ns()
 print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 ## Stage 4 finished
