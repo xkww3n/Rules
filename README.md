@@ -291,7 +291,7 @@ rule-providers:
 Surge:
 
 ```
-DOMAIN-SET,https://rules.xkww3n.cyou/surge/dmm.txt,*your policy*
+DOMAIN-SET,https://rules.xkww3n.cyou/surge/niconico.txt,*your policy*
 ```
 
 Clash Premium:
@@ -304,7 +304,7 @@ rule-providers:
   DMM:
     type: http
     behavior: domain
-    url: https://rules.xkww3n.cyou/clash/dmm.txt
+    url: https://rules.xkww3n.cyou/clash/niconico.txt
     path: ./Rules/niconico
     interval: 86400
 ```
