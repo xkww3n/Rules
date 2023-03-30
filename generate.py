@@ -193,8 +193,56 @@ END_TIME = time_ns()
 print("FINISHED Stage 4.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 # Stage 3 finished.
 
-## Stage 4: Build custom rules.
-print("START Stage 4: Build custom rules.")
+# Stage 4: Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.
+print("START Stage 4: Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.")
+START_TIME = time_ns()
+regex_cntld = re.compile('^([a-zA-Z0-9-]*(?:\.\S*)?)( #.*)?$')
+
+list_cntld = []
+for line in open(PREFIX_DOMAIN_LIST + "tld-cn", mode='r').read().splitlines():
+    istld = regex_cntld.match(line)
+    if istld and istld[1] != '':
+        list_cntld.append(istld[1])
+dist_surge = open('./dists/surge/geolocation-cn.txt', mode='r')
+dist_clash = open('./dists/clash/geolocation-cn.txt', mode='r')
+list_domain_surge = dist_surge.read().splitlines()
+list_domain_clash = dist_clash.read().splitlines()[1:]
+## After loading temporary rules, reopen rule files as write mode.
+dist_surge.close()
+dist_surge = open('./dists/surge/geolocation-cn.txt', mode='w')
+dist_clash.close()
+dist_clash = open('./dists/clash/geolocation-cn.txt', mode='w')
+
+dist_clash.writelines("payload:\n")
+
+for tld in list_cntld:
+    dist_surge.writelines('.' + tld + '\n')
+    dist_clash.writelines("  - '+." + tld + "'\n")
+
+for domain in list_domain_surge[:]:
+    for tld in list_cntld:
+        if domain.endswith(tld):
+            list_domain_surge.remove(domain)
+            break
+for domain in list_domain_clash[:]:
+    for tld in list_cntld:
+        if domain.endswith(tld + "'"):
+            list_domain_clash.remove(domain)
+            break
+
+for line in list_domain_surge:
+    dist_surge.writelines(line + '\n')
+for line in list_domain_clash:
+    dist_clash.writelines(line + '\n')
+
+dist_surge.close()
+dist_clash.close()
+END_TIME = time_ns()
+print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+## Stage 4 finished.
+
+## Stage 5: Build custom rules.
+print("START Stage 5: Build custom rules.")
 START_TIME = time_ns()
 list_custom = os.listdir(PREFIX_CUSTOM_SRC)
 for filename in list_custom:
@@ -236,5 +284,5 @@ for filename in list_personal:
     dist_clash.close()
 
 END_TIME = time_ns()
-print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
-## Stage 4 finished
+print("FINISHED Stage 5\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+## Stage 5 finished
