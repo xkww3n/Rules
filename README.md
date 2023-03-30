@@ -197,7 +197,7 @@ rule-providers:
     type: http
     behavior: domain
     url: https://rules.xkww3n.cyou/clash/cjmarketing.txt
-    path: ./Rules/Apple Music
+    path: ./Rules/CJMarketing
     interval: 86400
 ```
 
@@ -305,7 +305,7 @@ rule-providers:
     type: http
     behavior: domain
     url: https://rules.xkww3n.cyou/clash/dmm.txt
-    path: ./Rules/DMM
+    path: ./Rules/niconico
     interval: 86400
 ```
 
