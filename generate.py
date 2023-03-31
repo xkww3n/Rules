@@ -72,19 +72,22 @@ def is_domain_rule(rule):
         return False
 
 def dump_rules(list, target, output):
+    if target not in ['surge', 'clash']:
+        raise TypeError("Target type unsupported, only accept 'surge' or 'clash'.")
     if target == 'clash':
         output.writelines("payload:\n")
     for domain in list:
-        if domain.startswith('.'):
-            if target == 'surge':
-                output.writelines(domain + '\n')
-            if target == 'clash':
-                output.writelines("  - '+" + domain + "'\n")
-        elif not domain.startswith('#'):
-            if target == 'surge':
-                output.writelines(domain + '\n')
-            if target == 'clash':
-                output.writelines("  - '" + domain + "'\n")
+        if domain:
+            if domain.startswith('.'):
+                if target == 'surge':
+                    output.writelines(domain + '\n')
+                if target == 'clash':
+                    output.writelines("  - '+" + domain + "'\n")
+            elif not domain.startswith('#'):
+                if target == 'surge':
+                    output.writelines(domain + '\n')
+                if target == 'clash':
+                    output.writelines("  - '" + domain + "'\n")
 
 # Stage 1: Sync advertisements blocking and privacy protection rules.
 print("START Stage 1: Sync advertisements blocking and privacy protection rules.")
