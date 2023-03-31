@@ -1,13 +1,14 @@
 import os, re
-from abp.filters import parse_filterlist
+from abp.filters.parser import parse_filterlist, Filter
 from requests import get
 from time import time_ns
+from typing import TextIO
 
 PREFIX_DOMAIN_LIST = './domain-list-community/data/'
 PREFIX_CUSTOM_SRC = './Source/'
 PREFIX_CUSTOM_ADJUST = './Custom/'
 
-def geosite_import(src, exclusion=None):
+def geosite_import(src:list, exclusion:str='') -> list:
     regex_import = re.compile(r'^include\:(\S*)$')
     list_converted = []
     for line in src:
@@ -19,7 +20,7 @@ def geosite_import(src, exclusion=None):
         list_converted.append(line)
     return list_converted
 
-def geosite_convert(src):
+def geosite_convert(src:list) -> list:
     # The following 2 regexes' group 1 matches domains without "@cn" directive.
     regex_fulldomain = re.compile(r'^full\:(\S*)(?: @cn)?$')
     regex_subdomain = re.compile(r'^([a-zA-Z0-9-]*(?:\.\S*)?)(?: @cn)?$')
@@ -36,7 +37,7 @@ def geosite_convert(src):
         list_converted.sort()
     return list_converted
 
-def geosite_batch_convert(targets, tools, exclusions=[]):
+def geosite_batch_convert(targets:list, tools:list, exclusions:list=[]) -> None:
     for tool in tools:
         for target in targets:
             for exclusion in exclusions:
@@ -46,7 +47,7 @@ def geosite_batch_convert(targets, tools, exclusions=[]):
                 dump_rules(geosite_convert(content_orig), tool, dist)
                 dist.close()
 
-def is_domain_rule(rule):
+def is_domain_rule(rule:Filter) -> bool:
     if (rule.type == 'filter'
     and rule.selector['type'] == 'url-pattern'
     and rule.text.find('/') == -1
@@ -71,7 +72,7 @@ def is_domain_rule(rule):
     else:
         return False
 
-def dump_rules(list, target, output):
+def dump_rules(list:list, target:str, output:TextIO) -> None:
     if target not in ['surge', 'clash']:
         raise TypeError("Target type unsupported, only accept 'surge' or 'clash'.")
     if target == 'clash':
@@ -124,10 +125,10 @@ for line in parse_filterlist(content_rejections):
     if is_domain_rule(line) and line.action == 'allow' and not line.text.endswith('|'):
         list_exclusions.append(line.text)
 
-rejections_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r')
+rejections_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r').read().splitlines()
 list_rejections += geosite_convert(geosite_import(rejections_v2fly))
-rejections_custom = open(PREFIX_CUSTOM_ADJUST + "append-reject.txt", mode='r')
-list_rejections += rejections_custom.read().splitlines()
+rejections_custom = open(PREFIX_CUSTOM_ADJUST + "append-reject.txt", mode='r').read().splitlines()
+list_rejections += rejections_custom
 list_rejections = list(set(list_rejections))
 list_rejections.sort()
 
