@@ -193,7 +193,7 @@ rules:
 - RULE-SET,CJMarketing,REJECT
 
 rule-providers:
-  Bilibili:
+  CJMarketing:
     type: http
     behavior: domain
     url: https://rules.xkww3n.cyou/clash/cjmarketing.txt
@@ -298,10 +298,10 @@ Clash Premium:
 
 ```
 rules:
-- RULE-SET,DMM,*your policy*
+- RULE-SET,niconico,*your policy*
 
 rule-providers:
-  DMM:
+  niconico:
     type: http
     behavior: domain
     url: https://rules.xkww3n.cyou/clash/niconico.txt
@@ -325,7 +325,7 @@ Clash Premium:
 
 ```
 rules:
-- RULE-SET,Bilibili,*your policy*
+- RULE-SET,PayPal,*your policy*
 
 rule-providers:
   PayPal:
