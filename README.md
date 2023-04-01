@@ -418,7 +418,7 @@ rule-providers:
   - [碧蓝航线（英文版）](https://azurlane.yo-star.com/)`azurlane-en`
   - [BanG Dream！少女乐团派对！（日文版）](https://bang-dream.bushimo.jp/)`bangdream-jp`
   - [原神（国际版）](https://genshin.hoyoverse.com/)`genshin`
-  - [Love Live! 学园偶像祭（英文版）](https://lovelive-sif-global.bushimo.jp/)`lovelovesif-en`
+  - ~~[Love Live! 学园偶像祭（英文版）](https://lovelive-sif-global.bushimo.jp/)`lovelovesif-en`~~
   - [世界计划 缤纷舞台！ feat.初音未來（繁体中文版）](https://www.tw-pjsekai.com/)`pjsk-tw`
 
 ## 许可证
