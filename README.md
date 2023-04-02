@@ -314,6 +314,33 @@ rule-providers:
 - 数据来源：
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
+#### OpenAI
+Surge:
+
+```
+DOMAIN-SET,https://rules.xkww3n.cyou/surge/openai.txt,*your policy*
+```
+
+Clash Premium:
+
+```
+rules:
+- RULE-SET,OpenAI,*your policy*
+
+rule-providers:
+  OpenAI:
+    type: http
+    behavior: domain
+    url: https://rules.xkww3n.cyou/clash/openai.txt
+    path: ./Rules/OpenAI
+    interval: 86400
+```
+
+- 自动生成
+- 包含 OpenAI 的服务域名。
+- 数据来源：
+  - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
+
 #### PayPal
 Surge:
 

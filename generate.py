@@ -90,8 +90,8 @@ def dump_rules(list:list, target:str, output:TextIO) -> None:
                 if target == 'clash':
                     output.writelines("  - '" + domain + "'\n")
 
-# Stage 1: Sync advertisements blocking and privacy protection rules.
-print("START Stage 1: Sync advertisements blocking and privacy protection rules.")
+# Stage 1: Sync reject and exclude rules.
+print("START Stage 1: Sync reject and exclude rules.")
 START_TIME = time_ns()
 regex_ip = re.compile(r'((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}') ## IP addresses shouldn't be added.
 ## AdGuard Base Filter
@@ -104,6 +104,9 @@ src_jp = 'https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi
 src_mobile = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt'
 ## ADgk
 src_cn_extend = 'https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt'
+## AdGuard DNS Filter Whitelist
+src_exclusions_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt'
+src_exclusions_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
 
 content_rejections = (
     get(src_base).text +
@@ -112,9 +115,10 @@ content_rejections = (
     get(src_mobile).text +
     get(src_cn_extend).text
     ).splitlines()
+content_exclusions = (get(src_exclusions_1).text + get(src_exclusions_2).text).splitlines()
 
 list_rejections = []
-list_exclusions = []
+list_exclusions_raw = []
 
 for line in parse_filterlist(content_rejections):
     if is_domain_rule(line) and line.action == 'block' and not line.text.endswith('|'):
@@ -123,14 +127,39 @@ for line in parse_filterlist(content_rejections):
         else:
             list_rejections.append(line.text.replace("||", '.').replace('^', ''))
     if is_domain_rule(line) and line.action == 'allow' and not line.text.endswith('|'):
-        list_exclusions.append(line.text)
+        content_exclusions.append(line.text)
+
+for line in parse_filterlist(content_exclusions):
+    if is_domain_rule(line):
+        domain = line.text.replace('@','').replace('^','').replace('|','')
+        if not domain.startswith('-'):
+            list_exclusions_raw.append('.' + domain)
 
 rejections_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r').read().splitlines()
 list_rejections += geosite_convert(geosite_import(rejections_v2fly))
 rejections_custom = open(PREFIX_CUSTOM_ADJUST + "append-reject.txt", mode='r').read().splitlines()
 list_rejections += rejections_custom
 list_rejections = list(set(list_rejections))
+list_exclusions_raw = list(set(list_exclusions_raw))
+list_exclusions = []
+
+for domain_exclude in list_exclusions_raw:
+    for domain_reject in list_rejections[:]:
+        if domain_reject == domain_exclude:
+            list_rejections.remove(domain_reject)
+            break
+        if domain_exclude.endswith(domain_reject) and domain_exclude != domain_reject:
+            list_exclusions.append(domain_exclude)
+
+exclusions_append = open(PREFIX_CUSTOM_ADJUST + "append-exclude.txt", mode='r')
+for line in exclusions_append.read().splitlines():
+    if line not in list_exclusions or '.' + line not in list_exclusions:
+        list_exclusions.append(line)
+    else:
+        print(line + " has already been excluded.")
+
 list_rejections.sort()
+list_exclusions.sort()
 
 dist_surge = open('./dists/surge/reject.txt', mode='w')
 dist_clash = open('./dists/clash/reject.txt', mode='w')
@@ -138,34 +167,6 @@ dump_rules(list_rejections, 'surge', dist_surge)
 dump_rules(list_rejections, 'clash', dist_clash)
 dist_surge.close()
 dist_clash.close()
-
-END_TIME = time_ns()
-print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
-# Stage 1 finished.
-
-# Stage 2: Sync exclusions with AdGuard.
-print("START Stage 2: Sync exclusions with AdGuard.")
-START_TIME = time_ns()
-
-src_exclusions_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt'
-src_exclusions_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
-content_exclusions = (get(src_exclusions_1).text + get(src_exclusions_2).text).splitlines() + list_exclusions
-list_exclusions = []
-for line in parse_filterlist(content_exclusions):
-    if is_domain_rule(line):
-        domain = line.text.replace('@','').replace('^','').replace('|','')
-        if not domain.startswith('-'):
-            list_exclusions.append('.' + domain)
-
-rejections_remove = open(PREFIX_CUSTOM_ADJUST + "remove-reject.txt", mode='r')
-for line in rejections_remove.read().splitlines():
-    try:
-        list_exclusions.remove('.' + line)
-    except ValueError:
-        pass
-
-list_exclusions = list(set(list_exclusions))
-list_exclusions.sort()
 
 dist_surge = open('./dists/surge/exclude.txt', mode='w')
 dist_clash = open('./dists/clash/exclude.txt', mode='w')
@@ -175,23 +176,23 @@ dist_surge.close()
 dist_clash.close()
 
 END_TIME = time_ns()
-print("FINISHED Stage 2\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
-# Stage 2 finished.
+print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+# Stage 1 finished.
 
-# Stage 3: Sync Bahamut, CN, DMM, Google FCM, Microsoft, niconico, PayPal and YouTube domains with v2fly community.
-print("START Stage 3: Sync Bahamut, CN, DMM, Google FCM, Microsoft, niconico, PayPal and YouTube domains with v2fly community.")
+# Stage 2: Sync v2fly community rules.
+print("START Stage 2: Sync v2fly community rules.")
 START_TIME = time_ns()
 
-target = ['bahamut', 'geolocation-cn', 'dmm', 'googlefcm', 'microsoft', 'niconico', 'paypal', 'youtube']
+target = ['bahamut', 'geolocation-cn', 'dmm', 'googlefcm', 'microsoft', 'niconico', 'openai', 'paypal', 'youtube']
 exclusions = ['github'] ## GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
 geosite_batch_convert(target, ['surge', 'clash'], exclusions)
 
 END_TIME = time_ns()
-print("FINISHED Stage 4.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
-# Stage 3 finished.
+print("FINISHED Stage 2.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+# Stage 2 finished.
 
-# Stage 4: Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.
-print("START Stage 4: Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.")
+# Stage 3: Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.
+print("START Stage 3: Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.")
 START_TIME = time_ns()
 regex_cntld = re.compile(r'^([a-zA-Z0-9-]*(?:\.\S*)?)( #.*)?$')
 
@@ -232,11 +233,11 @@ for line in list_domain_clash:
 dist_surge.close()
 dist_clash.close()
 END_TIME = time_ns()
-print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
-## Stage 4 finished.
+print("FINISHED Stage 3\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+## Stage 3 finished.
 
-## Stage 5: Build custom rules.
-print("START Stage 5: Build custom rules.")
+## Stage 4: Build custom rules.
+print("START Stage 4: Build custom rules.")
 START_TIME = time_ns()
 list_custom = os.listdir(PREFIX_CUSTOM_SRC)
 for filename in list_custom:
@@ -266,5 +267,5 @@ for filename in list_personal:
     dist_clash.close()
 
 END_TIME = time_ns()
-print("FINISHED Stage 5\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
-## Stage 5 finished
+print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+## Stage 4 finished
