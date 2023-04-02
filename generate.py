@@ -139,7 +139,7 @@ for line in parse_filterlist(content_exclusions):
     if is_domain_rule(line):
         domain = line.text.replace('@','').replace('^','').replace('|','')
         if not domain.startswith('-'):
-            list_exclusions_raw.append('.' + domain)
+            list_exclusions_raw.append(domain)
 
 rejections_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r').read().splitlines()
 list_rejections += geosite_convert(geosite_import(rejections_v2fly))
