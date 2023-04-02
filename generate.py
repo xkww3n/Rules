@@ -156,6 +156,7 @@ for domain_exclude in list_exclusions_raw:
             break
         if domain_exclude.endswith(domain_reject) and domain_exclude != domain_reject:
             list_exclusions.append(domain_exclude)
+            break
 
 exclusions_append = PREFIX_CUSTOM_ADJUST + "append-exclude.txt"
 for line in custom_convert(exclusions_append):
