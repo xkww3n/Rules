@@ -2,7 +2,6 @@ import os, re
 from abp.filters.parser import parse_filterlist, Filter
 from requests import get
 from time import time_ns
-from typing import TextIO
 
 PREFIX_DOMAIN_LIST = './domain-list-community/data/'
 PREFIX_CUSTOM_SRC = './Source/'
@@ -42,14 +41,13 @@ def geosite_batch_convert(targets:list, tools:list, exclusions:list=[]) -> None:
         for target in targets:
             for exclusion in exclusions:
                 file_orig = open(PREFIX_DOMAIN_LIST + target, mode='r').read().splitlines()
-                dist = open("./dists/" + tool + "/" + target + ".txt", mode='w')
                 content_orig = geosite_import(file_orig, exclusion)
-                dump_rules(geosite_convert(content_orig), tool, dist)
-                dist.close()
+                dump_rules(geosite_convert(content_orig), tool, "./dists/" + tool + "/" + target + ".txt")
 
-def custom_convert(src:TextIO) -> list:
+def custom_convert(src:str) -> list:
+    content_custom = open(src, mode='r').read().splitlines()
     list_converted = []
-    for line in src.read().splitlines():
+    for line in content_custom:
         if not line.startswith('#'):
             list_converted.append(line)
     return list_converted
@@ -79,23 +77,24 @@ def is_domain_rule(rule:Filter) -> bool:
     else:
         return False
 
-def dump_rules(list:list, target:str, output:TextIO) -> None:
+def dump_rules(list:list, target:str, output:str) -> None:
+    dist = open(output, mode='w')
     if target not in ['surge', 'clash']:
         raise TypeError("Target type unsupported, only accept 'surge' or 'clash'.")
     if target == 'clash':
-        output.writelines("payload:\n")
+        dist.writelines("payload:\n")
     for domain in list:
         if domain:
             if domain.startswith('.'):
                 if target == 'surge':
-                    output.writelines(domain + '\n')
+                    dist.writelines(domain + '\n')
                 if target == 'clash':
-                    output.writelines("  - '+" + domain + "'\n")
+                    dist.writelines("  - '+" + domain + "'\n")
             elif not domain.startswith('#'):
                 if target == 'surge':
-                    output.writelines(domain + '\n')
+                    dist.writelines(domain + '\n')
                 if target == 'clash':
-                    output.writelines("  - '" + domain + "'\n")
+                    dist.writelines("  - '" + domain + "'\n")
 
 # Stage 1: Sync reject and exclude rules.
 print("START Stage 1: Sync reject and exclude rules.")
@@ -144,7 +143,7 @@ for line in parse_filterlist(content_exclusions):
 
 rejections_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r').read().splitlines()
 list_rejections += geosite_convert(geosite_import(rejections_v2fly))
-rejections_custom = custom_convert(open(PREFIX_CUSTOM_ADJUST + "append-reject.txt", mode='r'))
+rejections_custom = custom_convert(PREFIX_CUSTOM_ADJUST + "append-reject.txt")
 list_rejections += rejections_custom
 list_rejections = list(set(list_rejections))
 list_exclusions_raw = list(set(list_exclusions_raw))
@@ -158,7 +157,7 @@ for domain_exclude in list_exclusions_raw:
         if domain_exclude.endswith(domain_reject) and domain_exclude != domain_reject:
             list_exclusions.append(domain_exclude)
 
-exclusions_append = open(PREFIX_CUSTOM_ADJUST + "append-exclude.txt", mode='r')
+exclusions_append = PREFIX_CUSTOM_ADJUST + "append-exclude.txt"
 for line in custom_convert(exclusions_append):
     if (line not in list_exclusions or '.' + line not in list_exclusions):
         list_exclusions.append(line)
@@ -168,19 +167,11 @@ for line in custom_convert(exclusions_append):
 list_rejections.sort()
 list_exclusions.sort()
 
-dist_surge = open('./dists/surge/reject.txt', mode='w')
-dist_clash = open('./dists/clash/reject.txt', mode='w')
-dump_rules(list_rejections, 'surge', dist_surge)
-dump_rules(list_rejections, 'clash', dist_clash)
-dist_surge.close()
-dist_clash.close()
+dump_rules(list_rejections, 'surge', './dists/surge/reject.txt')
+dump_rules(list_rejections, 'clash', './dists/clash/reject.txt')
 
-dist_surge = open('./dists/surge/exclude.txt', mode='w')
-dist_clash = open('./dists/clash/exclude.txt', mode='w')
-dump_rules(list_exclusions, 'surge', dist_surge)
-dump_rules(list_exclusions, 'clash', dist_clash)
-dist_surge.close()
-dist_clash.close()
+dump_rules(list_exclusions, 'surge', './dists/surge/exclude.txt')
+dump_rules(list_exclusions, 'clash', './dists/clash/exclude.txt')
 
 END_TIME = time_ns()
 print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
@@ -218,8 +209,8 @@ dist_surge = open('./dists/surge/geolocation-cn.txt', mode='w')
 dist_clash.close()
 dist_clash = open('./dists/clash/geolocation-cn.txt', mode='w')
 
-dump_rules(list_cntld, 'surge', dist_surge)
-dump_rules(list_cntld, 'clash', dist_clash)
+dump_rules(list_cntld, 'surge', './dists/surge/geolocation-cn.txt')
+dump_rules(list_cntld, 'clash', './dists/clash/geolocation-cn.txt')
 
 for domain in list_domain_surge[:]:
     for tld in list_cntld:
@@ -249,29 +240,17 @@ START_TIME = time_ns()
 list_custom = os.listdir(PREFIX_CUSTOM_SRC)
 for filename in list_custom:
     if os.path.isfile(PREFIX_CUSTOM_SRC + filename):
-        file_custom = open(PREFIX_CUSTOM_SRC + filename, mode='r')
-        content_custom = custom_convert(file_custom)
+        content_custom = custom_convert(PREFIX_CUSTOM_SRC + filename)
         content_custom.sort()
-        dist_surge = open('./dists/surge/' + filename, mode='w')
-        dist_clash = open('./dists/clash/' + filename, mode='w')
-        dump_rules(content_custom, 'surge', dist_surge)
-        dump_rules(content_custom, 'clash', dist_clash)
-        file_custom.close()
-        dist_surge.close()
-        dist_clash.close()
+        dump_rules(content_custom, 'surge', './dists/surge/' + filename)
+        dump_rules(content_custom, 'clash', './dists/clash/' + filename)
 
 list_personal = os.listdir(PREFIX_CUSTOM_SRC + "personal/")
 for filename in list_personal:
-    file_personal = open(PREFIX_CUSTOM_SRC + "personal/" + filename, mode='r')
-    content_personal = custom_convert(file_personal)
-    file_personal.close()
+    content_personal = custom_convert(PREFIX_CUSTOM_SRC + "personal/" + filename)
     content_personal.sort()
-    dist_surge = open('./dists/surge/personal/' + filename, mode='w')
-    dist_clash = open('./dists/clash/personal/' + filename, mode='w')
-    dump_rules(content_personal, 'surge', dist_surge)
-    dump_rules(content_personal, 'clash', dist_clash)
-    dist_surge.close()
-    dist_clash.close()
+    dump_rules(content_personal, 'surge', './dists/surge/personal/' + filename)
+    dump_rules(content_personal, 'clash', './dists/clash/personal/' + filename)
 
 END_TIME = time_ns()
 print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
