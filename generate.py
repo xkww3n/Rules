@@ -47,6 +47,13 @@ def geosite_batch_convert(targets:list, tools:list, exclusions:list=[]) -> None:
                 dump_rules(geosite_convert(content_orig), tool, dist)
                 dist.close()
 
+def custom_convert(src:TextIO) -> list:
+    list_converted = []
+    for line in src.read().splitlines():
+        if not line.startswith('#'):
+            list_converted.append(line)
+    return list_converted
+
 def is_domain_rule(rule:Filter) -> bool:
     if (rule.type == 'filter'
     and rule.selector['type'] == 'url-pattern'
@@ -137,7 +144,7 @@ for line in parse_filterlist(content_exclusions):
 
 rejections_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r').read().splitlines()
 list_rejections += geosite_convert(geosite_import(rejections_v2fly))
-rejections_custom = open(PREFIX_CUSTOM_ADJUST + "append-reject.txt", mode='r').read().splitlines()
+rejections_custom = custom_convert(open(PREFIX_CUSTOM_ADJUST + "append-reject.txt", mode='r'))
 list_rejections += rejections_custom
 list_rejections = list(set(list_rejections))
 list_exclusions_raw = list(set(list_exclusions_raw))
@@ -152,8 +159,8 @@ for domain_exclude in list_exclusions_raw:
             list_exclusions.append(domain_exclude)
 
 exclusions_append = open(PREFIX_CUSTOM_ADJUST + "append-exclude.txt", mode='r')
-for line in exclusions_append.read().splitlines():
-    if line not in list_exclusions or '.' + line not in list_exclusions:
+for line in custom_convert(exclusions_append):
+    if (line not in list_exclusions or '.' + line not in list_exclusions):
         list_exclusions.append(line)
     else:
         print(line + " has already been excluded.")
@@ -243,7 +250,7 @@ list_custom = os.listdir(PREFIX_CUSTOM_SRC)
 for filename in list_custom:
     if os.path.isfile(PREFIX_CUSTOM_SRC + filename):
         file_custom = open(PREFIX_CUSTOM_SRC + filename, mode='r')
-        content_custom = file_custom.read().splitlines()
+        content_custom = custom_convert(file_custom)
         content_custom.sort()
         dist_surge = open('./dists/surge/' + filename, mode='w')
         dist_clash = open('./dists/clash/' + filename, mode='w')
@@ -255,14 +262,14 @@ for filename in list_custom:
 
 list_personal = os.listdir(PREFIX_CUSTOM_SRC + "personal/")
 for filename in list_personal:
-    file_custom = open(PREFIX_CUSTOM_SRC + "personal/" + filename, mode='r')
-    content_custom = file_custom.read().splitlines()
-    content_custom.sort()
+    file_personal = open(PREFIX_CUSTOM_SRC + "personal/" + filename, mode='r')
+    content_personal = custom_convert(file_personal)
+    file_personal.close()
+    content_personal.sort()
     dist_surge = open('./dists/surge/personal/' + filename, mode='w')
     dist_clash = open('./dists/clash/personal/' + filename, mode='w')
-    dump_rules(content_custom, 'surge', dist_surge)
-    dump_rules(content_custom, 'clash', dist_clash)
-    file_custom.close()
+    dump_rules(content_personal, 'surge', dist_surge)
+    dump_rules(content_personal, 'clash', dist_clash)
     dist_surge.close()
     dist_clash.close()
 

@@ -1,2 +1,9 @@
+# Adjust web portal
 www.adjust.com
+help.adjust.com
+suite.adjust.com
+
+# AppsFlyer web portal
 www.appsflyer.com
+hq1.appsflyer.com
+support.appsflyer.com
