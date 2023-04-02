@@ -205,12 +205,13 @@ list_domain_surge = dist_surge.read().splitlines()
 list_domain_clash = dist_clash.read().splitlines()[1:]
 ## After loading temporary rules, reopen rule files as write mode.
 dist_surge.close()
-dist_surge = open('./dists/surge/geolocation-cn.txt', mode='w')
 dist_clash.close()
-dist_clash = open('./dists/clash/geolocation-cn.txt', mode='w')
 
 dump_rules(list_cntld, 'surge', './dists/surge/geolocation-cn.txt')
 dump_rules(list_cntld, 'clash', './dists/clash/geolocation-cn.txt')
+
+dist_surge = open('./dists/surge/geolocation-cn.txt', mode='a')
+dist_clash = open('./dists/clash/geolocation-cn.txt', mode='a')
 
 for domain in list_domain_surge[:]:
     for tld in list_cntld:
