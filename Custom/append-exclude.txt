@@ -2,6 +2,13 @@
 www.adjust.com
 help.adjust.com
 suite.adjust.com
+try.adjust.com
+mobilespreeconf.adjust.com
+craft.adjust.com
+atom.adjust.com
+insights.adjust.com
+events.adjust.com
+dash.adjust.com
 
 # AppsFlyer web portal
 www.appsflyer.com
