@@ -151,7 +151,7 @@ list_exclusions = []
 
 for domain_exclude in list_exclusions_raw:
     for domain_reject in list_rejections[:]:
-        if domain_reject == domain_exclude or domain_reject == '.' + domain_exclude:
+        if domain_reject == domain_exclude:
             list_rejections.remove(domain_reject)
             break
         if domain_exclude.endswith(domain_reject) and domain_exclude != domain_reject:
