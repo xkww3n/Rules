@@ -8,7 +8,7 @@ PREFIX_CUSTOM_SRC = './Source/'
 PREFIX_CUSTOM_ADJUST = './Custom/'
 
 def geosite_import(src:list, exclusion:str='') -> set:
-    regex_import = re.compile(r'^include\:(\S*)$')
+    regex_import = re.compile(r'^include\:([-\w]{1,})$')
     set_converted = set()
     for line in src:
         flag_import = regex_import.match(line)
@@ -21,8 +21,8 @@ def geosite_import(src:list, exclusion:str='') -> set:
 
 def geosite_convert(src:set) -> set:
     # The following 2 regexes' group 1 matches domains without "@cn" directive.
-    regex_fulldomain = re.compile(r'^full\:(\S*)(?: @cn)?$')
-    regex_subdomain = re.compile(r'^([a-zA-Z0-9-]*(?:\.\S*)?)(?: @cn)?$')
+    regex_fulldomain = re.compile(r'^full\:([-\.a-zA-Z\d]{1,}?(?:\.[-\.a-zA-Z\d]{1,}))(?: @cn){0,1}?$')
+    regex_subdomain = re.compile(r'^([-\.a-zA-Z\d]{1,}?(?:\.[-\.a-zA-Z\d]{1,}))(?: @cn){0,1}?$')
     set_converted = set()
     for line in src:
         if not line.startswith("regexp:") or line.startswith("keyword:") or line.startswith("#"):
@@ -30,7 +30,7 @@ def geosite_convert(src:set) -> set:
             subdomain = regex_subdomain.match(line)
             if fulldomain:
                 set_converted.add(fulldomain.group(1))
-            elif subdomain and subdomain.group(1) != '':
+            elif subdomain:
                 set_converted.add('.' + subdomain.group(1))
     return set_converted
 
@@ -54,6 +54,7 @@ def custom_convert(src:str) -> set:
     return set_converted
 
 def is_domain_rule(rule:Filter) -> bool:
+    regex_ip = re.compile(r'^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$')
     if (rule.type == 'filter'
     and rule.selector['type'] == 'url-pattern'
     and rule.text.find('/') == -1
@@ -100,7 +101,6 @@ def dump_rules(src:list, target:str, dst:str) -> None:
 # Stage 1: Sync reject and exclude rules.
 print("START Stage 1: Sync reject and exclude rules.")
 START_TIME = time_ns()
-regex_ip = re.compile(r'((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}') ## IP addresses shouldn't be added.
 ## AdGuard Base Filter
 src_base = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt'
 ## Easylist China
@@ -195,12 +195,12 @@ print("FINISHED Stage 2.\nTotal time: " + str(format((END_TIME - START_TIME) / 1
 # Stage 3: Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.
 print("START Stage 3: Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.")
 START_TIME = time_ns()
-regex_cntld = re.compile(r'^([a-zA-Z0-9-]*(?:\.\S*)?)( #.*)?$')
+regex_cntld = re.compile(r'^([-\.a-zA-Z\d]{1,}(?:\.\w{1,})?)( #.*){0,1}$')
 
 set_cntld = set()
 for line in open(PREFIX_DOMAIN_LIST + "tld-cn", mode='r').read().splitlines():
     istld = regex_cntld.match(line)
-    if istld and istld[1] != '':
+    if istld:
         set_cntld.add('.' + istld[1])
 dist_surge = open('./dists/surge/geolocation-cn.txt', mode='r')
 dist_clash = open('./dists/clash/geolocation-cn.txt', mode='r')
