@@ -38,17 +38,17 @@ def geosite_batch_convert(targets:list, tools:list, exclusions:list=[]) -> None:
     for tool in tools:
         for target in targets:
             for exclusion in exclusions:
-                file_orig = open(PREFIX_DOMAIN_LIST + target, mode='r').read().splitlines()
-                content_orig = geosite_import(file_orig, exclusion)
-                set_geosite = geosite_convert(content_orig)
+                src_geosite = open(PREFIX_DOMAIN_LIST + target, mode='r').read().splitlines()
+                src_geosite_imported = geosite_import(src_geosite, exclusion)
+                set_geosite = geosite_convert(src_geosite_imported)
                 list_geosite_sorted = [item for item in set_geosite]
                 list_geosite_sorted.sort()
                 dump_rules(list_geosite_sorted, tool, "./dists/" + tool + "/" + target + ".txt")
 
 def custom_convert(src:str) -> set:
-    content_custom = open(src, mode='r').read().splitlines()
+    src_custom = open(src, mode='r').read().splitlines()
     set_converted = set()
-    for line in content_custom:
+    for line in src_custom:
         if not line.startswith('#'):
             set_converted.add(line)
     return set_converted
@@ -102,27 +102,27 @@ def dump_rules(src:list, target:str, dst:str) -> None:
 print("START Stage 1: Sync reject and exclude rules.")
 START_TIME = time_ns()
 ## AdGuard Base Filter
-src_base = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt'
+url_base = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt'
 ## Easylist China
-src_cn = 'https://easylist-downloads.adblockplus.org/easylistchina.txt'
+url_cn = 'https://easylist-downloads.adblockplus.org/easylistchina.txt'
 ## もちフィルタ
-src_jp = 'https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi_filter.txt'
+url_jp = 'https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi_filter.txt'
 ## AdGuard Mobile Filter
-src_mobile = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt'
+url_mobile = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt'
 ## ADgk
-src_cn_extend = 'https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt'
+url_cn_extend = 'https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt'
 ## AdGuard DNS Filter Whitelist
-src_exclusions_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt'
-src_exclusions_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
+url_exclusions_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt'
+url_exclusions_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
 
 src_rejections = (
-    get(src_base).text +
-    get(src_cn).text +
-    get(src_jp).text +
-    get(src_mobile).text +
-    get(src_cn_extend).text
+    get(url_base).text +
+    get(url_cn).text +
+    get(url_jp).text +
+    get(url_mobile).text +
+    get(url_cn_extend).text
     ).splitlines()
-src_exclusions = (get(src_exclusions_1).text + get(src_exclusions_2).text).splitlines()
+src_exclusions = (get(url_exclusions_1).text + get(url_exclusions_2).text).splitlines()
 
 set_rejections = set()
 set_exclusions_raw = set()
@@ -158,8 +158,8 @@ for domain_exclude in set_exclusions_raw:
         if domain_exclude.endswith(domain_reject):
             set_exclusions.add(domain_exclude)
 
-exclusions_append = PREFIX_CUSTOM_ADJUST + "append-exclude.txt"
-for line in custom_convert(exclusions_append):
+path_exclusions_append = PREFIX_CUSTOM_ADJUST + "append-exclude.txt"
+for line in custom_convert(path_exclusions_append):
     if (line not in set_exclusions or '.' + line not in set_exclusions):
         set_exclusions.add(line)
     else:
@@ -244,19 +244,19 @@ print("FINISHED Stage 3\nTotal time: " + str(format((END_TIME - START_TIME) / 10
 ## Stage 4: Build custom rules.
 print("START Stage 4: Build custom rules.")
 START_TIME = time_ns()
-list_custom = os.listdir(PREFIX_CUSTOM_SRC)
-for filename in list_custom:
+list_file_custom = os.listdir(PREFIX_CUSTOM_SRC)
+for filename in list_file_custom:
     if os.path.isfile(PREFIX_CUSTOM_SRC + filename):
-        content_custom = custom_convert(PREFIX_CUSTOM_SRC + filename)
-        list_custom_sorted = [item for item in content_custom]
+        set_custom = custom_convert(PREFIX_CUSTOM_SRC + filename)
+        list_custom_sorted = [item for item in set_custom]
         list_custom_sorted.sort()
         dump_rules(list_custom_sorted, 'surge', './dists/surge/' + filename)
         dump_rules(list_custom_sorted, 'clash', './dists/clash/' + filename)
 
-list_personal = os.listdir(PREFIX_CUSTOM_SRC + "personal/")
-for filename in list_personal:
-    content_personal = custom_convert(PREFIX_CUSTOM_SRC + "personal/" + filename)
-    list_personal_sorted = [item for item in content_personal]
+list_file_personal = os.listdir(PREFIX_CUSTOM_SRC + "personal/")
+for filename in list_file_personal:
+    set_personal = custom_convert(PREFIX_CUSTOM_SRC + "personal/" + filename)
+    list_personal_sorted = [item for item in set_personal]
     list_personal_sorted.sort()
     dump_rules(list_personal_sorted, 'surge', './dists/surge/personal/' + filename)
     dump_rules(list_personal_sorted, 'clash', './dists/clash/personal/' + filename)
