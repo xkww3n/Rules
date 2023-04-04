@@ -77,13 +77,13 @@ def is_domain_rule(rule:Filter) -> bool:
     else:
         return False
 
-def dump_rules(list:list, target:str, output:str) -> None:
-    dist = open(output, mode='w')
+def dump_rules(src:list, target:str, dst:str) -> None:
+    dist = open(dst, mode='w')
     if target not in ['surge', 'clash']:
         raise TypeError("Target type unsupported, only accept 'surge' or 'clash'.")
     if target == 'clash':
         dist.writelines("payload:\n")
-    for domain in list:
+    for domain in src:
         if domain:
             if domain.startswith('.'):
                 if target == 'surge':
@@ -114,37 +114,36 @@ src_cn_extend = 'https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.
 src_exclusions_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt'
 src_exclusions_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
 
-content_rejections = (
+src_rejections = (
     get(src_base).text +
     get(src_cn).text +
     get(src_jp).text +
     get(src_mobile).text +
     get(src_cn_extend).text
     ).splitlines()
-content_exclusions = (get(src_exclusions_1).text + get(src_exclusions_2).text).splitlines()
+src_exclusions = (get(src_exclusions_1).text + get(src_exclusions_2).text).splitlines()
 
 list_rejections = []
 list_exclusions_raw = []
 
-for line in parse_filterlist(content_rejections):
+for line in parse_filterlist(src_rejections):
     if is_domain_rule(line) and line.action == 'block' and not line.text.endswith('|'):
         if line.text.startswith('.'):
             list_rejections.append(line.text.replace('^', ''))
         else:
             list_rejections.append(line.text.replace("||", '.').replace('^', ''))
     if is_domain_rule(line) and line.action == 'allow' and not line.text.endswith('|'):
-        content_exclusions.append(line.text)
+        src_exclusions.append(line.text)
 
-for line in parse_filterlist(content_exclusions):
+for line in parse_filterlist(src_exclusions):
     if is_domain_rule(line):
         domain = line.text.replace('@','').replace('^','').replace('|','')
         if not domain.startswith('-'):
             list_exclusions_raw.append(domain)
 
-rejections_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r').read().splitlines()
-list_rejections += geosite_convert(geosite_import(rejections_v2fly))
-rejections_custom = custom_convert(PREFIX_CUSTOM_ADJUST + "append-reject.txt")
-list_rejections += rejections_custom
+list_rejections_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r').read().splitlines()
+list_rejections += geosite_convert(geosite_import(list_rejections_v2fly))
+list_rejections += custom_convert(PREFIX_CUSTOM_ADJUST + "append-reject.txt")
 list_rejections = list(set(list_rejections))
 list_exclusions_raw = list(set(list_exclusions_raw))
 list_exclusions = []
