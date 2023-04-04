@@ -7,34 +7,32 @@ PREFIX_DOMAIN_LIST = './domain-list-community/data/'
 PREFIX_CUSTOM_SRC = './Source/'
 PREFIX_CUSTOM_ADJUST = './Custom/'
 
-def geosite_import(src:list, exclusion:str='') -> list:
+def geosite_import(src:list, exclusion:str='') -> set:
     regex_import = re.compile(r'^include\:(\S*)$')
-    list_converted = []
+    set_converted = set()
     for line in src:
         flag_import = regex_import.match(line)
         if flag_import and flag_import.group(1) != exclusion:
             file_import = open(PREFIX_DOMAIN_LIST + flag_import.group(1), mode='r').read().splitlines()
-            list_converted += geosite_import(file_import)
+            set_converted |= geosite_import(file_import)
             continue
-        list_converted.append(line)
-    return list_converted
+        set_converted.add(line)
+    return set_converted
 
-def geosite_convert(src:list) -> list:
+def geosite_convert(src:set) -> set:
     # The following 2 regexes' group 1 matches domains without "@cn" directive.
     regex_fulldomain = re.compile(r'^full\:(\S*)(?: @cn)?$')
     regex_subdomain = re.compile(r'^([a-zA-Z0-9-]*(?:\.\S*)?)(?: @cn)?$')
-    list_converted = []
+    set_converted = set()
     for line in src:
         if not line.startswith("regexp:") or line.startswith("keyword:") or line.startswith("#"):
             fulldomain = regex_fulldomain.match(line)
             subdomain = regex_subdomain.match(line)
             if fulldomain:
-                list_converted.append(fulldomain.group(1))
+                set_converted.add(fulldomain.group(1))
             elif subdomain and subdomain.group(1) != '':
-                list_converted.append('.' + subdomain.group(1))
-        list_converted = list(set(list_converted))
-        list_converted.sort()
-    return list_converted
+                set_converted.add('.' + subdomain.group(1))
+    return set_converted
 
 def geosite_batch_convert(targets:list, tools:list, exclusions:list=[]) -> None:
     for tool in tools:
@@ -42,15 +40,18 @@ def geosite_batch_convert(targets:list, tools:list, exclusions:list=[]) -> None:
             for exclusion in exclusions:
                 file_orig = open(PREFIX_DOMAIN_LIST + target, mode='r').read().splitlines()
                 content_orig = geosite_import(file_orig, exclusion)
-                dump_rules(geosite_convert(content_orig), tool, "./dists/" + tool + "/" + target + ".txt")
+                set_geosite = geosite_convert(content_orig)
+                list_geosite_sorted = [item for item in set_geosite]
+                list_geosite_sorted.sort()
+                dump_rules(list_geosite_sorted, tool, "./dists/" + tool + "/" + target + ".txt")
 
-def custom_convert(src:str) -> list:
+def custom_convert(src:str) -> set:
     content_custom = open(src, mode='r').read().splitlines()
-    list_converted = []
+    set_converted = set()
     for line in content_custom:
         if not line.startswith('#'):
-            list_converted.append(line)
-    return list_converted
+            set_converted.add(line)
+    return set_converted
 
 def is_domain_rule(rule:Filter) -> bool:
     if (rule.type == 'filter'
@@ -123,15 +124,15 @@ src_rejections = (
     ).splitlines()
 src_exclusions = (get(src_exclusions_1).text + get(src_exclusions_2).text).splitlines()
 
-list_rejections = []
-list_exclusions_raw = []
+set_rejections = set()
+set_exclusions_raw = set()
 
 for line in parse_filterlist(src_rejections):
     if is_domain_rule(line) and line.action == 'block' and not line.text.endswith('|'):
         if line.text.startswith('.'):
-            list_rejections.append(line.text.replace('^', ''))
+            set_rejections.add(line.text.replace('^', ''))
         else:
-            list_rejections.append(line.text.replace("||", '.').replace('^', ''))
+            set_rejections.add(line.text.replace("||", '.').replace('^', ''))
     if is_domain_rule(line) and line.action == 'allow' and not line.text.endswith('|'):
         src_exclusions.append(line.text)
 
@@ -139,41 +140,41 @@ for line in parse_filterlist(src_exclusions):
     if is_domain_rule(line):
         domain = line.text.replace('@','').replace('^','').replace('|','')
         if not domain.startswith('-'):
-            list_exclusions_raw.append(domain)
+            set_exclusions_raw.add(domain)
 
 list_rejections_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r').read().splitlines()
-list_rejections += geosite_convert(geosite_import(list_rejections_v2fly))
-list_rejections += custom_convert(PREFIX_CUSTOM_ADJUST + "append-reject.txt")
-list_rejections = list(set(list_rejections))
-list_exclusions_raw = list(set(list_exclusions_raw))
-list_exclusions = []
+set_rejections |= geosite_convert(geosite_import(list_rejections_v2fly))
+set_rejections |= custom_convert(PREFIX_CUSTOM_ADJUST + "append-reject.txt")
+set_exclusions = set()
 
-for domain_exclude in list_exclusions_raw[:]:
-    for domain_reject in list_rejections[:]:
+for domain_exclude in set_exclusions_raw.copy():
+    for domain_reject in set_rejections.copy():
         if domain_reject == domain_exclude or domain_reject == '.' + domain_exclude:
-            list_rejections.remove(domain_reject)
-            list_exclusions_raw.remove(domain_exclude)
+            set_rejections.remove(domain_reject)
+            set_exclusions_raw.remove(domain_exclude)
 
-for domain_exclude in list_exclusions_raw:
-    for domain_reject in list_rejections:
+for domain_exclude in set_exclusions_raw:
+    for domain_reject in set_rejections:
         if domain_exclude.endswith(domain_reject):
-            list_exclusions.append(domain_exclude)
+            set_exclusions.add(domain_exclude)
 
 exclusions_append = PREFIX_CUSTOM_ADJUST + "append-exclude.txt"
 for line in custom_convert(exclusions_append):
-    if (line not in list_exclusions or '.' + line not in list_exclusions):
-        list_exclusions.append(line)
+    if (line not in set_exclusions or '.' + line not in set_exclusions):
+        set_exclusions.add(line)
     else:
         print(line + " has already been excluded.")
 
-list_rejections.sort()
-list_exclusions.sort()
+list_rejections_sorted = [item for item in set_rejections]
+list_rejections_sorted.sort()
+list_exclusions_sorted = [item for item in set_exclusions]
+list_exclusions_sorted.sort()
 
-dump_rules(list_rejections, 'surge', './dists/surge/reject.txt')
-dump_rules(list_rejections, 'clash', './dists/clash/reject.txt')
+dump_rules(list_rejections_sorted, 'surge', './dists/surge/reject.txt')
+dump_rules(list_rejections_sorted, 'clash', './dists/clash/reject.txt')
 
-dump_rules(list_exclusions, 'surge', './dists/surge/exclude.txt')
-dump_rules(list_exclusions, 'clash', './dists/clash/exclude.txt')
+dump_rules(list_exclusions_sorted, 'surge', './dists/surge/exclude.txt')
+dump_rules(list_exclusions_sorted, 'clash', './dists/clash/exclude.txt')
 
 END_TIME = time_ns()
 print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
@@ -196,11 +197,11 @@ print("START Stage 3: Add all CN TLDs to CN rules, then remove CN domains with C
 START_TIME = time_ns()
 regex_cntld = re.compile(r'^([a-zA-Z0-9-]*(?:\.\S*)?)( #.*)?$')
 
-list_cntld = []
+set_cntld = set()
 for line in open(PREFIX_DOMAIN_LIST + "tld-cn", mode='r').read().splitlines():
     istld = regex_cntld.match(line)
     if istld and istld[1] != '':
-        list_cntld.append('.' + istld[1])
+        set_cntld.add('.' + istld[1])
 dist_surge = open('./dists/surge/geolocation-cn.txt', mode='r')
 dist_clash = open('./dists/clash/geolocation-cn.txt', mode='r')
 list_domain_surge = dist_surge.read().splitlines()
@@ -209,19 +210,22 @@ list_domain_clash = dist_clash.read().splitlines()[1:]
 dist_surge.close()
 dist_clash.close()
 
-dump_rules(list_cntld, 'surge', './dists/surge/geolocation-cn.txt')
-dump_rules(list_cntld, 'clash', './dists/clash/geolocation-cn.txt')
+list_cntld_sorted = [item for item in set_cntld]
+list_cntld_sorted.sort()
+
+dump_rules(list_cntld_sorted, 'surge', './dists/surge/geolocation-cn.txt')
+dump_rules(list_cntld_sorted, 'clash', './dists/clash/geolocation-cn.txt')
 
 dist_surge = open('./dists/surge/geolocation-cn.txt', mode='a')
 dist_clash = open('./dists/clash/geolocation-cn.txt', mode='a')
 
 for domain in list_domain_surge[:]:
-    for tld in list_cntld:
+    for tld in set_cntld:
         if domain.endswith(tld):
             list_domain_surge.remove(domain)
             break
 for domain in list_domain_clash[:]:
-    for tld in list_cntld:
+    for tld in set_cntld:
         if domain.endswith(tld + "'"):
             list_domain_clash.remove(domain)
             break
@@ -244,16 +248,18 @@ list_custom = os.listdir(PREFIX_CUSTOM_SRC)
 for filename in list_custom:
     if os.path.isfile(PREFIX_CUSTOM_SRC + filename):
         content_custom = custom_convert(PREFIX_CUSTOM_SRC + filename)
-        content_custom.sort()
-        dump_rules(content_custom, 'surge', './dists/surge/' + filename)
-        dump_rules(content_custom, 'clash', './dists/clash/' + filename)
+        list_custom_sorted = [item for item in content_custom]
+        list_custom_sorted.sort()
+        dump_rules(list_custom_sorted, 'surge', './dists/surge/' + filename)
+        dump_rules(list_custom_sorted, 'clash', './dists/clash/' + filename)
 
 list_personal = os.listdir(PREFIX_CUSTOM_SRC + "personal/")
 for filename in list_personal:
     content_personal = custom_convert(PREFIX_CUSTOM_SRC + "personal/" + filename)
-    content_personal.sort()
-    dump_rules(content_personal, 'surge', './dists/surge/personal/' + filename)
-    dump_rules(content_personal, 'clash', './dists/clash/personal/' + filename)
+    list_personal_sorted = [item for item in content_personal]
+    list_personal_sorted.sort()
+    dump_rules(list_personal_sorted, 'surge', './dists/surge/personal/' + filename)
+    dump_rules(list_personal_sorted, 'clash', './dists/clash/personal/' + filename)
 
 END_TIME = time_ns()
 print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
