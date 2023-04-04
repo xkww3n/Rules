@@ -149,14 +149,16 @@ list_rejections = list(set(list_rejections))
 list_exclusions_raw = list(set(list_exclusions_raw))
 list_exclusions = []
 
-for domain_exclude in list_exclusions_raw:
+for domain_exclude in list_exclusions_raw[:]:
     for domain_reject in list_rejections[:]:
-        if domain_reject == domain_exclude:
+        if domain_reject == domain_exclude or domain_reject == '.' + domain_exclude:
             list_rejections.remove(domain_reject)
-            break
-        if domain_exclude.endswith(domain_reject) and domain_exclude != domain_reject:
+            list_exclusions_raw.remove(domain_exclude)
+
+for domain_exclude in list_exclusions_raw:
+    for domain_reject in list_rejections:
+        if domain_exclude.endswith(domain_reject):
             list_exclusions.append(domain_exclude)
-            break
 
 exclusions_append = PREFIX_CUSTOM_ADJUST + "append-exclude.txt"
 for line in custom_convert(exclusions_append):
