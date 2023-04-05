@@ -22,7 +22,7 @@ def geosite_import(src:list, exclusion:str='') -> set:
 def geosite_convert(src:set) -> set:
     # The following 2 regexes' group 1 matches domains without "@cn" directive.
     regex_fulldomain = re.compile(r'^full\:([-\.a-zA-Z\d]{1,}?(?:\.[-\.a-zA-Z\d]{1,}))(?: @cn){0,1}?$')
-    regex_subdomain = re.compile(r'^([-a-zA-Z\d]{1,}(?:\.[-a-zA-Z\d]*)?)(?: @cn){0,1}?$')
+    regex_subdomain = re.compile(r'^([-a-zA-Z\d]{1,}(?:\.\S*)?)(?: @cn)?$')
     set_converted = set()
     for line in src:
         if not line.startswith("regexp:") or line.startswith("keyword:") or line.startswith("#"):
