@@ -81,8 +81,8 @@ def is_domain_rule(rule:Filter) -> bool:
 
 def dump_rules(src:list, target:str, dst:str) -> None:
     dist = open(dst, mode='w')
-    if target not in ['surge', 'clash']:
-        raise TypeError("Target type unsupported, only accept 'surge' or 'clash'.")
+    if target not in ['surge', 'clash', 'surge-compatible', 'clash-compatible']:
+        raise TypeError("Target type unsupported, only accept 'surge', 'clash', 'surge-compatible' or 'clash-compatible'.")
     if target == 'clash':
         dist.writelines("payload:\n")
     for domain in src:
@@ -90,13 +90,21 @@ def dump_rules(src:list, target:str, dst:str) -> None:
             if domain.startswith('.'):
                 if target == 'surge':
                     dist.writelines(domain + '\n')
-                if target == 'clash':
+                elif target == 'clash':
                     dist.writelines("  - '+" + domain + "'\n")
+                elif target == 'surge-compatible':
+                    dist.writelines(domain.replace('.', "DOMAIN-SUFFIX,", 1) + '\n')
+                elif target == 'clash-compatible':
+                    dist.writelines(domain.replace('.', "DOMAIN-SUFFIX,", 1) + ",Policy\n")
             elif not domain.startswith('#'):
                 if target == 'surge':
                     dist.writelines(domain + '\n')
-                if target == 'clash':
+                elif target == 'clash':
                     dist.writelines("  - '" + domain + "'\n")
+                elif target == 'surge-compatible':
+                    dist.writelines("DOMAIN," + domain + '\n')
+                elif target == 'clash-compatible':
+                    dist.writelines("DOMAIN," + domain + ",Policy\n")
 
 # Stage 1: Sync reject and exclude rules.
 print("START Stage 1: Sync reject and exclude rules.")
@@ -172,9 +180,13 @@ list_exclusions_sorted.sort()
 
 dump_rules(list_rejections_sorted, 'surge', './dists/surge/reject.txt')
 dump_rules(list_rejections_sorted, 'clash', './dists/clash/reject.txt')
+dump_rules(list_rejections_sorted, 'surge-compatible', './dists/surge-compatible/reject.txt')
+dump_rules(list_rejections_sorted, 'clash-compatible', './dists/clash-compatible/reject.txt')
 
 dump_rules(list_exclusions_sorted, 'surge', './dists/surge/exclude.txt')
 dump_rules(list_exclusions_sorted, 'clash', './dists/clash/exclude.txt')
+dump_rules(list_rejections_sorted, 'surge-compatible', './dists/surge-compatible/exclude.txt')
+dump_rules(list_rejections_sorted, 'clash-compatible', './dists/clash-compatible/exclude.txt')
 
 END_TIME = time_ns()
 print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
@@ -186,7 +198,7 @@ START_TIME = time_ns()
 
 target = ['bahamut', 'geolocation-cn', 'dmm', 'googlefcm', 'microsoft', 'niconico', 'openai', 'paypal', 'youtube']
 exclusions = ['github'] ## GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
-geosite_batch_convert(target, ['surge', 'clash'], exclusions)
+geosite_batch_convert(target, ['surge', 'clash', 'surge-compatible', 'clash-compatible'], exclusions)
 
 END_TIME = time_ns()
 print("FINISHED Stage 2.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
@@ -204,20 +216,30 @@ for line in open(PREFIX_DOMAIN_LIST + "tld-cn", mode='r').read().splitlines():
         set_cntld.add('.' + istld[1])
 dist_surge = open('./dists/surge/geolocation-cn.txt', mode='r')
 dist_clash = open('./dists/clash/geolocation-cn.txt', mode='r')
+dist_surge_compatible = open('./dists/surge-compatible/geolocation-cn.txt', mode='r')
+dist_clash_compatible = open('./dists/clash-compatible/geolocation-cn.txt', mode='r')
 list_domain_surge = dist_surge.read().splitlines()
 list_domain_clash = dist_clash.read().splitlines()[1:]
+list_domain_surge_compatible = dist_surge_compatible.read().splitlines()
+list_domain_clash_compatible = dist_clash_compatible.read().splitlines()
 ## After loading temporary rules, reopen rule files as write mode.
 dist_surge.close()
 dist_clash.close()
+dist_surge_compatible.close()
+dist_clash_compatible.close()
 
 list_cntld_sorted = [item for item in set_cntld]
 list_cntld_sorted.sort()
 
 dump_rules(list_cntld_sorted, 'surge', './dists/surge/geolocation-cn.txt')
 dump_rules(list_cntld_sorted, 'clash', './dists/clash/geolocation-cn.txt')
+dump_rules(list_cntld_sorted, 'surge-compatible', './dists/surge-compatible/geolocation-cn.txt')
+dump_rules(list_cntld_sorted, 'clash-compatible', './dists/clash-compatible/geolocation-cn.txt')
 
 dist_surge = open('./dists/surge/geolocation-cn.txt', mode='a')
 dist_clash = open('./dists/clash/geolocation-cn.txt', mode='a')
+dist_surge_compatible = open('./dists/surge-compatible/geolocation-cn.txt', mode='a')
+dist_clash_compatible = open('./dists/clash-compatible/geolocation-cn.txt', mode='a')
 
 for domain in list_domain_surge[:]:
     for tld in set_cntld:
@@ -229,14 +251,30 @@ for domain in list_domain_clash[:]:
         if domain.endswith(tld + "'"):
             list_domain_clash.remove(domain)
             break
+for domain in list_domain_surge_compatible[:]:
+    for tld in set_cntld:
+        if domain.endswith(tld):
+            list_domain_surge_compatible.remove(domain)
+            break
+for domain in list_domain_clash_compatible[:]:
+    for tld in set_cntld:
+        if domain.endswith(tld + ",Policy"):
+            list_domain_clash_compatible.remove(domain)
+            break
 
 for line in list_domain_surge:
     dist_surge.writelines(line + '\n')
 for line in list_domain_clash:
     dist_clash.writelines(line + '\n')
+for line in list_domain_surge_compatible:
+    dist_surge_compatible.writelines(line + '\n')
+for line in list_domain_clash_compatible:
+    dist_clash_compatible.writelines(line + '\n')
 
 dist_surge.close()
 dist_clash.close()
+dist_surge_compatible.close()
+dist_clash_compatible.close()
 END_TIME = time_ns()
 print("FINISHED Stage 3\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 ## Stage 3 finished.
@@ -252,6 +290,8 @@ for filename in list_file_custom:
         list_custom_sorted.sort()
         dump_rules(list_custom_sorted, 'surge', './dists/surge/' + filename)
         dump_rules(list_custom_sorted, 'clash', './dists/clash/' + filename)
+        dump_rules(list_custom_sorted, 'surge-compatible', './dists/surge-compatible/' + filename)
+        dump_rules(list_custom_sorted, 'clash-compatible', './dists/clash-compatible/' + filename)
 
 list_file_personal = os.listdir(PREFIX_CUSTOM_SRC + "personal/")
 for filename in list_file_personal:
@@ -260,6 +300,8 @@ for filename in list_file_personal:
     list_personal_sorted.sort()
     dump_rules(list_personal_sorted, 'surge', './dists/surge/personal/' + filename)
     dump_rules(list_personal_sorted, 'clash', './dists/clash/personal/' + filename)
+    dump_rules(list_personal_sorted, 'surge-compatible', './dists/surge-compatible/personal/' + filename)
+    dump_rules(list_personal_sorted, 'clash-compatible', './dists/clash-compatible/personal/' + filename)
 
 END_TIME = time_ns()
 print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
