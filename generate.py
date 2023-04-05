@@ -185,8 +185,8 @@ dump_rules(list_rejections_sorted, 'clash-compatible', './dists/clash-compatible
 
 dump_rules(list_exclusions_sorted, 'surge', './dists/surge/exclude.txt')
 dump_rules(list_exclusions_sorted, 'clash', './dists/clash/exclude.txt')
-dump_rules(list_rejections_sorted, 'surge-compatible', './dists/surge-compatible/exclude.txt')
-dump_rules(list_rejections_sorted, 'clash-compatible', './dists/clash-compatible/exclude.txt')
+dump_rules(list_exclusions_sorted, 'surge-compatible', './dists/surge-compatible/exclude.txt')
+dump_rules(list_exclusions_sorted, 'clash-compatible', './dists/clash-compatible/exclude.txt')
 
 END_TIME = time_ns()
 print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
