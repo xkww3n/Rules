@@ -1,0 +1,14 @@
+playartifact.com
+s.team
+steam-api.com
+steam-chat.com
+steamcommunity.com
+steamcontent.com
+steamdeck.com
+steamgames.com
+steampowered.com
+steamserver.net
+steamstatic.com
+steamusercontent.com
+underlords.com
+valvesoftware.com
