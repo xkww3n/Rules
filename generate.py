@@ -87,23 +87,25 @@ def dump_rules(src:list, target:str, dst:str) -> None:
         dist.writelines("payload:\n")
     for domain in src:
         if domain:
-            if domain.startswith('.'):
-                if target == 'surge':
+            if target == 'surge':
+                if domain.startswith('.'):
                     dist.writelines(domain + '\n')
-                elif target == 'clash':
+                elif not domain.startswith('#'):
+                    dist.writelines(domain + '\n')
+            elif target == 'clash':
+                if domain.startswith('.'):
                     dist.writelines("  - '+" + domain + "'\n")
-                elif target == 'surge-compatible':
-                    dist.writelines(domain.replace('.', "DOMAIN-SUFFIX,", 1) + '\n')
-                elif target == 'clash-compatible':
-                    dist.writelines(domain.replace('.', "DOMAIN-SUFFIX,", 1) + ",Policy\n")
-            elif not domain.startswith('#'):
-                if target == 'surge':
-                    dist.writelines(domain + '\n')
-                elif target == 'clash':
+                elif not domain.startswith('#'):
                     dist.writelines("  - '" + domain + "'\n")
-                elif target == 'surge-compatible':
+            elif target == 'surge-compatible':
+                if domain.startswith('.'):
+                    dist.writelines(domain.replace('.', "DOMAIN-SUFFIX,", 1) + '\n')
+                elif not domain.startswith('#'):
                     dist.writelines("DOMAIN," + domain + '\n')
-                elif target == 'clash-compatible':
+            elif target == 'clash-compatible':
+                if domain.startswith('.'):
+                    dist.writelines(domain.replace('.', "DOMAIN-SUFFIX,", 1) + ",Policy\n")
+                elif not domain.startswith('#'):
                     dist.writelines("DOMAIN," + domain + ",Policy\n")
 
 # Stage 1: Sync reject and exclude rules.
