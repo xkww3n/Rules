@@ -13,8 +13,8 @@ def geosite_import(src:list, exclusion:str='') -> set:
     for line in src:
         flag_import = regex_import.match(line)
         if flag_import and flag_import.group(1) != exclusion:
-            file_import = open(PREFIX_DOMAIN_LIST + flag_import.group(1), mode='r').read().splitlines()
-            set_converted |= geosite_import(file_import)
+            src_import = open(PREFIX_DOMAIN_LIST + flag_import.group(1), mode='r').read().splitlines()
+            set_converted |= geosite_import(src_import)
             continue
         set_converted.add(line)
     return set_converted
@@ -110,27 +110,27 @@ def dump_rules(src:list, target:str, dst:str) -> None:
 print("START Stage 1: Sync reject and exclude rules.")
 START_TIME = time_ns()
 ## AdGuard Base Filter
-url_base = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt'
+URL_BASE = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt'
 ## Easylist China
-url_cn = 'https://easylist-downloads.adblockplus.org/easylistchina.txt'
+URL_CN = 'https://easylist-downloads.adblockplus.org/easylistchina.txt'
 ## もちフィルタ
-url_jp = 'https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi_filter.txt'
+URL_JP = 'https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi_filter.txt'
 ## AdGuard Mobile Filter
-url_mobile = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt'
+URL_MOBILE = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt'
 ## ADgk
-url_cn_extend = 'https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt'
+URL_CN_EXTEND = 'https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt'
 ## AdGuard DNS Filter Whitelist
-url_exclusions_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt'
-url_exclusions_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
+URL_EXCLUSIONS_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt'
+URL_EXCLUSIONS_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
 
 src_rejections = (
-    get(url_base).text +
-    get(url_cn).text +
-    get(url_jp).text +
-    get(url_mobile).text +
-    get(url_cn_extend).text
+    get(URL_BASE).text +
+    get(URL_CN).text +
+    get(URL_JP).text +
+    get(URL_MOBILE).text +
+    get(URL_CN_EXTEND).text
     ).splitlines()
-src_exclusions = (get(url_exclusions_1).text + get(url_exclusions_2).text).splitlines()
+src_exclusions = (get(URL_EXCLUSIONS_1).text + get(URL_EXCLUSIONS_2).text).splitlines()
 
 set_rejections = set()
 set_exclusions_raw = set()
