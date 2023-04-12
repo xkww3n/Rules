@@ -202,21 +202,34 @@ END_TIME = time_ns()
 print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 # Stage 1 finished.
 
-# Stage 2: Sync v2fly community rules.
-print("START Stage 2: Sync v2fly community rules.")
+# Stage 2: Sync CN rules.
+print("START Stage 2: Sync CN rules.")
 START_TIME = time_ns()
 
-rules_dump(list_cn_sorted, 'surge', './dists/surge/geolocation-cn.txt')
-rules_dump(list_cn_sorted, 'clash', './dists/clash/geolocation-cn.txt')
-rules_dump(list_cn_sorted, 'surge-compatible', './dists/surge-compatible/geolocation-cn.txt')
-rules_dump(list_cn_sorted, 'clash-compatible', './dists/clash-compatible/geolocation-cn.txt')
+src_cn_raw = geosite_import(open(PREFIX_DOMAIN_LIST + 'geolocation-cn', mode='r').read().splitlines())
+set_cn_raw = geosite_convert(src_cn_raw)
+set_cn_raw |= custom_convert(PREFIX_CUSTOM_ADJUST + "append-direct.txt")
+list_cn_sorted = set_to_sorted_list(set_cn_raw)
+rules_batch_dump(list_cn_sorted, TARGETS, PREFIX_DIST, "geolocation-cn.txt")
 
 END_TIME = time_ns()
 print("FINISHED Stage 2.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 # Stage 2 finished.
 
-# Stage 3: Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.
-print("START Stage 3: Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.")
+# Stage 3: Sync v2fly community rules.
+print("START Stage 3: Sync v2fly community rules.")
+START_TIME = time_ns()
+
+target = ['bahamut', 'dmm', 'googlefcm', 'microsoft', 'niconico', 'openai', 'paypal', 'youtube']
+exclusions = ['github'] ## GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
+geosite_batch_convert(target, ['surge', 'clash', 'surge-compatible', 'clash-compatible'], exclusions)
+
+END_TIME = time_ns()
+print("FINISHED Stage 3.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+# Stage 3 finished.
+
+# Stage 4: Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.
+print("START Stage 4: Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.")
 START_TIME = time_ns()
 regex_cntld = re.compile(r'^([-\.a-zA-Z\d]{1,}(?:\.\w{1,})?)( #.*){0,1}$')
 
@@ -287,11 +300,11 @@ dist_clash.close()
 dist_surge_compatible.close()
 dist_clash_compatible.close()
 END_TIME = time_ns()
-print("FINISHED Stage 3\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
-## Stage 3 finished.
+print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+## Stage 4 finished.
 
-## Stage 4: Build custom rules.
-print("START Stage 4: Build custom rules.")
+## Stage 5: Build custom rules.
+print("START Stage 5: Build custom rules.")
 START_TIME = time_ns()
 list_file_custom = os.listdir(PREFIX_CUSTOM_SRC)
 for filename in list_file_custom:
@@ -307,5 +320,5 @@ for filename in list_file_personal:
     rules_batch_dump(list_personal_sorted, TARGETS, PREFIX_DIST, "personal/" + filename)
 
 END_TIME = time_ns()
-print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
-## Stage 4 finished
+print("FINISHED Stage 5\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+## Stage 5 finished
