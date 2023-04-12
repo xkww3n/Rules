@@ -9,7 +9,7 @@ Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/reject.txt>
 
 Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/reject.txt>
 
-- 自动生成
+- 自动生成 + 人工修订
 - 拦截在中国与日本常见的广告提供商和跟踪服务商的服务域名。
 - **不**拦截这些服务商面向其接入客户的域名（如：官网、控制台）。如果两者相同，将不会拦截。
 - 应当放在**所有非拦截类规则列表之前**
@@ -45,7 +45,7 @@ Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/geolocation-cn.
 
 Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/geolocation-cn.txt>
 
-- 自动生成
+- 自动生成 + 人工修订
 - 包含各大中国大陆网络服务提供商的域名。
 - 对于由 [CNNIC](https://www.cnnic.net.cn/) 管理的 TLD（如 `.cn`、`.中国`），无论其对应的服务是否在中国大陆境内运营，都将视为中国大陆服务。
 - 不包含跨国网络服务提供商对中国大陆提供服务的域名（如微软的 `o365cn.com`）。
@@ -150,7 +150,7 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/microsoft.txt>
 - 数据来源：
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
-### niconico 动画 / ニコニコ動画
+### niconico 动画
 Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/niconico.txt>
 
 Surge 3 规则集：<https://rules.xkww3n.cyou/surge/niconico.txt>
