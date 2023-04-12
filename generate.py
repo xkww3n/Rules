@@ -255,10 +255,6 @@ dist_clash_compatible.close()
 list_cntld_sorted = set_to_sorted_list(set_cntld)
 
 rules_batch_dump(list_cntld_sorted, TARGETS, PREFIX_DIST, "geolocation-cn.txt")
-rules_dump(list_cntld_sorted, 'surge', './dists/surge/geolocation-cn.txt')
-rules_dump(list_cntld_sorted, 'clash', './dists/clash/geolocation-cn.txt')
-rules_dump(list_cntld_sorted, 'surge-compatible', './dists/surge-compatible/geolocation-cn.txt')
-rules_dump(list_cntld_sorted, 'clash-compatible', './dists/clash-compatible/geolocation-cn.txt')
 
 dist_surge = open('./dists/surge/geolocation-cn.txt', mode='a')
 dist_clash = open('./dists/clash/geolocation-cn.txt', mode='a')
