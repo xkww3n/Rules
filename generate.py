@@ -3,9 +3,11 @@ from abp.filters.parser import parse_filterlist, Filter
 from requests import get
 from time import time_ns
 
+TARGETS = ['surge', 'clash', 'surge-compatible', 'clash-compatible']
 PREFIX_DOMAIN_LIST = './domain-list-community/data/'
 PREFIX_CUSTOM_SRC = './Source/'
 PREFIX_CUSTOM_ADJUST = './Custom/'
+PREFIX_DIST = './dists/'
 
 def geosite_import(src:list, exclusion:str='') -> set:
     regex_import = re.compile(r'^include\:([-\w]{1,})$')
@@ -114,6 +116,15 @@ def rules_dump(src:list, target:str, dst:str) -> None:
         case _:
             raise TypeError("Target type unsupported, only accept 'surge', 'clash', 'surge-compatible' or 'clash-compatible'.")
 
+def rules_batch_dump(src:list, targets:list, dst_prefix:str, filename:str) -> None:
+    for target in targets:
+        rules_dump(src, target, dst_prefix + target + '/' + filename)
+
+def set_to_sorted_list(src:set) -> list:
+    list_sorted = [item for item in src]
+    list_sorted.sort()
+    return list_sorted
+
 # Stage 1: Sync reject and exclude rules.
 print("START Stage 1: Sync reject and exclude rules.")
 START_TIME = time_ns()
@@ -181,25 +192,11 @@ for line in custom_convert(path_exclusions_append):
     else:
         print(line + " has already been excluded.")
 
-list_rejections_sorted = [item for item in set_rejections]
-list_rejections_sorted.sort()
-list_exclusions_sorted = [item for item in set_exclusions]
-list_exclusions_sorted.sort()
+list_rejections_sorted = set_to_sorted_list(set_rejections)
+list_exclusions_sorted = set_to_sorted_list(set_exclusions)
 
-dump_rules(list_rejections_sorted, 'surge', './dists/surge/reject.txt')
-dump_rules(list_rejections_sorted, 'clash', './dists/clash/reject.txt')
-dump_rules(list_rejections_sorted, 'surge-compatible', './dists/surge-compatible/reject.txt')
-dump_rules(list_rejections_sorted, 'clash-compatible', './dists/clash-compatible/reject.txt')
-
-rules_dump(list_rejections_sorted, 'surge', './dists/surge/reject.txt')
-rules_dump(list_rejections_sorted, 'clash', './dists/clash/reject.txt')
-rules_dump(list_rejections_sorted, 'surge-compatible', './dists/surge-compatible/reject.txt')
-rules_dump(list_rejections_sorted, 'clash-compatible', './dists/clash-compatible/reject.txt')
-
-rules_dump(list_exclusions_sorted, 'surge', './dists/surge/exclude.txt')
-rules_dump(list_exclusions_sorted, 'clash', './dists/clash/exclude.txt')
-rules_dump(list_exclusions_sorted, 'surge-compatible', './dists/surge-compatible/exclude.txt')
-rules_dump(list_exclusions_sorted, 'clash-compatible', './dists/clash-compatible/exclude.txt')
+rules_batch_dump(list_rejections_sorted, TARGETS, PREFIX_DIST, "reject.txt")
+rules_batch_dump(list_exclusions_sorted, TARGETS, PREFIX_DIST, "reject.txt")
 
 END_TIME = time_ns()
 print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
@@ -242,9 +239,9 @@ dist_clash.close()
 dist_surge_compatible.close()
 dist_clash_compatible.close()
 
-list_cntld_sorted = [item for item in set_cntld]
-list_cntld_sorted.sort()
+list_cntld_sorted = set_to_sorted_list(set_cntld)
 
+rules_batch_dump(list_cntld_sorted, TARGETS, PREFIX_DIST, "geolocation-cn.txt")
 rules_dump(list_cntld_sorted, 'surge', './dists/surge/geolocation-cn.txt')
 rules_dump(list_cntld_sorted, 'clash', './dists/clash/geolocation-cn.txt')
 rules_dump(list_cntld_sorted, 'surge-compatible', './dists/surge-compatible/geolocation-cn.txt')
@@ -300,22 +297,14 @@ list_file_custom = os.listdir(PREFIX_CUSTOM_SRC)
 for filename in list_file_custom:
     if os.path.isfile(PREFIX_CUSTOM_SRC + filename):
         set_custom = custom_convert(PREFIX_CUSTOM_SRC + filename)
-        list_custom_sorted = [item for item in set_custom]
-        list_custom_sorted.sort()
-        rules_dump(list_custom_sorted, 'surge', './dists/surge/' + filename)
-        rules_dump(list_custom_sorted, 'clash', './dists/clash/' + filename)
-        rules_dump(list_custom_sorted, 'surge-compatible', './dists/surge-compatible/' + filename)
-        rules_dump(list_custom_sorted, 'clash-compatible', './dists/clash-compatible/' + filename)
+        list_custom_sorted = set_to_sorted_list(set_custom)
+        rules_batch_dump(list_custom_sorted, TARGETS, PREFIX_DIST, filename)
 
 list_file_personal = os.listdir(PREFIX_CUSTOM_SRC + "personal/")
 for filename in list_file_personal:
     set_personal = custom_convert(PREFIX_CUSTOM_SRC + "personal/" + filename)
-    list_personal_sorted = [item for item in set_personal]
-    list_personal_sorted.sort()
-    rules_dump(list_personal_sorted, 'surge', './dists/surge/personal/' + filename)
-    rules_dump(list_personal_sorted, 'clash', './dists/clash/personal/' + filename)
-    rules_dump(list_personal_sorted, 'surge-compatible', './dists/surge-compatible/personal/' + filename)
-    rules_dump(list_personal_sorted, 'clash-compatible', './dists/clash-compatible/personal/' + filename)
+    list_personal_sorted = set_to_sorted_list(set_personal)
+    rules_batch_dump(list_personal_sorted, TARGETS, PREFIX_DIST, "personal/" + filename)
 
 END_TIME = time_ns()
 print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
