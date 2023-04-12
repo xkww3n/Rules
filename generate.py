@@ -81,32 +81,38 @@ def is_domain_rule(rule:Filter) -> bool:
 
 def dump_rules(src:list, target:str, dst:str) -> None:
     dist = open(dst, mode='w')
-    if target not in ['surge', 'clash', 'surge-compatible', 'clash-compatible']:
-        raise TypeError("Target type unsupported, only accept 'surge', 'clash', 'surge-compatible' or 'clash-compatible'.")
-    if target == 'clash':
-        dist.writelines("payload:\n")
-    for domain in src:
-        if domain:
-            if target == 'surge':
-                if domain.startswith('.'):
-                    dist.writelines(domain + '\n')
-                elif not domain.startswith('#'):
-                    dist.writelines(domain + '\n')
-            elif target == 'clash':
-                if domain.startswith('.'):
-                    dist.writelines("  - '+" + domain + "'\n")
-                elif not domain.startswith('#'):
-                    dist.writelines("  - '" + domain + "'\n")
-            elif target == 'surge-compatible':
-                if domain.startswith('.'):
-                    dist.writelines(domain.replace('.', "DOMAIN-SUFFIX,", 1) + '\n')
-                elif not domain.startswith('#'):
-                    dist.writelines("DOMAIN," + domain + '\n')
-            elif target == 'clash-compatible':
-                if domain.startswith('.'):
-                    dist.writelines(domain.replace('.', "DOMAIN-SUFFIX,", 1) + ",Policy\n")
-                elif not domain.startswith('#'):
-                    dist.writelines("DOMAIN," + domain + ",Policy\n")
+    match target:
+        case 'surge':
+            for domain in src:
+                if domain:
+                    if domain.startswith('.'):
+                        dist.writelines(domain + '\n')
+                    elif not domain.startswith('#'):
+                        dist.writelines(domain + '\n')
+        case 'clash':
+            dist.writelines("payload:\n")
+            for domain in src:
+                if domain:
+                    if domain.startswith('.'):
+                        dist.writelines("  - '+" + domain + "'\n")
+                    elif not domain.startswith('#'):
+                        dist.writelines("  - '" + domain + "'\n")
+        case 'surge-compatible':
+            for domain in src:
+                if domain:
+                    if domain.startswith('.'):
+                        dist.writelines(domain.replace('.', "DOMAIN-SUFFIX,", 1) + '\n')
+                    elif not domain.startswith('#'):
+                        dist.writelines("DOMAIN," + domain + '\n')
+        case 'clash-compatible':
+            for domain in src:
+                if domain:
+                    if domain.startswith('.'):
+                        dist.writelines(domain.replace('.', "DOMAIN-SUFFIX,", 1) + ",Policy\n")
+                    elif not domain.startswith('#'):
+                        dist.writelines("DOMAIN," + domain + ",Policy\n")
+        case _:
+            raise TypeError("Target type unsupported, only accept 'surge', 'clash', 'surge-compatible' or 'clash-compatible'.")
 
 # Stage 1: Sync reject and exclude rules.
 print("START Stage 1: Sync reject and exclude rules.")
