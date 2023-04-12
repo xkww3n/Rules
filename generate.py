@@ -49,7 +49,7 @@ def custom_convert(src:str) -> set:
     src_custom = open(src, mode='r').read().splitlines()
     set_converted = set()
     for line in src_custom:
-        if not line.startswith('#'):
+        if line and not line.startswith('#'):
             set_converted.add(line)
     return set_converted
 
@@ -149,7 +149,7 @@ for line in parse_filterlist(src_rejections):
             set_rejections.add(line.text.replace('^', ''))
         else:
             set_rejections.add(line.text.replace("||", '.').replace('^', ''))
-    if is_domain_rule(line) and line.action == 'allow' and not line.text.endswith('|'):
+    elif is_domain_rule(line) and line.action == 'allow' and not line.text.endswith('|'):
         src_exclusions.append(line.text)
 
 for line in parse_filterlist(src_exclusions):
