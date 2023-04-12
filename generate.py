@@ -196,7 +196,7 @@ list_rejections_sorted = set_to_sorted_list(set_rejections)
 list_exclusions_sorted = set_to_sorted_list(set_exclusions)
 
 rules_batch_dump(list_rejections_sorted, TARGETS, PREFIX_DIST, "reject.txt")
-rules_batch_dump(list_exclusions_sorted, TARGETS, PREFIX_DIST, "reject.txt")
+rules_batch_dump(list_exclusions_sorted, TARGETS, PREFIX_DIST, "exclude.txt")
 
 END_TIME = time_ns()
 print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
