@@ -43,7 +43,7 @@ def geosite_batch_convert(targets:list, tools:list, exclusions:list=[]) -> None:
                 set_geosite = geosite_convert(src_geosite_imported)
                 list_geosite_sorted = [item for item in set_geosite]
                 list_geosite_sorted.sort()
-                dump_rules(list_geosite_sorted, tool, "./dists/" + tool + "/" + target + ".txt")
+                rules_dump(list_geosite_sorted, tool, "./dists/" + tool + "/" + target + ".txt")
 
 def custom_convert(src:str) -> set:
     src_custom = open(src, mode='r').read().splitlines()
@@ -79,7 +79,7 @@ def is_domain_rule(rule:Filter) -> bool:
     else:
         return False
 
-def dump_rules(src:list, target:str, dst:str) -> None:
+def rules_dump(src:list, target:str, dst:str) -> None:
     dist = open(dst, mode='w')
     match target:
         case 'surge':
@@ -191,10 +191,15 @@ dump_rules(list_rejections_sorted, 'clash', './dists/clash/reject.txt')
 dump_rules(list_rejections_sorted, 'surge-compatible', './dists/surge-compatible/reject.txt')
 dump_rules(list_rejections_sorted, 'clash-compatible', './dists/clash-compatible/reject.txt')
 
-dump_rules(list_exclusions_sorted, 'surge', './dists/surge/exclude.txt')
-dump_rules(list_exclusions_sorted, 'clash', './dists/clash/exclude.txt')
-dump_rules(list_exclusions_sorted, 'surge-compatible', './dists/surge-compatible/exclude.txt')
-dump_rules(list_exclusions_sorted, 'clash-compatible', './dists/clash-compatible/exclude.txt')
+rules_dump(list_rejections_sorted, 'surge', './dists/surge/reject.txt')
+rules_dump(list_rejections_sorted, 'clash', './dists/clash/reject.txt')
+rules_dump(list_rejections_sorted, 'surge-compatible', './dists/surge-compatible/reject.txt')
+rules_dump(list_rejections_sorted, 'clash-compatible', './dists/clash-compatible/reject.txt')
+
+rules_dump(list_exclusions_sorted, 'surge', './dists/surge/exclude.txt')
+rules_dump(list_exclusions_sorted, 'clash', './dists/clash/exclude.txt')
+rules_dump(list_exclusions_sorted, 'surge-compatible', './dists/surge-compatible/exclude.txt')
+rules_dump(list_exclusions_sorted, 'clash-compatible', './dists/clash-compatible/exclude.txt')
 
 END_TIME = time_ns()
 print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
@@ -204,9 +209,10 @@ print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 10
 print("START Stage 2: Sync v2fly community rules.")
 START_TIME = time_ns()
 
-target = ['bahamut', 'geolocation-cn', 'dmm', 'googlefcm', 'microsoft', 'niconico', 'openai', 'paypal', 'youtube']
-exclusions = ['github'] ## GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
-geosite_batch_convert(target, ['surge', 'clash', 'surge-compatible', 'clash-compatible'], exclusions)
+rules_dump(list_cn_sorted, 'surge', './dists/surge/geolocation-cn.txt')
+rules_dump(list_cn_sorted, 'clash', './dists/clash/geolocation-cn.txt')
+rules_dump(list_cn_sorted, 'surge-compatible', './dists/surge-compatible/geolocation-cn.txt')
+rules_dump(list_cn_sorted, 'clash-compatible', './dists/clash-compatible/geolocation-cn.txt')
 
 END_TIME = time_ns()
 print("FINISHED Stage 2.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
@@ -239,10 +245,10 @@ dist_clash_compatible.close()
 list_cntld_sorted = [item for item in set_cntld]
 list_cntld_sorted.sort()
 
-dump_rules(list_cntld_sorted, 'surge', './dists/surge/geolocation-cn.txt')
-dump_rules(list_cntld_sorted, 'clash', './dists/clash/geolocation-cn.txt')
-dump_rules(list_cntld_sorted, 'surge-compatible', './dists/surge-compatible/geolocation-cn.txt')
-dump_rules(list_cntld_sorted, 'clash-compatible', './dists/clash-compatible/geolocation-cn.txt')
+rules_dump(list_cntld_sorted, 'surge', './dists/surge/geolocation-cn.txt')
+rules_dump(list_cntld_sorted, 'clash', './dists/clash/geolocation-cn.txt')
+rules_dump(list_cntld_sorted, 'surge-compatible', './dists/surge-compatible/geolocation-cn.txt')
+rules_dump(list_cntld_sorted, 'clash-compatible', './dists/clash-compatible/geolocation-cn.txt')
 
 dist_surge = open('./dists/surge/geolocation-cn.txt', mode='a')
 dist_clash = open('./dists/clash/geolocation-cn.txt', mode='a')
@@ -296,20 +302,20 @@ for filename in list_file_custom:
         set_custom = custom_convert(PREFIX_CUSTOM_SRC + filename)
         list_custom_sorted = [item for item in set_custom]
         list_custom_sorted.sort()
-        dump_rules(list_custom_sorted, 'surge', './dists/surge/' + filename)
-        dump_rules(list_custom_sorted, 'clash', './dists/clash/' + filename)
-        dump_rules(list_custom_sorted, 'surge-compatible', './dists/surge-compatible/' + filename)
-        dump_rules(list_custom_sorted, 'clash-compatible', './dists/clash-compatible/' + filename)
+        rules_dump(list_custom_sorted, 'surge', './dists/surge/' + filename)
+        rules_dump(list_custom_sorted, 'clash', './dists/clash/' + filename)
+        rules_dump(list_custom_sorted, 'surge-compatible', './dists/surge-compatible/' + filename)
+        rules_dump(list_custom_sorted, 'clash-compatible', './dists/clash-compatible/' + filename)
 
 list_file_personal = os.listdir(PREFIX_CUSTOM_SRC + "personal/")
 for filename in list_file_personal:
     set_personal = custom_convert(PREFIX_CUSTOM_SRC + "personal/" + filename)
     list_personal_sorted = [item for item in set_personal]
     list_personal_sorted.sort()
-    dump_rules(list_personal_sorted, 'surge', './dists/surge/personal/' + filename)
-    dump_rules(list_personal_sorted, 'clash', './dists/clash/personal/' + filename)
-    dump_rules(list_personal_sorted, 'surge-compatible', './dists/surge-compatible/personal/' + filename)
-    dump_rules(list_personal_sorted, 'clash-compatible', './dists/clash-compatible/personal/' + filename)
+    rules_dump(list_personal_sorted, 'surge', './dists/surge/personal/' + filename)
+    rules_dump(list_personal_sorted, 'clash', './dists/clash/personal/' + filename)
+    rules_dump(list_personal_sorted, 'surge-compatible', './dists/surge-compatible/personal/' + filename)
+    rules_dump(list_personal_sorted, 'clash-compatible', './dists/clash-compatible/personal/' + filename)
 
 END_TIME = time_ns()
 print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
