@@ -11,4 +11,3 @@
 .bilibili.tv
 .biliintl.com
 .bstarstatic.com
-pic-bstarstatic.akamaized.net
