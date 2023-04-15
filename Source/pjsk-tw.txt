@@ -1,2 +1,4 @@
 .bytedgame.com
 .byteoversea.com
+.bytegsdk.com
+.nvsgames.com
