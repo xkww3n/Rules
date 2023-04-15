@@ -1,4 +1,2 @@
 api.heaven-burns-red.wfs.games
 heaven-burns-red-assets.akamaized.net
-# Seems to be payment gateway
-gl-payment.gree-apps.net
