@@ -254,11 +254,11 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/youtube.txt>
       Surge 3 规则集：<https://rules.xkww3n.cyou/surge/heavenburnsred.txt>  
       Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/heavenburnsred.txt>  
       Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/heavenburnsred.txt>  
-  - ~~[Love Live! 学园偶像祭（英文版）](https://lovelive-sif-global.bushimo.jp/)~~
-    - ~~Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/loveliesif-en.txt>~~  
-      ~~Surge 3 规则集：<https://rules.xkww3n.cyou/surge/loveliesif-en.txt>~~  
-      ~~Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/loveliesif-en.txt>~~  
-      ~~Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/loveliesif-en.txt>~~  
+  - [Love Live!学园偶像祭2 MIRACLE LIVE!（日文版）](https://lovelive-sif2.bushimo.jp/)
+    - Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/loveliesif2-jp.txt>  
+      Surge 3 规则集：<https://rules.xkww3n.cyou/surge/loveliesif2-jp.txt>  
+      Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/loveliesif2-jp.txt>  
+      Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/loveliesif2-jp.txt>  
   - [世界计划 缤纷舞台！ feat.初音未来（繁体中文版）](https://www.tw-pjsekai.com/)
     - Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/pjsk-tw.txt>  
       Surge 3 规则集：<https://rules.xkww3n.cyou/surge/pjsk-tw.txt>  
