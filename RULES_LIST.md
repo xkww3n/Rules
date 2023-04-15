@@ -264,3 +264,18 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/youtube.txt>
       Surge 3 规则集：<https://rules.xkww3n.cyou/surge/pjsk-tw.txt>  
       Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/pjsk-tw.txt>  
       Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/pjsk-tw.txt>  
+
+## IP 归属地检测服务
+Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/ipgeo.txt>
+
+Surge 3 规则集：<https://rules.xkww3n.cyou/surge/ipgeo.txt>
+
+Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/ipgeo.txt>
+
+Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/ipgeo.txt>
+
+- 手动维护
+- 针对（主页、评论区等）公开展示用户 IP 归属地的网站，通过代理此规则内含的域名，可以实现更改对应网站检测到的 IP 归属地而（基本）不影响其他功能。
+- 支持的网站：
+  - [哔哩哔哩](https://www.bilibili.com/)
+  - [小红书](https://www.xiaohongshu.com/)
