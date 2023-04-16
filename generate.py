@@ -187,10 +187,7 @@ for domain_exclude in set_exclusions_raw:
 
 path_exclusions_append = PREFIX_CUSTOM_APPEND + "exclude.txt"
 for line in custom_convert(path_exclusions_append):
-    if (line not in set_exclusions or '.' + line not in set_exclusions):
         set_exclusions.add(line)
-    else:
-        print(line + " has already been excluded.")
 
 list_rejections_sorted = set_to_sorted_list(set_rejections)
 list_exclusions_sorted = set_to_sorted_list(set_exclusions)
