@@ -37,11 +37,10 @@ jobs:
       - name: Generate rules
         run: python generate.py
       - name: Deploy to GitHub Pages
-        uses: crazy-max/ghaction-github-pages@v3
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
         with:
-          target_branch: gh-pages
-          keep_history: true
-          build_dir: dists
-          fqdn: rules.xkww3n.cyou
+          clean: true
+          folder: dists
+          clean-exclude: CNAME
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
