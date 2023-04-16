@@ -244,11 +244,6 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/youtube.txt>
       Surge 3 规则集：<https://rules.xkww3n.cyou/surge/bangdream-jp.txt>  
       Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/bangdream-jp.txt>  
       Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/bangdream-jp.txt>  
-  - [原神（国际版）](https://genshin.hoyoverse.com/)
-    - Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/genshin.txt>  
-      Surge 3 规则集：<https://rules.xkww3n.cyou/surge/genshin.txt>  
-      Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/genshin.txt>  
-      Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/genshin.txt>  
   - [绯染天空](https://heaven-burns-red.com/)
     - Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/heavenburnsred.txt>  
       Surge 3 规则集：<https://rules.xkww3n.cyou/surge/heavenburnsred.txt>  
@@ -259,11 +254,6 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/youtube.txt>
       Surge 3 规则集：<https://rules.xkww3n.cyou/surge/loveliesif2-jp.txt>  
       Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/loveliesif2-jp.txt>  
       Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/loveliesif2-jp.txt>  
-  - [世界计划 缤纷舞台！ feat.初音未来（繁体中文版）](https://www.tw-pjsekai.com/)
-    - Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/pjsk-tw.txt>  
-      Surge 3 规则集：<https://rules.xkww3n.cyou/surge/pjsk-tw.txt>  
-      Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/pjsk-tw.txt>  
-      Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/pjsk-tw.txt>  
 
 ## IP 归属地检测服务
 Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/ipgeo.txt>
