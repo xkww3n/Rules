@@ -1,6 +1,7 @@
 import os, re
 from abp.filters.parser import parse_filterlist, Filter
 from requests import get
+from shutil import copyfile
 from time import time_ns
 
 TARGETS = ['surge', 'clash', 'surge-compatible', 'clash-compatible']
@@ -259,3 +260,7 @@ for filename in list_file_personal:
 END_TIME = time_ns()
 print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 ## Stage 4 finished
+
+# For backward compatibility.
+for target in TARGETS:
+    copyfile(PREFIX_DIST + target + "/domestic.txt", PREFIX_DIST + target + "/geolocation-cn.txt")
