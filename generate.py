@@ -5,8 +5,8 @@ from time import time_ns
 
 TARGETS = ['surge', 'clash', 'surge-compatible', 'clash-compatible']
 PREFIX_DOMAIN_LIST = './domain-list-community/data/'
-PREFIX_CUSTOM_SRC = './Source/'
-PREFIX_CUSTOM_ADJUST = './Custom/'
+PREFIX_CUSTOM_BUILD = './Source/'
+PREFIX_CUSTOM_APPEND = './Custom/Append/'
 PREFIX_DIST = './dists/'
 
 def geosite_import(src:list, exclusion:str='') -> set:
@@ -171,7 +171,7 @@ for line in parse_filterlist(src_exclusions):
 
 list_rejections_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r').read().splitlines()
 set_rejections |= geosite_convert(geosite_import(list_rejections_v2fly))
-set_rejections |= custom_convert(PREFIX_CUSTOM_ADJUST + "append-reject.txt")
+set_rejections |= custom_convert(PREFIX_CUSTOM_APPEND + "reject.txt")
 set_exclusions = set()
 
 for domain_exclude in set_exclusions_raw.copy():
@@ -185,7 +185,7 @@ for domain_exclude in set_exclusions_raw:
         if domain_exclude.endswith(domain_reject):
             set_exclusions.add(domain_exclude)
 
-path_exclusions_append = PREFIX_CUSTOM_ADJUST + "append-exclude.txt"
+path_exclusions_append = PREFIX_CUSTOM_APPEND + "exclude.txt"
 for line in custom_convert(path_exclusions_append):
     if (line not in set_exclusions or '.' + line not in set_exclusions):
         set_exclusions.add(line)
@@ -208,7 +208,7 @@ START_TIME = time_ns()
 
 src_cn_raw = geosite_import(open(PREFIX_DOMAIN_LIST + 'geolocation-cn', mode='r').read().splitlines())
 set_cn_raw = geosite_convert(src_cn_raw)
-set_cn_raw |= custom_convert(PREFIX_CUSTOM_ADJUST + "append-direct.txt")
+set_cn_raw |= custom_convert(PREFIX_CUSTOM_APPEND + "direct.txt")
 list_cn_sorted = set_to_sorted_list(set_cn_raw)
 rules_batch_dump(list_cn_sorted, TARGETS, PREFIX_DIST, "geolocation-cn.txt")
 
@@ -302,16 +302,16 @@ print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 10
 ## Stage 5: Build custom rules.
 print("START Stage 5: Build custom rules.")
 START_TIME = time_ns()
-list_file_custom = os.listdir(PREFIX_CUSTOM_SRC)
+list_file_custom = os.listdir(PREFIX_CUSTOM_BUILD)
 for filename in list_file_custom:
-    if os.path.isfile(PREFIX_CUSTOM_SRC + filename):
-        set_custom = custom_convert(PREFIX_CUSTOM_SRC + filename)
+    if os.path.isfile(PREFIX_CUSTOM_BUILD + filename):
+        set_custom = custom_convert(PREFIX_CUSTOM_BUILD + filename)
         list_custom_sorted = set_to_sorted_list(set_custom)
         rules_batch_dump(list_custom_sorted, TARGETS, PREFIX_DIST, filename)
 
-list_file_personal = os.listdir(PREFIX_CUSTOM_SRC + "personal/")
+list_file_personal = os.listdir(PREFIX_CUSTOM_BUILD + "personal/")
 for filename in list_file_personal:
-    set_personal = custom_convert(PREFIX_CUSTOM_SRC + "personal/" + filename)
+    set_personal = custom_convert(PREFIX_CUSTOM_BUILD + "personal/" + filename)
     list_personal_sorted = set_to_sorted_list(set_personal)
     rules_batch_dump(list_personal_sorted, TARGETS, PREFIX_DIST, "personal/" + filename)
 
