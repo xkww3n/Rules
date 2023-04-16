@@ -202,12 +202,27 @@ print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 10
 # Stage 2: Sync CN rules.
 print("START Stage 2: Sync CN rules.")
 START_TIME = time_ns()
+regex_domestic_tld = re.compile(r'^([-\.a-zA-Z\d]{1,}(?:\.\w{1,})?)( #.*){0,1}$')
 
-src_cn_raw = geosite_import(open(PREFIX_DOMAIN_LIST + 'geolocation-cn', mode='r').read().splitlines())
-set_cn_raw = geosite_convert(src_cn_raw)
-set_cn_raw |= custom_convert(PREFIX_CUSTOM_APPEND + "domestic.txt")
-list_cn_sorted = set_to_sorted_list(set_cn_raw)
-rules_batch_dump(list_cn_sorted, TARGETS, PREFIX_DIST, "domestic.txt")
+src_domestic_raw = geosite_import(open(PREFIX_DOMAIN_LIST + 'geolocation-cn', mode='r').read().splitlines())
+set_domestic_raw = geosite_convert(src_domestic_raw)
+set_domestic_raw |= custom_convert(PREFIX_CUSTOM_APPEND + "domestic.txt")
+
+## Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.
+set_domestic_tld = set()
+for line in open(PREFIX_DOMAIN_LIST + "tld-cn", mode='r').read().splitlines():
+    istld = regex_domestic_tld.match(line)
+    if istld:
+        set_domestic_tld.add('.' + istld[1])
+for domain in set_domestic_raw.copy():
+    for tld in set_domestic_tld:
+        if domain.endswith(tld):
+            set_domestic_raw.remove(domain)
+            break
+set_domestic_raw |= set_domestic_tld
+
+list_domestic_sorted = set_to_sorted_list(set_domestic_raw)
+rules_batch_dump(list_domestic_sorted, TARGETS, PREFIX_DIST, "domestic.txt")
 
 END_TIME = time_ns()
 print("FINISHED Stage 2.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
@@ -225,79 +240,8 @@ END_TIME = time_ns()
 print("FINISHED Stage 3.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
 # Stage 3 finished.
 
-# Stage 4: Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.
-print("START Stage 4: Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.")
-START_TIME = time_ns()
-regex_cntld = re.compile(r'^([-\.a-zA-Z\d]{1,}(?:\.\w{1,})?)( #.*){0,1}$')
-
-set_cntld = set()
-for line in open(PREFIX_DOMAIN_LIST + "tld-cn", mode='r').read().splitlines():
-    istld = regex_cntld.match(line)
-    if istld:
-        set_cntld.add('.' + istld[1])
-dist_surge = open('./dists/surge/domestic.txt', mode='r')
-dist_clash = open('./dists/clash/domestic.txt', mode='r')
-dist_surge_compatible = open('./dists/surge-compatible/domestic.txt', mode='r')
-dist_clash_compatible = open('./dists/clash-compatible/domestic.txt', mode='r')
-list_domain_surge = dist_surge.read().splitlines()
-list_domain_clash = dist_clash.read().splitlines()[1:]
-list_domain_surge_compatible = dist_surge_compatible.read().splitlines()
-list_domain_clash_compatible = dist_clash_compatible.read().splitlines()
-## After loading temporary rules, reopen rule files as write mode.
-dist_surge.close()
-dist_clash.close()
-dist_surge_compatible.close()
-dist_clash_compatible.close()
-
-list_cntld_sorted = set_to_sorted_list(set_cntld)
-
-rules_batch_dump(list_cntld_sorted, TARGETS, PREFIX_DIST, "domestic.txt")
-
-dist_surge = open('./dists/surge/domestic.txt', mode='a')
-dist_clash = open('./dists/clash/domestic.txt', mode='a')
-dist_surge_compatible = open('./dists/surge-compatible/domestic.txt', mode='a')
-dist_clash_compatible = open('./dists/clash-compatible/domestic.txt', mode='a')
-
-for domain in list_domain_surge[:]:
-    for tld in set_cntld:
-        if domain.endswith(tld):
-            list_domain_surge.remove(domain)
-            break
-for domain in list_domain_clash[:]:
-    for tld in set_cntld:
-        if domain.endswith(tld + "'"):
-            list_domain_clash.remove(domain)
-            break
-for domain in list_domain_surge_compatible[:]:
-    for tld in set_cntld:
-        if domain.endswith(tld):
-            list_domain_surge_compatible.remove(domain)
-            break
-for domain in list_domain_clash_compatible[:]:
-    for tld in set_cntld:
-        if domain.endswith(tld + ",Policy"):
-            list_domain_clash_compatible.remove(domain)
-            break
-
-for line in list_domain_surge:
-    dist_surge.writelines(line + '\n')
-for line in list_domain_clash:
-    dist_clash.writelines(line + '\n')
-for line in list_domain_surge_compatible:
-    dist_surge_compatible.writelines(line + '\n')
-for line in list_domain_clash_compatible:
-    dist_clash_compatible.writelines(line + '\n')
-
-dist_surge.close()
-dist_clash.close()
-dist_surge_compatible.close()
-dist_clash_compatible.close()
-END_TIME = time_ns()
-print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
-## Stage 4 finished.
-
-## Stage 5: Build custom rules.
-print("START Stage 5: Build custom rules.")
+## Stage 4: Build custom rules.
+print("START Stage 4: Build custom rules.")
 START_TIME = time_ns()
 list_file_custom = os.listdir(PREFIX_CUSTOM_BUILD)
 for filename in list_file_custom:
@@ -313,5 +257,5 @@ for filename in list_file_personal:
     rules_batch_dump(list_personal_sorted, TARGETS, PREFIX_DIST, "personal/" + filename)
 
 END_TIME = time_ns()
-print("FINISHED Stage 5\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
-## Stage 5 finished
+print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+## Stage 4 finished
