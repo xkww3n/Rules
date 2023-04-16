@@ -1,2 +1,1 @@
 api.heaven-burns-red.wfs.games
-heaven-burns-red-assets.akamaized.net

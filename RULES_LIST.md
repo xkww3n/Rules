@@ -233,7 +233,7 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/youtube.txt>
 
 ### 游戏
 - 手动维护
-- 提供以下游戏的分流规则（**包含**资源 CDN）：
+- 提供以下游戏的分流规则（**不含**资源 CDN）：
   - [碧蓝航线（英文版）](https://azurlane.yo-star.com/)
     - Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/azurlane-en.txt>  
       Surge 3 规则集：<https://rules.xkww3n.cyou/surge/azurlane-en.txt>  
