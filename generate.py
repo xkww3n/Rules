@@ -205,9 +205,9 @@ START_TIME = time_ns()
 
 src_cn_raw = geosite_import(open(PREFIX_DOMAIN_LIST + 'geolocation-cn', mode='r').read().splitlines())
 set_cn_raw = geosite_convert(src_cn_raw)
-set_cn_raw |= custom_convert(PREFIX_CUSTOM_APPEND + "direct.txt")
+set_cn_raw |= custom_convert(PREFIX_CUSTOM_APPEND + "domestic.txt")
 list_cn_sorted = set_to_sorted_list(set_cn_raw)
-rules_batch_dump(list_cn_sorted, TARGETS, PREFIX_DIST, "geolocation-cn.txt")
+rules_batch_dump(list_cn_sorted, TARGETS, PREFIX_DIST, "domestic.txt")
 
 END_TIME = time_ns()
 print("FINISHED Stage 2.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
@@ -235,10 +235,10 @@ for line in open(PREFIX_DOMAIN_LIST + "tld-cn", mode='r').read().splitlines():
     istld = regex_cntld.match(line)
     if istld:
         set_cntld.add('.' + istld[1])
-dist_surge = open('./dists/surge/geolocation-cn.txt', mode='r')
-dist_clash = open('./dists/clash/geolocation-cn.txt', mode='r')
-dist_surge_compatible = open('./dists/surge-compatible/geolocation-cn.txt', mode='r')
-dist_clash_compatible = open('./dists/clash-compatible/geolocation-cn.txt', mode='r')
+dist_surge = open('./dists/surge/domestic.txt', mode='r')
+dist_clash = open('./dists/clash/domestic.txt', mode='r')
+dist_surge_compatible = open('./dists/surge-compatible/domestic.txt', mode='r')
+dist_clash_compatible = open('./dists/clash-compatible/domestic.txt', mode='r')
 list_domain_surge = dist_surge.read().splitlines()
 list_domain_clash = dist_clash.read().splitlines()[1:]
 list_domain_surge_compatible = dist_surge_compatible.read().splitlines()
@@ -251,12 +251,12 @@ dist_clash_compatible.close()
 
 list_cntld_sorted = set_to_sorted_list(set_cntld)
 
-rules_batch_dump(list_cntld_sorted, TARGETS, PREFIX_DIST, "geolocation-cn.txt")
+rules_batch_dump(list_cntld_sorted, TARGETS, PREFIX_DIST, "domestic.txt")
 
-dist_surge = open('./dists/surge/geolocation-cn.txt', mode='a')
-dist_clash = open('./dists/clash/geolocation-cn.txt', mode='a')
-dist_surge_compatible = open('./dists/surge-compatible/geolocation-cn.txt', mode='a')
-dist_clash_compatible = open('./dists/clash-compatible/geolocation-cn.txt', mode='a')
+dist_surge = open('./dists/surge/domestic.txt', mode='a')
+dist_clash = open('./dists/clash/domestic.txt', mode='a')
+dist_surge_compatible = open('./dists/surge-compatible/domestic.txt', mode='a')
+dist_clash_compatible = open('./dists/clash-compatible/domestic.txt', mode='a')
 
 for domain in list_domain_surge[:]:
     for tld in set_cntld:
