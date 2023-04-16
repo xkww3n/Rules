@@ -37,13 +37,13 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/exclude.txt>
   - [AdGuard](https://github.com/AdguardTeam/AdguardFilters)
 
 ## 中国大陆网络服务
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/geolocation-cn.txt>
+Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/domestic.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/geolocation-cn.txt>
+Surge 3 规则集：<https://rules.xkww3n.cyou/surge/domestic.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/geolocation-cn.txt>
+Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/domestic.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/geolocation-cn.txt>
+Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/domestic.txt>
 
 - 自动生成 + 人工修订
 - 包含各大中国大陆网络服务提供商的域名。
