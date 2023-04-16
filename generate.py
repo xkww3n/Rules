@@ -36,16 +36,16 @@ def geosite_convert(src:set) -> set:
                 set_converted.add('.' + subdomain.group(1))
     return set_converted
 
-def geosite_batch_convert(targets:list, tools:list, exclusions:list=[]) -> None:
+def geosite_batch_convert(categories:list, tools:list, exclusions:list=[]) -> None:
     for tool in tools:
-        for target in targets:
+        for category in categories:
             for exclusion in exclusions:
-                src_geosite = open(PREFIX_DOMAIN_LIST + target, mode='r').read().splitlines()
+                src_geosite = open(PREFIX_DOMAIN_LIST + category, mode='r').read().splitlines()
                 src_geosite_imported = geosite_import(src_geosite, exclusion)
                 set_geosite = geosite_convert(src_geosite_imported)
                 list_geosite_sorted = [item for item in set_geosite]
                 list_geosite_sorted.sort()
-                rules_dump(list_geosite_sorted, tool, "./dists/" + tool + "/" + target + ".txt")
+                rules_dump(list_geosite_sorted, tool, "./dists/" + tool + "/" + category + ".txt")
 
 def custom_convert(src:str) -> set:
     src_custom = open(src, mode='r').read().splitlines()
@@ -220,9 +220,9 @@ print("FINISHED Stage 2.\nTotal time: " + str(format((END_TIME - START_TIME) / 1
 print("START Stage 3: Sync v2fly community rules.")
 START_TIME = time_ns()
 
-target = ['bahamut', 'dmm', 'googlefcm', 'microsoft', 'niconico', 'openai', 'paypal', 'youtube']
+categories = ['bahamut', 'dmm', 'googlefcm', 'microsoft', 'niconico', 'openai', 'paypal', 'youtube']
 exclusions = ['github'] ## GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
-geosite_batch_convert(target, ['surge', 'clash', 'surge-compatible', 'clash-compatible'], exclusions)
+geosite_batch_convert(categories, TARGETS, exclusions)
 
 END_TIME = time_ns()
 print("FINISHED Stage 3.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
