@@ -46,7 +46,7 @@ def geosite_batch_convert(categories:list, tools:list, exclusions:list=[]) -> No
                 set_geosite = geosite_convert(src_geosite_imported)
                 list_geosite_sorted = [item for item in set_geosite]
                 list_geosite_sorted.sort()
-                rules_dump(list_geosite_sorted, tool, "./dists/" + tool + "/" + category + ".txt")
+                rules_dump(list_geosite_sorted, tool, os.path.join(PREFIX_DIST, tool, category + ".txt"))
 
 def custom_convert(src:str) -> set:
     src_custom = open(src, mode='r').read().splitlines()
@@ -119,7 +119,7 @@ def rules_dump(src:list, target:str, dst:str) -> None:
 
 def rules_batch_dump(src:list, targets:list, dst_prefix:str, filename:str) -> None:
     for target in targets:
-        rules_dump(src, target, dst_prefix + target + '/' + filename)
+        rules_dump(src, target, os.path.join(dst_prefix, target, filename))
 
 def set_to_sorted_list(src:set) -> list:
     list_sorted = [item for item in src]
@@ -170,9 +170,9 @@ for line in parse_filterlist(src_exclusions):
         if not domain.startswith('-'):
             set_exclusions_raw.add(domain)
 
-list_rejections_v2fly = open(PREFIX_DOMAIN_LIST + "category-ads-all", mode='r').read().splitlines()
+list_rejections_v2fly = open(os.path.join(PREFIX_DOMAIN_LIST, "category-ads-all"), mode='r').read().splitlines()
 set_rejections |= geosite_convert(geosite_import(list_rejections_v2fly))
-set_rejections |= custom_convert(PREFIX_CUSTOM_APPEND + "reject.txt")
+set_rejections |= custom_convert(os.path.join(PREFIX_CUSTOM_APPEND, "reject.txt"))
 set_exclusions = set()
 
 for domain_exclude in set_exclusions_raw.copy():
@@ -186,7 +186,7 @@ for domain_exclude in set_exclusions_raw:
         if domain_exclude.endswith(domain_reject):
             set_exclusions.add(domain_exclude)
 
-path_exclusions_append = PREFIX_CUSTOM_APPEND + "exclude.txt"
+path_exclusions_append = os.path.join(PREFIX_CUSTOM_APPEND, "exclude.txt")
 for line in custom_convert(path_exclusions_append):
         set_exclusions.add(line)
 
@@ -205,13 +205,13 @@ print("START Stage 2: Sync CN rules.")
 START_TIME = time_ns()
 regex_domestic_tld = re.compile(r'^([-\.a-zA-Z\d]{1,}(?:\.\w{1,})?)( #.*){0,1}$')
 
-src_domestic_raw = geosite_import(open(PREFIX_DOMAIN_LIST + 'geolocation-cn', mode='r').read().splitlines())
+src_domestic_raw = geosite_import(open(os.path.join(PREFIX_DOMAIN_LIST, 'geolocation-cn'), mode='r').read().splitlines())
 set_domestic_raw = geosite_convert(src_domestic_raw)
-set_domestic_raw |= custom_convert(PREFIX_CUSTOM_APPEND + "domestic.txt")
+set_domestic_raw |= custom_convert(os.path.join(PREFIX_CUSTOM_APPEND, "domestic.txt"))
 
 ## Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.
 set_domestic_tld = set()
-for line in open(PREFIX_DOMAIN_LIST + "tld-cn", mode='r').read().splitlines():
+for line in open(os.path.join(PREFIX_DOMAIN_LIST, "tld-cn"), mode='r').read().splitlines():
     istld = regex_domestic_tld.match(line)
     if istld:
         set_domestic_tld.add('.' + istld[1])
@@ -246,16 +246,16 @@ print("START Stage 4: Build custom rules.")
 START_TIME = time_ns()
 list_file_custom = os.listdir(PREFIX_CUSTOM_BUILD)
 for filename in list_file_custom:
-    if os.path.isfile(PREFIX_CUSTOM_BUILD + filename):
-        set_custom = custom_convert(PREFIX_CUSTOM_BUILD + filename)
+    if os.path.isfile(os.path.join(PREFIX_CUSTOM_BUILD, filename)):
+        set_custom = custom_convert(os.path.join(PREFIX_CUSTOM_BUILD, filename))
         list_custom_sorted = set_to_sorted_list(set_custom)
         rules_batch_dump(list_custom_sorted, TARGETS, PREFIX_DIST, filename)
 
-list_file_personal = os.listdir(PREFIX_CUSTOM_BUILD + "personal/")
+list_file_personal = os.listdir(os.path.join(PREFIX_CUSTOM_BUILD, "personal"))
 for filename in list_file_personal:
-    set_personal = custom_convert(PREFIX_CUSTOM_BUILD + "personal/" + filename)
+    set_personal = custom_convert(os.path.join(PREFIX_CUSTOM_BUILD, "personal", filename))
     list_personal_sorted = set_to_sorted_list(set_personal)
-    rules_batch_dump(list_personal_sorted, TARGETS, PREFIX_DIST, "personal/" + filename)
+    rules_batch_dump(list_personal_sorted, TARGETS, PREFIX_DIST, os.path.join("personal", filename))
 
 END_TIME = time_ns()
 print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
@@ -263,4 +263,4 @@ print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 10
 
 # For backward compatibility.
 for target in TARGETS:
-    copyfile(PREFIX_DIST + target + "/domestic.txt", PREFIX_DIST + target + "/geolocation-cn.txt")
+    copyfile(os.path.join(PREFIX_DIST, target, "domestic.txt"), os.path.join(PREFIX_DIST, target, "geolocation-cn.txt"))
