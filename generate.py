@@ -68,6 +68,7 @@ def is_domain_rule(rule:Filter) -> bool:
     and rule.text.find('?') == -1
     and rule.text.find('#') == -1
     and rule.text.find(',') == -1
+    and rule.text.find(':') == -1
     and not rule.text.find('.') == -1
     and not regex_ip.search(rule.text)
     and not rule.text.startswith('_')
