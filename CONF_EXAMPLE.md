@@ -36,7 +36,7 @@ rule-providers:
   CN:
     type: http
     behavior: domain
-    url: https://rules.xkww3n.cyou/clash/geolocation-cn.txt
+    url: https://rules.xkww3n.cyou/clash/domestic.txt
     path: ./Rules/CN
     interval: 86400
   Microsoft:
@@ -65,7 +65,7 @@ rule-providers:
 DOMAIN-SET,https://rules.xkww3n.cyou/surge/cjmarketing.txt,REJECT
 DOMAIN-SET,https://rules.xkww3n.cyou/surge/reject.txt,REJECT
 DOMAIN-SET,https://rules.xkww3n.cyou/surge/exclude.txt,Final
-DOMAIN-SET,https://rules.xkww3n.cyou/surge/geolocation-cn.txt,DIRECT
+DOMAIN-SET,https://rules.xkww3n.cyou/surge/domestic.txt,DIRECT
 DOMAIN-SET,https://rules.xkww3n.cyou/surge/microsoft.txt,Proxy
 DOMAIN-SET,https://rules.xkww3n.cyou/surge/niconico.txt,JP
 DOMAIN-SET,https://rules.xkww3n.cyou/surge/bangdream-jp.txt,Gaming
@@ -81,7 +81,7 @@ DOMAIN-SET,https://rules.xkww3n.cyou/surge/bangdream-jp.txt,Gaming
 https://rules.xkww3n.cyou/clash-compatible/cjmarketing.txt,tag=CJMarketing,force-policy=Reject,enabled=true
 https://rules.xkww3n.cyou/clash-compatible/reject.txt,tag=Reject,force-policy=Reject,enabled=true
 https://rules.xkww3n.cyou/clash-compatible/exclude.txt,tag=Exclude,force-policy=Final,enabled=true
-https://rules.xkww3n.cyou/clash-compatible/geolocation-cn.txt,tag=CN,force-policy=Direct,enabled=true
+https://rules.xkww3n.cyou/clash-compatible/domestic.txt,tag=CN,force-policy=Direct,enabled=true
 https://rules.xkww3n.cyou/clash-compatible/microsoft.txt,tag=Microsoft,force-policy=Proxy,enabled=true
 https://rules.xkww3n.cyou/clash-compatible/niconico.txt,tag=niconico,force-policy=JP,enabled=true
 https://rules.xkww3n.cyou/clash-compatible/bangdream-jp.txt,tag=BanG Dream,force-policy=Gaming,enabled=true
@@ -95,7 +95,7 @@ https://rules.xkww3n.cyou/clash-compatible/bangdream-jp.txt,tag=BanG Dream,force
 https://rules.xkww3n.cyou/surge-compatible/cjmarketing.txt,policy=REJECT,tag=CJMarketing,enabled=true
 https://rules.xkww3n.cyou/surge-compatible/reject.txt,policy=REJECT,tag=Reject,enabled=true
 https://rules.xkww3n.cyou/surge-compatible/exclude.txt,policy=Final,tag=Exclude,enabled=true
-https://rules.xkww3n.cyou/surge-compatible/geolocation-cn.txt,policy=DIRECT,tag=CN,enabled=true
+https://rules.xkww3n.cyou/surge-compatible/domestic.txt,policy=DIRECT,tag=CN,enabled=true
 https://rules.xkww3n.cyou/surge-compatible/microsoft.txt,policy=Proxy,tag=Microsoft,enabled=true
 https://rules.xkww3n.cyou/surge-compatible/niconico.txt,policy=JP,tag=niconico,enabled=true
 https://rules.xkww3n.cyou/surge-compatible/bangdream-jp.txt,policy=Gaming,tag=BanG Dream,enabled=true
