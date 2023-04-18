@@ -61,15 +61,15 @@ def is_domain_rule(rule:Filter) -> bool:
     regex_ip = re.compile(r'(?:(?:2(?:5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(?:\.(?:(?:2(?:5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}')
     if (rule.type == 'filter'
     and rule.selector['type'] == 'url-pattern'
-    and rule.text.find('/') == -1
-    and rule.text.find('*') == -1
-    and rule.text.find('=') == -1
-    and rule.text.find('~') == -1
-    and rule.text.find('?') == -1
-    and rule.text.find('#') == -1
-    and rule.text.find(',') == -1
-    and rule.text.find(':') == -1
-    and not rule.text.find('.') == -1
+    and '.' in rule.text
+    and '/' not in rule.text
+    and '*' not in rule.text
+    and '=' not in rule.text
+    and '~' not in rule.text
+    and '?' not in rule.text
+    and '#' not in rule.text
+    and ',' not in rule.text
+    and ':' not in rule.text
     and not regex_ip.search(rule.text)
     and not rule.text.startswith('_')
     and not rule.text.startswith('-')
