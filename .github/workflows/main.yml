@@ -37,11 +37,11 @@ jobs:
           path: 'domain-list-community'
       - name: Generate rules
         run: python generate.py
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.4.1
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
         with:
-          clean: true
-          folder: dists
-          clean-exclude: CNAME
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 2e54d1245681bc04eaa33ed5d68bdfa7
+          projectName: xkww3n-rules
+          directory: ./dists
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
