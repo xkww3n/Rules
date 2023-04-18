@@ -3,8 +3,6 @@
 
 一套由 xkww3n 搜集、整理与维护的，适用于大多数主流代理软件的规则列表。
 
-本仓库含两个分支——*main* 和 *gh-pages*，其中前者包含用于生成规则列表的脚本（*generate.py*）以及部分自定义内容（*Custom* 和 *Source* 文件夹），后者包含生成的规则列表。
-
 本仓库提供四种格式的规则列表：
 - [Clash Premium](https://github.com/Dreamacro/clash/wiki/Clash-Premium-Features) 规则集
   - 同时适用于兼容 Clash Premium 规则集格式的代理软件，如 [Clash Meta](https://github.com/MetaCubeX/Clash.Meta/) 和 [Stash](https://stash.ws/).
