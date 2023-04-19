@@ -2,4 +2,5 @@
 .pglstatp-toutiao.com
 .adukwai.com
 .zijieapi.com
+.mediav.com
 optimus-ads.amap.com
