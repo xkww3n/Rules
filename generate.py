@@ -9,6 +9,7 @@ TARGETS = ['surge', 'clash', 'surge-compatible', 'clash-compatible']
 PREFIX_DOMAIN_LIST = Path('./domain-list-community/data/')
 PREFIX_CUSTOM_BUILD = Path('./Source/')
 PREFIX_CUSTOM_APPEND = Path('./Custom/Append/')
+PREFIX_CUSTOM_REMOVE = Path('./Custom/Remove/')
 PREFIX_DIST = Path('./dists/')
 
 def geosite_import(src:list, exclusion:str='') -> set:
@@ -176,6 +177,7 @@ list_rejections_v2fly = open(PREFIX_DOMAIN_LIST/"category-ads-all", mode='r').re
 set_rejections |= geosite_convert(geosite_import(list_rejections_v2fly))
 set_rejections |= custom_convert(PREFIX_CUSTOM_APPEND/"reject.txt")
 set_exclusions = set()
+set_exclusions_raw |= custom_convert(PREFIX_CUSTOM_REMOVE/"reject.txt")
 
 for domain_exclude in set_exclusions_raw.copy():
     for domain_reject in set_rejections.copy():
