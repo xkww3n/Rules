@@ -176,9 +176,10 @@ for line in parse_filterlist(src_exclusions):
 list_rejections_v2fly = open(PREFIX_DOMAIN_LIST/"category-ads-all", mode='r').read().splitlines()
 set_rejections |= geosite_convert(geosite_import(list_rejections_v2fly))
 set_rejections |= custom_convert(PREFIX_CUSTOM_APPEND/"reject.txt")
-set_exclusions = set()
 set_exclusions_raw |= custom_convert(PREFIX_CUSTOM_REMOVE/"reject.txt")
+set_exclusions_raw |= custom_convert(PREFIX_CUSTOM_APPEND/"exclude.txt")
 
+set_exclusions = set()
 for domain_exclude in set_exclusions_raw.copy():
     for domain_reject in set_rejections.copy():
         if domain_reject == domain_exclude or domain_reject == '.' + domain_exclude:
@@ -190,9 +191,6 @@ for domain_exclude in set_exclusions_raw:
         if domain_exclude.endswith(domain_reject):
             set_exclusions.add(domain_exclude)
 
-path_exclusions_append = PREFIX_CUSTOM_APPEND/"exclude.txt"
-for line in custom_convert(path_exclusions_append):
-        set_exclusions.add(line)
 
 list_rejections_sorted = set_to_sorted_list(set_rejections)
 list_exclusions_sorted = set_to_sorted_list(set_exclusions)
@@ -201,7 +199,7 @@ rules_batch_dump(list_rejections_sorted, TARGETS, PREFIX_DIST, "reject.txt")
 rules_batch_dump(list_exclusions_sorted, TARGETS, PREFIX_DIST, "exclude.txt")
 
 END_TIME = time_ns()
-print("FINISHED Stage 1\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+print(f"FINISHED Stage 1\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 1 finished.
 
 # Stage 2: Sync CN rules.
@@ -230,7 +228,7 @@ list_domestic_sorted = set_to_sorted_list(set_domestic_raw)
 rules_batch_dump(list_domestic_sorted, TARGETS, PREFIX_DIST, "domestic.txt")
 
 END_TIME = time_ns()
-print("FINISHED Stage 2.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+print(f"FINISHED Stage 2\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 2 finished.
 
 # Stage 3: Sync v2fly community rules.
@@ -242,7 +240,7 @@ exclusions = ['github'] ## GitHub's domains are included in "microsoft", but its
 geosite_batch_convert(categories, TARGETS, exclusions)
 
 END_TIME = time_ns()
-print("FINISHED Stage 3.\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+print(f"FINISHED Stage 3\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 3 finished.
 
 # Stage 4: Build custom rules.
@@ -262,7 +260,7 @@ for filename in list_file_personal:
     rules_batch_dump(list_personal_sorted, TARGETS, PREFIX_DIST, "personal/" + filename.name)
 
 END_TIME = time_ns()
-print("FINISHED Stage 4\nTotal time: " + str(format((END_TIME - START_TIME) / 1000000000, '.3f')) + 's\n')
+print(f"FINISHED Stage 4\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 4 finished
 
 # For backward compatibility.
