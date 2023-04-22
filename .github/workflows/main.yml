@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '**.md'
   schedule:
     - cron: '0 12 * * *'
 
