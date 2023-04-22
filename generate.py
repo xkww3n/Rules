@@ -86,7 +86,11 @@ def is_domain_rule(rule:Filter) -> bool:
         return False
 
 def rules_dump(src:list, target:str, dst:Path) -> None:
-    dist = open(dst, mode='w')
+    try:
+        dist = open(dst, mode='w')
+    except FileNotFoundError:
+        dst.parent.mkdir(parents=True)
+        dist = open(dst, mode='w')
     match target:
         case 'surge':
             for domain in src:
