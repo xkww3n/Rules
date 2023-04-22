@@ -81,6 +81,20 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/bahamut.txt>
 - 数据来源：
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
+### 微软必应搜索
+Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/bing.txt>
+
+Surge 3 规则集：<https://rules.xkww3n.cyou/surge/bing.txt>
+
+Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/bing.txt>
+
+Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/bing.txt>
+
+- 自动生成
+- 包含微软必应搜索的服务域名。
+- 数据来源：
+  - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
+
 ### 哔哩哔哩
 Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/bilibili.txt>
 
@@ -147,6 +161,7 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/microsoft.txt>
 - 自动生成
 - 包含微软旗下网络服务的域名。
   - 不含 GitHub 的服务域名，因为该服务在中国大陆的连通性与微软的其他服务可能不同。
+  - 不含必应搜索的服务域名，因为该服务有针对中国大陆的特殊版本。
 - 数据来源：
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 

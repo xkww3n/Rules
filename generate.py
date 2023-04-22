@@ -235,8 +235,9 @@ print(f"FINISHED Stage 2\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3
 print("START Stage 3: Sync v2fly community rules.")
 START_TIME = time_ns()
 
-categories = ['bahamut', 'dmm', 'googlefcm', 'microsoft', 'niconico', 'openai', 'paypal', 'youtube']
-exclusions = ['github'] ## GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
+categories = ['bahamut', 'bing', 'dmm', 'googlefcm', 'microsoft', 'niconico', 'openai', 'paypal', 'youtube']
+exclusions = ['github',  ## GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
+              'bing']    ## Bing has a more restricted ver for Mainland China.
 geosite_batch_convert(categories, TARGETS, exclusions)
 
 END_TIME = time_ns()
