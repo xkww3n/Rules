@@ -9,11 +9,12 @@ Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/reject.txt>
 
 Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/reject.txt>
 
-- 自动生成 + 人工修订
+- 自动生成
 - 拦截在中国与日本常见的广告提供商和跟踪服务商的服务域名。
 - **不**拦截这些服务商面向其接入客户的域名（如：官网、控制台）。如果两者相同，将不会拦截。
 - 应当放在**所有非拦截类规则列表之前**
 - 数据来源：
+  - [本仓库](./Custom/)
   - [AdGuard](https://github.com/AdguardTeam/AdguardFilters)
   - [banbendalao / ADgk](https://github.com/banbendalao/ADgk/)
   - [EasyList China](https://github.com/easylist/easylistchina)
@@ -34,6 +35,7 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/exclude.txt>
   - 如：拦截规则拦截了 `googleadservices.com` 域名，这个域名的许多子域名都被用于推送广告，因此将这个域名纳入拦截列表完全合理。但是，`www.googleadservices.com` 这个子域名用于 Google 搜索引擎中广告条目的跳转，不应被拦截；所以，此域名被纳入排除规则中。
 - 应当放在**拦截规则列表之前**。
 - 数据来源：
+  - [本仓库](./Custom/)
   - [AdGuard](https://github.com/AdguardTeam/AdguardFilters)
 
 ## 中国大陆网络服务
@@ -45,12 +47,13 @@ Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/domestic.txt>
 
 Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/domestic.txt>
 
-- 自动生成 + 人工修订
+- 自动生成
 - 包含各大中国大陆网络服务提供商的域名。
 - 对于由 [CNNIC](https://www.cnnic.net.cn/) 管理的 TLD（如 `.cn`、`.中国`），无论其对应的服务是否在中国大陆境内运营，都将视为中国大陆服务。
 - 不包含跨国网络服务提供商对中国大陆提供服务的域名（如微软的 `o365cn.com`）。
   - 这是因为，如果将这些域名视为中国大陆服务，用户到服务商的流量就会出现两条不同的路径——部分经代理转发，部分直接到达服务器，这无论对于用户体验还是故障排除都不利；且一些服务商会因为 IP 地址变更而注销用户的会话，导致用户需要频繁地重新验证凭据。
 - 数据来源：
+  - [本仓库](./Custom/)
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
 ## 特定网站/服务
