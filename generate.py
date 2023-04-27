@@ -46,8 +46,7 @@ def geosite_batch_convert(categories:list, tools:list, exclusions:list=[]) -> No
             src_geosite = open(PREFIX_DOMAIN_LIST/category, mode='r').read().splitlines()
             src_geosite_imported = geosite_import(src_geosite, exclusions)
             set_geosite = geosite_convert(src_geosite_imported)
-            list_geosite_sorted = [item for item in set_geosite]
-            list_geosite_sorted.sort()
+            list_geosite_sorted = set_to_sorted_list(set_geosite)
             rules_dump(list_geosite_sorted, tool, PREFIX_DIST/tool/(category + ".txt"))
 
 def custom_convert(src:Path) -> set:
