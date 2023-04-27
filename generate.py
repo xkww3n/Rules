@@ -1,7 +1,7 @@
 import re
 from abp.filters.parser import Filter, parse_filterlist
 from pathlib import Path
-from requests import get
+from requests import Session
 from shutil import copyfile
 from time import time_ns
 
@@ -135,6 +135,7 @@ def set_to_sorted_list(src:set) -> list:
 # Stage 1: Sync reject and exclude rules.
 print("START Stage 1: Sync reject and exclude rules.")
 START_TIME = time_ns()
+connection = Session()
 ## AdGuard Base Filter
 URL_BASE = 'https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt'
 ## Easylist China
@@ -150,13 +151,13 @@ URL_EXCLUSIONS_1 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFil
 URL_EXCLUSIONS_2 = 'https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt'
 
 src_rejections = (
-    get(URL_BASE).text +
-    get(URL_CN).text +
-    get(URL_JP).text +
-    get(URL_MOBILE).text +
-    get(URL_CN_EXTEND).text
+    connection.get(URL_BASE).text +
+    connection.get(URL_CN).text +
+    connection.get(URL_JP).text +
+    connection.get(URL_MOBILE).text +
+    connection.get(URL_CN_EXTEND).text
     ).splitlines()
-src_exclusions = (get(URL_EXCLUSIONS_1).text + get(URL_EXCLUSIONS_2).text).splitlines()
+src_exclusions = (connection.get(URL_EXCLUSIONS_1).text + connection.get(URL_EXCLUSIONS_2).text).splitlines()
 
 set_rejections = set()
 set_exclusions_raw = set()
