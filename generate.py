@@ -12,16 +12,17 @@ PREFIX_CUSTOM_APPEND = Path('./Custom/Append/')
 PREFIX_CUSTOM_REMOVE = Path('./Custom/Remove/')
 PREFIX_DIST = Path('./dists/')
 
-def geosite_import(src:list, exclusion:str='') -> set:
+def geosite_import(src:list, exclusions:list=[]) -> set:
     regex_import = re.compile(r'^include\:([-\w]{1,})$')
     set_converted = set()
     for line in src:
-        flag_import = regex_import.match(line)
-        if flag_import and flag_import.group(1) != exclusion:
-            src_import = open(PREFIX_DOMAIN_LIST/flag_import.group(1), mode='r').read().splitlines()
-            set_converted |= geosite_import(src_import)
-            continue
-        set_converted.add(line)
+        for exclusion in exclusions:
+            flag_import = regex_import.match(line)
+            if flag_import and flag_import.group(1) != exclusion:
+                src_import = open(PREFIX_DOMAIN_LIST/flag_import.group(1), mode='r').read().splitlines()
+                set_converted |= geosite_import(src_import)
+                continue
+            set_converted.add(line)
     return set_converted
 
 def geosite_convert(src:set) -> set:
@@ -42,13 +43,12 @@ def geosite_convert(src:set) -> set:
 def geosite_batch_convert(categories:list, tools:list, exclusions:list=[]) -> None:
     for tool in tools:
         for category in categories:
-            for exclusion in exclusions:
-                src_geosite = open(PREFIX_DOMAIN_LIST/category, mode='r').read().splitlines()
-                src_geosite_imported = geosite_import(src_geosite, exclusion)
-                set_geosite = geosite_convert(src_geosite_imported)
-                list_geosite_sorted = [item for item in set_geosite]
-                list_geosite_sorted.sort()
-                rules_dump(list_geosite_sorted, tool, PREFIX_DIST/tool/(category + ".txt"))
+            src_geosite = open(PREFIX_DOMAIN_LIST/category, mode='r').read().splitlines()
+            src_geosite_imported = geosite_import(src_geosite, exclusions)
+            set_geosite = geosite_convert(src_geosite_imported)
+            list_geosite_sorted = [item for item in set_geosite]
+            list_geosite_sorted.sort()
+            rules_dump(list_geosite_sorted, tool, PREFIX_DIST/tool/(category + ".txt"))
 
 def custom_convert(src:Path) -> set:
     src_custom = open(src, mode='r').read().splitlines()
