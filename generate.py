@@ -17,7 +17,7 @@ def geosite_import(src:list, exclusions:list=[]) -> set:
     set_converted = set()
     for line in src:
         flag_import = regex_import.match(line)
-        if flag_import and flag_import.group(1) != exclusions:
+        if flag_import and flag_import.group(1) not in exclusions:
             src_import = open(PATH_DOMAIN_LIST/flag_import.group(1), mode='r').read().splitlines()
             set_converted |= geosite_import(src_import)
             continue
