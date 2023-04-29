@@ -6,11 +6,11 @@ from shutil import copyfile
 from time import time_ns
 
 TARGETS = ['surge', 'clash', 'surge-compatible', 'clash-compatible']
-PREFIX_DOMAIN_LIST = Path('./domain-list-community/data/')
-PREFIX_CUSTOM_BUILD = Path('./Source/')
-PREFIX_CUSTOM_APPEND = Path('./Custom/Append/')
-PREFIX_CUSTOM_REMOVE = Path('./Custom/Remove/')
-PREFIX_DIST = Path('./dists/')
+PATH_DOMAIN_LIST = Path('./domain-list-community/data/')
+PATH_CUSTOM_BUILD = Path('./Source/')
+PATH_CUSTOM_APPEND = Path('./Custom/Append/')
+PATH_CUSTOM_REMOVE = Path('./Custom/Remove/')
+PATH_DIST = Path('./dists/')
 
 def geosite_import(src:list, exclusions:list=[]) -> set:
     regex_import = re.compile(r'^include\:([-\w]{1,})$')
@@ -18,7 +18,7 @@ def geosite_import(src:list, exclusions:list=[]) -> set:
     for line in src:
         flag_import = regex_import.match(line)
         if flag_import and flag_import.group(1) != exclusions:
-            src_import = open(PREFIX_DOMAIN_LIST/flag_import.group(1), mode='r').read().splitlines()
+            src_import = open(PATH_DOMAIN_LIST/flag_import.group(1), mode='r').read().splitlines()
             set_converted |= geosite_import(src_import)
             continue
         set_converted.add(line)
@@ -42,11 +42,11 @@ def geosite_convert(src:set) -> set:
 def geosite_batch_convert(categories:list, tools:list, exclusions:list=[]) -> None:
     for tool in tools:
         for category in categories:
-            src_geosite = open(PREFIX_DOMAIN_LIST/category, mode='r').read().splitlines()
+            src_geosite = open(PATH_DOMAIN_LIST/category, mode='r').read().splitlines()
             src_geosite_imported = geosite_import(src_geosite, exclusions)
             set_geosite = geosite_convert(src_geosite_imported)
             list_geosite_sorted = set_to_sorted_list(set_geosite)
-            rules_dump(list_geosite_sorted, tool, PREFIX_DIST/tool/(category + ".txt"))
+            rules_dump(list_geosite_sorted, tool, PATH_DIST/tool/(category + ".txt"))
 
 def custom_convert(src:Path) -> set:
     src_custom = open(src, mode='r').read().splitlines()
@@ -122,9 +122,9 @@ def rules_dump(src:list, target:str, dst:Path) -> None:
         case _:
             raise TypeError("Target type unsupported, only accept 'surge', 'clash', 'surge-compatible' or 'clash-compatible'.")
 
-def rules_batch_dump(src:list, targets:list, dst_prefix:Path, filename:str) -> None:
+def rules_batch_dump(src:list, targets:list, dst_PATH:Path, filename:str) -> None:
     for target in targets:
-        rules_dump(src, target, dst_prefix/target/filename)
+        rules_dump(src, target, dst_PATH/target/filename)
 
 def set_to_sorted_list(src:set) -> list:
     list_sorted = [item for item in src]
@@ -176,11 +176,11 @@ for line in parse_filterlist(src_exclusions):
         if not domain.startswith('-'):
             set_exclusions_raw.add(domain)
 
-list_rejections_v2fly = open(PREFIX_DOMAIN_LIST/"category-ads-all", mode='r').read().splitlines()
+list_rejections_v2fly = open(PATH_DOMAIN_LIST/"category-ads-all", mode='r').read().splitlines()
 set_rejections |= geosite_convert(geosite_import(list_rejections_v2fly))
-set_rejections |= custom_convert(PREFIX_CUSTOM_APPEND/"reject.txt")
-set_exclusions_raw |= custom_convert(PREFIX_CUSTOM_REMOVE/"reject.txt")
-set_exclusions_raw |= custom_convert(PREFIX_CUSTOM_APPEND/"exclude.txt")
+set_rejections |= custom_convert(PATH_CUSTOM_APPEND/"reject.txt")
+set_exclusions_raw |= custom_convert(PATH_CUSTOM_REMOVE/"reject.txt")
+set_exclusions_raw |= custom_convert(PATH_CUSTOM_APPEND/"exclude.txt")
 
 set_exclusions = set()
 for domain_exclude in set_exclusions_raw.copy():
@@ -198,8 +198,8 @@ for domain_exclude in set_exclusions_raw:
 list_rejections_sorted = set_to_sorted_list(set_rejections)
 list_exclusions_sorted = set_to_sorted_list(set_exclusions)
 
-rules_batch_dump(list_rejections_sorted, TARGETS, PREFIX_DIST, "reject.txt")
-rules_batch_dump(list_exclusions_sorted, TARGETS, PREFIX_DIST, "exclude.txt")
+rules_batch_dump(list_rejections_sorted, TARGETS, PATH_DIST, "reject.txt")
+rules_batch_dump(list_exclusions_sorted, TARGETS, PATH_DIST, "exclude.txt")
 
 END_TIME = time_ns()
 print(f"FINISHED Stage 1\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
@@ -210,13 +210,13 @@ print("START Stage 2: Sync CN rules.")
 START_TIME = time_ns()
 regex_domestic_tld = re.compile(r'^([-\.a-zA-Z\d]{1,}(?:\.\w{1,})?)( #.*){0,1}$')
 
-src_domestic_raw = geosite_import(open(PREFIX_DOMAIN_LIST/"geolocation-cn", mode='r').read().splitlines())
+src_domestic_raw = geosite_import(open(PATH_DOMAIN_LIST/"geolocation-cn", mode='r').read().splitlines())
 set_domestic_raw = geosite_convert(src_domestic_raw)
-set_domestic_raw |= custom_convert(PREFIX_CUSTOM_APPEND/"domestic.txt")
+set_domestic_raw |= custom_convert(PATH_CUSTOM_APPEND/"domestic.txt")
 
 ## Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.
 set_domestic_tld = set()
-for line in open(PREFIX_DOMAIN_LIST/"tld-cn", mode='r').read().splitlines():
+for line in open(PATH_DOMAIN_LIST/"tld-cn", mode='r').read().splitlines():
     istld = regex_domestic_tld.match(line)
     if istld:
         set_domestic_tld.add('.' + istld[1])
@@ -228,7 +228,7 @@ for domain in set_domestic_raw.copy():
 set_domestic_raw |= set_domestic_tld
 
 list_domestic_sorted = set_to_sorted_list(set_domestic_raw)
-rules_batch_dump(list_domestic_sorted, TARGETS, PREFIX_DIST, "domestic.txt")
+rules_batch_dump(list_domestic_sorted, TARGETS, PATH_DIST, "domestic.txt")
 
 END_TIME = time_ns()
 print(f"FINISHED Stage 2\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
@@ -250,18 +250,18 @@ print(f"FINISHED Stage 3\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3
 # Stage 4: Build custom rules.
 print("START Stage 4: Build custom rules.")
 START_TIME = time_ns()
-list_file_custom = Path.iterdir(PREFIX_CUSTOM_BUILD)
+list_file_custom = Path.iterdir(PATH_CUSTOM_BUILD)
 for filename in list_file_custom:
     if filename.is_file():
         set_custom = custom_convert(filename)
         list_custom_sorted = set_to_sorted_list(set_custom)
-        rules_batch_dump(list_custom_sorted, TARGETS, PREFIX_DIST, filename.name)
+        rules_batch_dump(list_custom_sorted, TARGETS, PATH_DIST, filename.name)
 
-list_file_personal = Path.iterdir(PREFIX_CUSTOM_BUILD/"personal")
+list_file_personal = Path.iterdir(PATH_CUSTOM_BUILD/"personal")
 for filename in list_file_personal:
     set_personal = custom_convert(filename)
     list_personal_sorted = set_to_sorted_list(set_personal)
-    rules_batch_dump(list_personal_sorted, TARGETS, PREFIX_DIST, "personal/" + filename.name)
+    rules_batch_dump(list_personal_sorted, TARGETS, PATH_DIST, "personal/" + filename.name)
 
 END_TIME = time_ns()
 print(f"FINISHED Stage 4\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
@@ -269,4 +269,4 @@ print(f"FINISHED Stage 4\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3
 
 # For backward compatibility.
 for target in TARGETS:
-    copyfile(PREFIX_DIST/target/"domestic.txt", PREFIX_DIST/target/"geolocation-cn.txt")
+    copyfile(PATH_DIST/target/"domestic.txt", PATH_DIST/target/"geolocation-cn.txt")
