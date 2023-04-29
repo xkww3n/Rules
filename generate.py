@@ -16,13 +16,12 @@ def geosite_import(src:list, exclusions:list=[]) -> set:
     regex_import = re.compile(r'^include\:([-\w]{1,})$')
     set_converted = set()
     for line in src:
-        for exclusion in exclusions:
-            flag_import = regex_import.match(line)
-            if flag_import and flag_import.group(1) != exclusion:
-                src_import = open(PREFIX_DOMAIN_LIST/flag_import.group(1), mode='r').read().splitlines()
-                set_converted |= geosite_import(src_import)
-                continue
-            set_converted.add(line)
+        flag_import = regex_import.match(line)
+        if flag_import and flag_import.group(1) != exclusions:
+            src_import = open(PREFIX_DOMAIN_LIST/flag_import.group(1), mode='r').read().splitlines()
+            set_converted |= geosite_import(src_import)
+            continue
+        set_converted.add(line)
     return set_converted
 
 def geosite_convert(src:set) -> set:
