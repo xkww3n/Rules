@@ -1,1 +1,2 @@
 .zen.com
+go.eset.com
