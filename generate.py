@@ -15,10 +15,10 @@ PATH_DIST = Path("./dists/")
 
 
 def geosite_import(src: list, exclusions: list = []) -> set:
-    regex_import = re.compile(r"^include\:([-\w]{1,})$")
+    REGEX_IMPORT = re.compile(r"^include\:([-\w]{1,})$")
     set_converted = set()
     for line in src:
-        flag_import = regex_import.match(line)
+        flag_import = REGEX_IMPORT.match(line)
         if flag_import and flag_import.group(1) not in exclusions:
             src_import = (
                 open(PATH_DOMAIN_LIST/flag_import.group(1), mode="r")
@@ -33,8 +33,8 @@ def geosite_import(src: list, exclusions: list = []) -> set:
 
 def geosite_convert(src: set) -> set:
     # The following 2 regexes' group 1 matches domains without "@cn" directive.
-    regex_fulldomain = re.compile(r"^full\:([-\.a-zA-Z\d]{1,}?(?:\.[-\.a-zA-Z\d]{1,}))(?: @cn){0,1}?$")
-    regex_subdomain = re.compile(r"^([-a-zA-Z\d]{1,}(?:\.\S*)?)(?: @cn){0,1}?$")
+    REGEX_FULLDOMAIN = re.compile(r"^full\:([-\.a-zA-Z\d]{1,}?(?:\.[-\.a-zA-Z\d]{1,}))(?: @cn){0,1}?$")
+    REGEX_SUBDOMAIN = re.compile(r"^([-a-zA-Z\d]{1,}(?:\.\S*)?)(?: @cn){0,1}?$")
     set_converted = set()
     for line in src:
         if (
@@ -42,8 +42,8 @@ def geosite_convert(src: set) -> set:
             or line.startswith("keyword:")
             or line.startswith("#")
         ):
-            fulldomain = regex_fulldomain.match(line)
-            subdomain = regex_subdomain.match(line)
+            fulldomain = REGEX_FULLDOMAIN.match(line)
+            subdomain = REGEX_SUBDOMAIN.match(line)
             if fulldomain:
                 set_converted.add(fulldomain.group(1))
             elif subdomain:
@@ -75,7 +75,7 @@ def custom_convert(src: Path) -> set:
 
 
 def is_domain_rule(rule: Filter) -> bool:
-    regex_ip = re.compile(r"(?:(?:2(?:5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(?:\.(?:(?:2(?:5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}")
+    REGEX_IP = re.compile(r"(?:(?:2(?:5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(?:\.(?:(?:2(?:5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}")
     if (
         rule.type == "filter"
         and rule.selector["type"] == "url-pattern"
@@ -88,7 +88,7 @@ def is_domain_rule(rule: Filter) -> bool:
         and "#" not in rule.text
         and "," not in rule.text
         and ":" not in rule.text
-        and not regex_ip.search(rule.text)
+        and not REGEX_IP.search(rule.text)
         and not rule.text.startswith("_")
         and not rule.text.startswith("-")
         and not rule.text.startswith("^")
@@ -146,9 +146,9 @@ def rules_dump(src: list, target: str, dst: Path) -> None:
             raise TypeError("Target type unsupported, only accept 'surge', 'clash', 'surge-compatible' or 'clash-compatible'.")
 
 
-def rules_batch_dump(src: list, targets: list, dst_PATH: Path, filename: str) -> None:
+def rules_batch_dump(src: list, targets: list, dst_path: Path, filename: str) -> None:
     for target in targets:
-        rules_dump(src, target, dst_PATH/target/filename)
+        rules_dump(src, target, dst_path/target/filename)
 
 
 def set_to_sorted_list(src: set) -> list:
@@ -242,7 +242,7 @@ print(
 # Stage 2: Sync CN rules.
 print("START Stage 2: Sync CN rules.")
 START_TIME = time_ns()
-regex_domestic_tld = re.compile(r"^([-\.a-zA-Z\d]{1,}(?:\.\w{1,})?)( #.*){0,1}$")
+REGEX_DOMESTIC_TLD = re.compile(r"^([-\.a-zA-Z\d]{1,}(?:\.\w{1,})?)( #.*){0,1}$")
 
 src_domestic_raw = geosite_import(
     open(PATH_DOMAIN_LIST/"geolocation-cn", mode="r").read().splitlines()
@@ -253,7 +253,7 @@ set_domestic_raw |= custom_convert(PATH_CUSTOM_APPEND/"domestic.txt")
 ## Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.
 set_domestic_tld = set()
 for line in open(PATH_DOMAIN_LIST/"tld-cn", mode="r").read().splitlines():
-    istld = regex_domestic_tld.match(line)
+    istld = REGEX_DOMESTIC_TLD.match(line)
     if istld:
         set_domestic_tld.add("." + istld[1])
 for domain in set_domestic_raw.copy():
@@ -276,7 +276,7 @@ print(
 print("START Stage 3: Sync v2fly community rules.")
 START_TIME = time_ns()
 
-categories = [
+CATEGORIES = [
     "bahamut",
     "bing",
     "dmm",
@@ -287,11 +287,11 @@ categories = [
     "paypal",
     "youtube",
 ]
-exclusions = [
+EXCLUSIONS = [
     "github",  ## GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
     "bing",  ## Bing has a more restricted ver for Mainland China.
 ]
-geosite_batch_convert(categories, TARGETS, exclusions)
+geosite_batch_convert(CATEGORIES, TARGETS, EXCLUSIONS)
 
 END_TIME = time_ns()
 print(
