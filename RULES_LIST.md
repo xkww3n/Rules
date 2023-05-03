@@ -268,10 +268,10 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/youtube.txt>
       Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/heavenburnsred.txt>  
       Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/heavenburnsred.txt>  
   - [Love Live!学园偶像祭2 MIRACLE LIVE!（日文版）](https://lovelive-sif2.bushimo.jp/)
-    - Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/loveliesif2-jp.txt>  
-      Surge 3 规则集：<https://rules.xkww3n.cyou/surge/loveliesif2-jp.txt>  
-      Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/loveliesif2-jp.txt>  
-      Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/loveliesif2-jp.txt>  
+    - Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/lovelivesif2-jp.txt>  
+      Surge 3 规则集：<https://rules.xkww3n.cyou/surge/lovelivesif2-jp.txt>  
+      Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/lovelivesif2-jp.txt>  
+      Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/lovelivesif2-jp.txt>  
 
 ## IP 归属地检测服务
 Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/ipgeo.txt>
