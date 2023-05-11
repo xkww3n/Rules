@@ -322,9 +322,3 @@ print(
     f"FINISHED Stage 4\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n"
 )
 # Stage 4 finished
-
-# For backward compatibility.
-for target in TARGETS:
-    copyfile(
-        PATH_DIST/target/"domestic.txt", PATH_DIST/target/"geolocation-cn.txt"
-    )
