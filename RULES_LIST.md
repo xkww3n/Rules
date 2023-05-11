@@ -210,18 +210,6 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/paypal.txt>
 - 数据来源：
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
-### 网速测试服务
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/speedtests.txt>
-
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/speedtests.txt>
-
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/speedtests.txt>
-
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/speedtests.txt>
-
-- 手动维护
-- 包含 [Ookla Speedtest](https://www.speedtest.net/), [Fast.com by Netflix](https://fast.com/) 和 [Cloudflare Internet Speed Test](https://speed.cloudflare.com/) 的服务域名。
-
 ### Steam
 Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/steam.txt>
 
