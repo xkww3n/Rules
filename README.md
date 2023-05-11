@@ -1,8 +1,6 @@
 # Rules
 [![Generate](https://github.com/xkww3n/Rules/actions/workflows/main.yml/badge.svg)](https://github.com/xkww3n/Rules/actions/workflows/main.yml)
 
-⚠ 本项目尚处于早期开发阶段，生成的规则列表之（包括但不限于）文件名、文件路径、文件内容可能频繁发生变动。如要将本项目的规则列表用于生产环境，请务必时常关注本仓库 [RULES_LIST.md](./RULES_LIST.md) 文件之变动。⚠
-
 一套由 xkww3n 搜集、整理与维护的，适用于大多数主流代理软件的规则列表。
 
 本仓库提供四种格式的规则列表：
