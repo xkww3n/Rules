@@ -1,6 +1,5 @@
 import re
 from pathlib import Path
-from shutil import copyfile
 from time import time_ns
 
 from abp.filters.parser import Filter, parse_filterlist
