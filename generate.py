@@ -19,11 +19,7 @@ def geosite_import(src: list, exclusions: list = []) -> set:
     for line in src:
         flag_import = REGEX_IMPORT.match(line)
         if flag_import and flag_import.group(1) not in exclusions:
-            src_import = (
-                open(PATH_DOMAIN_LIST/flag_import.group(1), mode="r")
-                .read()
-                .splitlines()
-            )
+            src_import = open(PATH_DOMAIN_LIST/flag_import.group(1), mode="r").read().splitlines()
             set_converted |= geosite_import(src_import)
             continue
         set_converted.add(line)
@@ -36,11 +32,7 @@ def geosite_convert(src: set) -> set:
     REGEX_SUBDOMAIN = re.compile(r"^([-a-zA-Z\d]{1,}(?:\.\S*)?)(?: @cn){0,1}?$")
     set_converted = set()
     for line in src:
-        if (
-            not line.startswith("regexp:")
-            or line.startswith("keyword:")
-            or line.startswith("#")
-        ):
+        if not line.startswith("regexp:") or line.startswith("keyword:") or line.startswith("#"):
             fulldomain = REGEX_FULLDOMAIN.match(line)
             subdomain = REGEX_SUBDOMAIN.match(line)
             if fulldomain:
@@ -53,15 +45,11 @@ def geosite_convert(src: set) -> set:
 def geosite_batch_convert(categories: list, tools: list, exclusions: list = []) -> None:
     for tool in tools:
         for category in categories:
-            src_geosite = (
-                open(PATH_DOMAIN_LIST/category, mode="r").read().splitlines()
-            )
+            src_geosite = open(PATH_DOMAIN_LIST/category, mode="r").read().splitlines()
             src_geosite_imported = geosite_import(src_geosite, exclusions)
             set_geosite = geosite_convert(src_geosite_imported)
             list_geosite_sorted = set_to_sorted_list(set_geosite)
-            rules_dump(
-                list_geosite_sorted, tool, PATH_DIST/tool/(category + ".txt")
-            )
+            rules_dump(list_geosite_sorted, tool, PATH_DIST/tool/(category + ".txt"))
 
 
 def custom_convert(src: Path) -> set:
@@ -74,7 +62,9 @@ def custom_convert(src: Path) -> set:
 
 
 def is_domain_rule(rule: Filter) -> bool:
-    REGEX_IP = re.compile(r"(?:(?:2(?:5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(?:\.(?:(?:2(?:5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}")
+    REGEX_IP = re.compile(
+        r"(?:(?:2(?:5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(?:\.(?:(?:2(?:5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}"
+    )
     if (
         rule.type == "filter"
         and rule.selector["type"] == "url-pattern"
@@ -136,13 +126,13 @@ def rules_dump(src: list, target: str, dst: Path) -> None:
             for domain in src:
                 if domain:
                     if domain.startswith("."):
-                        dist.writelines(
-                            domain.replace(".", "DOMAIN-SUFFIX,", 1) + ",Policy\n"
-                        )
+                        dist.writelines(domain.replace(".", "DOMAIN-SUFFIX,", 1) + ",Policy\n")
                     elif not domain.startswith("#"):
                         dist.writelines("DOMAIN," + domain + ",Policy\n")
         case _:
-            raise TypeError("Target type unsupported, only accept 'surge', 'clash', 'surge-compatible' or 'clash-compatible'.")
+            raise TypeError(
+                "Target type unsupported, only accept 'surge', 'clash', 'surge-compatible' or 'clash-compatible'."
+            )
 
 
 def rules_batch_dump(src: list, targets: list, dst_path: Path, filename: str) -> None:
@@ -181,9 +171,7 @@ src_rejections = (
     + connection.get(URL_MOBILE).text
     + connection.get(URL_CN_EXTEND).text
 ).splitlines()
-src_exclusions = (
-    connection.get(URL_EXCLUSIONS_1).text + connection.get(URL_EXCLUSIONS_2).text
-).splitlines()
+src_exclusions = (connection.get(URL_EXCLUSIONS_1).text + connection.get(URL_EXCLUSIONS_2).text).splitlines()
 
 set_rejections = set()
 set_exclusions_raw = set()
@@ -194,9 +182,7 @@ for line in parse_filterlist(src_rejections):
             set_rejections.add(line.text.replace("^", ""))
         else:
             set_rejections.add(line.text.replace("||", ".").replace("^", ""))
-    elif (
-        is_domain_rule(line) and line.action == "allow" and not line.text.endswith("|")
-    ):
+    elif is_domain_rule(line) and line.action == "allow" and not line.text.endswith("|"):
         src_exclusions.append(line.text)
 
 for line in parse_filterlist(src_exclusions):
@@ -205,9 +191,7 @@ for line in parse_filterlist(src_exclusions):
         if not domain.startswith("-"):
             set_exclusions_raw.add(domain)
 
-list_rejections_v2fly = (
-    open(PATH_DOMAIN_LIST/"category-ads-all", mode="r").read().splitlines()
-)
+list_rejections_v2fly = open(PATH_DOMAIN_LIST/"category-ads-all", mode="r").read().splitlines()
 set_rejections |= geosite_convert(geosite_import(list_rejections_v2fly))
 set_rejections |= custom_convert(PATH_CUSTOM_APPEND/"reject.txt")
 set_exclusions_raw |= custom_convert(PATH_CUSTOM_REMOVE/"reject.txt")
@@ -233,9 +217,7 @@ rules_batch_dump(list_rejections_sorted, TARGETS, PATH_DIST, "reject.txt")
 rules_batch_dump(list_exclusions_sorted, TARGETS, PATH_DIST, "exclude.txt")
 
 END_TIME = time_ns()
-print(
-    f"FINISHED Stage 1\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n"
-)
+print(f"FINISHED Stage 1\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 1 finished.
 
 # Stage 2: Sync CN rules.
@@ -243,9 +225,7 @@ print("START Stage 2: Sync CN rules.")
 START_TIME = time_ns()
 REGEX_DOMESTIC_TLD = re.compile(r"^([-\.a-zA-Z\d]{1,}(?:\.\w{1,})?)( #.*){0,1}$")
 
-src_domestic_raw = geosite_import(
-    open(PATH_DOMAIN_LIST/"geolocation-cn", mode="r").read().splitlines()
-)
+src_domestic_raw = geosite_import(open(PATH_DOMAIN_LIST/"geolocation-cn", mode="r").read().splitlines())
 set_domestic_raw = geosite_convert(src_domestic_raw)
 set_domestic_raw |= custom_convert(PATH_CUSTOM_APPEND/"domestic.txt")
 
@@ -266,9 +246,7 @@ list_domestic_sorted = set_to_sorted_list(set_domestic_raw)
 rules_batch_dump(list_domestic_sorted, TARGETS, PATH_DIST, "domestic.txt")
 
 END_TIME = time_ns()
-print(
-    f"FINISHED Stage 2\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n"
-)
+print(f"FINISHED Stage 2\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 2 finished.
 
 # Stage 3: Sync v2fly community rules.
@@ -293,9 +271,7 @@ EXCLUSIONS = [
 geosite_batch_convert(CATEGORIES, TARGETS, EXCLUSIONS)
 
 END_TIME = time_ns()
-print(
-    f"FINISHED Stage 3\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n"
-)
+print(f"FINISHED Stage 3\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 3 finished.
 
 # Stage 4: Build custom rules.
@@ -312,12 +288,8 @@ list_file_personal = Path.iterdir(PATH_CUSTOM_BUILD/"personal")
 for filename in list_file_personal:
     set_personal = custom_convert(filename)
     list_personal_sorted = set_to_sorted_list(set_personal)
-    rules_batch_dump(
-        list_personal_sorted, TARGETS, PATH_DIST, "personal/" + filename.name
-    )
+    rules_batch_dump(list_personal_sorted, TARGETS, PATH_DIST, "personal/" + filename.name)
 
 END_TIME = time_ns()
-print(
-    f"FINISHED Stage 4\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n"
-)
+print(f"FINISHED Stage 4\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 4 finished
