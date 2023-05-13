@@ -14,13 +14,19 @@ PATH_DIST = Path("./dists/")
 
 
 def geosite_import(src: list, exclusions: list = []) -> set:
-    REGEX_IMPORT = re.compile(r"^include\:([-\w]{1,})$")
     set_converted = set()
     for line in src:
-        flag_import = REGEX_IMPORT.match(line)
-        if flag_import and flag_import.group(1) not in exclusions:
-            src_import = open(PATH_DOMAIN_LIST/flag_import.group(1), mode="r").read().splitlines()
-            set_converted |= geosite_import(src_import)
+        if line.startswith("include:"):
+            name_import = line.split("include:")[1]
+            if "#" in name_import:
+                name_import = name_import.split(" #")[0]
+                if name_import not in exclusions:
+                    src_import = open(PATH_DOMAIN_LIST/name_import, mode="r").read().splitlines()
+                    set_converted |= geosite_import(src_import)
+            else:
+                if name_import not in exclusions:
+                    src_import = open(PATH_DOMAIN_LIST/name_import, mode="r").read().splitlines()
+                    set_converted |= geosite_import(src_import)
             continue
         set_converted.add(line)
     return set_converted
@@ -61,10 +67,19 @@ def custom_convert(src: Path) -> set:
     return set_converted
 
 
+def is_ipaddr(str: str) -> bool:
+    if str.find(".") != 4:
+        return False
+    for part in str.split('.'):
+        if not part.isdigit():
+            return False
+        i = int(part)
+        if i < 0 or i > 255:
+            return False
+    return True
+
+
 def is_domain_rule(rule: Filter) -> bool:
-    REGEX_IP = re.compile(
-        r"(?:(?:2(?:5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(?:\.(?:(?:2(?:5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}"
-    )
     if (
         rule.type == "filter"
         and rule.selector["type"] == "url-pattern"
@@ -77,7 +92,7 @@ def is_domain_rule(rule: Filter) -> bool:
         and "#" not in rule.text
         and "," not in rule.text
         and ":" not in rule.text
-        and not REGEX_IP.search(rule.text)
+        and not is_ipaddr(rule.text)
         and not rule.text.startswith("_")
         and not rule.text.startswith("-")
         and not rule.text.startswith("^")
