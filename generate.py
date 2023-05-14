@@ -152,7 +152,7 @@ def rules_dump(src: list, target: str, dst: Path) -> None:
 
 def rules_batch_dump(src: list, targets: list, dst_path: Path, filename: str) -> None:
     for target in targets:
-        rules_dump(src, target, dst_path/target/filename)
+        rules_dump(src, target, dst_path / target / filename)
 
 
 def set_to_sorted_list(src: set) -> list:
@@ -238,7 +238,6 @@ print(f"FINISHED Stage 1\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3
 # Stage 2: Sync CN rules.
 print("START Stage 2: Sync CN rules.")
 START_TIME = time_ns()
-REGEX_DOMESTIC_TLD = re.compile(r"^([-\.a-zA-Z\d]{1,}(?:\.\w{1,})?)( #.*){0,1}$")
 
 src_domestic_raw = geosite_import(open(PATH_DOMAIN_LIST/"geolocation-cn", mode="r").read().splitlines())
 set_domestic_raw = geosite_convert(src_domestic_raw)
@@ -247,9 +246,11 @@ set_domestic_raw |= custom_convert(PATH_CUSTOM_APPEND/"domestic.txt")
 ## Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.
 set_domestic_tld = set()
 for line in open(PATH_DOMAIN_LIST/"tld-cn", mode="r").read().splitlines():
-    istld = REGEX_DOMESTIC_TLD.match(line)
-    if istld:
-        set_domestic_tld.add("." + istld[1])
+    if line and not line.startswith("#"):
+        if "#" in line:
+            set_domestic_tld.add("." + line.split(" #")[0])
+        else:
+            set_domestic_tld.add("." + line)
 for domain in set_domestic_raw.copy():
     for tld in set_domestic_tld:
         if domain.endswith(tld):
@@ -299,7 +300,7 @@ for filename in list_file_custom:
         list_custom_sorted = set_to_sorted_list(set_custom)
         rules_batch_dump(list_custom_sorted, TARGETS, PATH_DIST, filename.name)
 
-list_file_personal = Path.iterdir(PATH_CUSTOM_BUILD/"personal")
+list_file_personal = Path.iterdir(PATH_CUSTOM_BUILD / "personal")
 for filename in list_file_personal:
     set_personal = custom_convert(filename)
     list_personal_sorted = set_to_sorted_list(set_personal)
