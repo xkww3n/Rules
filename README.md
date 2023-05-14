@@ -5,13 +5,13 @@
 
 本仓库提供四种格式的规则列表：
 - 纯文本规则集
-  - 适用于 [Clash Premium](https://github.com/Dreamacro/clash/wiki/Premium%3A-Introduction)（2023.04.13 及以后的版本）、[Clash Meta](https://github.com/MetaCubeX/Clash.Meta/)（v1.14.4 及以后的版本）、[Surge 3](https://nssurge.com/)、[Stash](https://stash.ws/) 和 [Surfboard](https://getsurfboard.com/)。
+  - 适用于 [Clash Premium](https://github.com/Dreamacro/clash/wiki/Premium%3A-Introduction)（2023.04.13 及更新的版本）、[Clash Meta](https://github.com/MetaCubeX/Clash.Meta/)（v1.14.4 及更新的版本）、[Surge](https://nssurge.com/)（v3 及更新的版本） 、[Stash](https://stash.ws/) 和 [Surfboard](https://getsurfboard.com/)。
 - YAML 规则集
-  - 仅建议用于**未**更新至 2023.04.13 版本的 [Clash Premium](https://github.com/Dreamacro/clash/wiki/Premium%3A-Introduction) 和**未**更新至 v1.14.4 版本的 [Clash Meta](https://github.com/MetaCubeX/Clash.Meta/)。
+  - 仅建议用于低于 2023.04.13 版本的 [Clash Premium](https://github.com/Dreamacro/clash/wiki/Premium%3A-Introduction) 和低于 v1.14.4 版本的 [Clash Meta](https://github.com/MetaCubeX/Clash.Meta/)。
 - Clash 传统规则
-  - 适用于兼容传统 Clash 规则的代理软件，如 [Clash FOSS](https://github.com/Dreamacro/clash)、[Quantumult](https://quantumult.app/) [(X)](https://quantumult.app/x/) 和 [Shadowrocket](https://apps.apple.com/us/app/shadowrocket/id932747118)。
+  - 仅建议用于只可使用传统 Clash 规则的代理软件，如 [Clash FOSS](https://github.com/Dreamacro/clash)、[Quantumult](https://quantumult.app/) [(X)](https://quantumult.app/x/) 和 [Shadowrocket](https://apps.apple.com/us/app/shadowrocket/id932747118)。
 - Surge 传统规则
-  - 适用于兼容传统 Surge 规则的代理软件，如 Surge 2 和 [Loon](https://www.nsloon.com/)。
+  - 仅建议用于只可使用传统 Surge 规则的代理软件，如低于 v3 版本的 Surge 和 [Loon](https://www.nsloon.com/)。
 
 ## 规则列表
 请查看 [RULES_LIST.md](./RULES_LIST.md)
