@@ -235,15 +235,15 @@ END_TIME = time_ns()
 print(f"FINISHED Stage 1\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 1 finished.
 
-# Stage 2: Sync CN rules.
-print("START Stage 2: Sync CN rules.")
+# Stage 2: Sync domestic rules.
+print("START Stage 2: Sync domestic rules.")
 START_TIME = time_ns()
 
 src_domestic_raw = geosite_import(open(PATH_DOMAIN_LIST/"geolocation-cn", mode="r").read().splitlines())
 set_domestic_raw = geosite_convert(src_domestic_raw)
 set_domestic_raw |= custom_convert(PATH_CUSTOM_APPEND/"domestic.txt")
 
-## Add all CN TLDs to CN rules, then remove CN domains with Chinese TLDs.
+## Add all domestic TLDs to domestic rules, then remove domestic domains with domestic TLDs.
 set_domestic_tld = set()
 for line in open(PATH_DOMAIN_LIST/"tld-cn", mode="r").read().splitlines():
     if line and not line.startswith("#"):
