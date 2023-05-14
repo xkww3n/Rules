@@ -1,9 +1,9 @@
 # 规则列表
 
 ## 广告服务与跟踪器拦截
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/reject.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/reject.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/reject.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/reject.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/reject.txt>
 
@@ -22,9 +22,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/reject.txt>
   - [もちフィルタ](https://eeii0a5l.github.io/mochifilter_homepage/mochi.html)
 
 ### 排除项
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/exclude.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/exclude.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/exclude.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/exclude.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/exclude.txt>
 
@@ -39,9 +39,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/exclude.txt>
   - [AdGuard](https://github.com/AdguardTeam/AdguardFilters)
 
 ## 中国大陆网络服务
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/domestic.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/domestic.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/domestic.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/domestic.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/domestic.txt>
 
@@ -59,9 +59,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/domestic.txt>
 ## 特定网站/服务
 
 ### Apple Music
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/apple-music.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/apple-music.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/apple-music.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/apple-music.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/apple-music.txt>
 
@@ -71,9 +71,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/apple-music.txt
 - 包含 Apple Music 和 iTunes Store 的服务域名。
 
 ### 巴哈姆特
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/bahamut.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/bahamut.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/bahamut.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/bahamut.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/bahamut.txt>
 
@@ -85,9 +85,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/bahamut.txt>
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
 ### 微软必应搜索
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/bing.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/bing.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/bing.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/bing.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/bing.txt>
 
@@ -99,9 +99,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/bing.txt>
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
 ### 哔哩哔哩
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/bilibili.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/bilibili.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/bilibili.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/bilibili.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/bilibili.txt>
 
@@ -112,9 +112,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/bilibili.txt>
   - 不含合作 CDN 域名（如与 Akamai 合作的 `upos-hz-mirrorakam.akamaized.net`）
 
 ### 思杰马克丁
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/cjmarketing.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/cjmarketing.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/cjmarketing.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/cjmarketing.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/cjmarketing.txt>
 
@@ -125,9 +125,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/cjmarketing.txt
 - 请参阅：[《揭开软件行业毒瘤思杰马克丁的虚伪面纱》](https://bbs.kafan.cn/thread-2091351-1-1.html)
 
 ### DMM
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/dmm.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/dmm.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/dmm.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/dmm.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/dmm.txt>
 
@@ -139,9 +139,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/dmm.txt>
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
 ### Google FCM
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/googlefcm.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/googlefcm.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/googlefcm.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/googlefcm.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/googlefcm.txt>
 
@@ -153,9 +153,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/googlefcm.txt>
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
 ### Microsoft
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/microsoft.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/microsoft.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/microsoft.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/microsoft.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/microsoft.txt>
 
@@ -169,9 +169,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/microsoft.txt>
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
 ### niconico 动画
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/niconico.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/niconico.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/niconico.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/niconico.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/niconico.txt>
 
@@ -183,9 +183,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/niconico.txt>
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
 ### OpenAI (ChatGPT)
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/openai.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/openai.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/openai.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/openai.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/openai.txt>
 
@@ -197,9 +197,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/openai.txt>
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
 ### PayPal
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/paypal.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/paypal.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/paypal.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/paypal.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/paypal.txt>
 
@@ -211,9 +211,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/paypal.txt>
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
 ### Steam
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/steam.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/steam.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/steam.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/steam.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/steam.txt>
 
@@ -224,9 +224,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/steam.txt>
   - **不**含资源 CDN
 
 ### YouTube
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/youtube.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/youtube.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/youtube.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/youtube.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/youtube.txt>
 
@@ -241,30 +241,30 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/youtube.txt>
 - 手动维护
 - 提供以下游戏的分流规则（**不含**资源 CDN）：
   - [碧蓝航线（英文版）](https://azurlane.yo-star.com/)
-    - Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/azurlane-en.txt>  
-      Surge 3 规则集：<https://rules.xkww3n.cyou/surge/azurlane-en.txt>  
+    - 纯文本规则集：<https://rules.xkww3n.cyou/text/azurlane-en.txt>  
+      YAML 规则集：<https://rules.xkww3n.cyou/yaml/azurlane-en.txt>  
       Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/azurlane-en.txt>  
       Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/azurlane-en.txt>  
   - [BanG Dream！少女乐团派对！（日文版）](https://bang-dream.bushimo.jp/)
-    - Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/bangdream-jp.txt>  
-      Surge 3 规则集：<https://rules.xkww3n.cyou/surge/bangdream-jp.txt>  
+    - 纯文本规则集：<https://rules.xkww3n.cyou/text/bangdream-jp.txt>  
+      YAML 规则集：<https://rules.xkww3n.cyou/yaml/bangdream-jp.txt>  
       Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/bangdream-jp.txt>  
       Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/bangdream-jp.txt>  
   - [绯染天空](https://heaven-burns-red.com/)
-    - Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/heavenburnsred.txt>  
-      Surge 3 规则集：<https://rules.xkww3n.cyou/surge/heavenburnsred.txt>  
+    - 纯文本规则集：<https://rules.xkww3n.cyou/text/heavenburnsred.txt>  
+      YAML 规则集：<https://rules.xkww3n.cyou/yaml/heavenburnsred.txt>  
       Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/heavenburnsred.txt>  
       Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/heavenburnsred.txt>  
   - [Love Live!学园偶像祭2 MIRACLE LIVE!（日文版）](https://lovelive-sif2.bushimo.jp/)
-    - Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/lovelivesif2-jp.txt>  
-      Surge 3 规则集：<https://rules.xkww3n.cyou/surge/lovelivesif2-jp.txt>  
+    - 纯文本规则集：<https://rules.xkww3n.cyou/text/lovelivesif2-jp.txt>  
+      YAML 规则集：<https://rules.xkww3n.cyou/yaml/lovelivesif2-jp.txt>  
       Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/lovelivesif2-jp.txt>  
       Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/lovelivesif2-jp.txt>  
 
 ## IP 归属地检测服务
-Clash Premium 规则集：<https://rules.xkww3n.cyou/clash/ipgeo.txt>
+纯文本规则集：<https://rules.xkww3n.cyou/text/ipgeo.txt>
 
-Surge 3 规则集：<https://rules.xkww3n.cyou/surge/ipgeo.txt>
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/ipgeo.txt>
 
 Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/ipgeo.txt>
 
