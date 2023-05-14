@@ -70,7 +70,7 @@ def custom_convert(src: Path) -> set:
 def is_ipaddr(str: str) -> bool:
     if str.count(".") != 3:
         return False
-    for part in str.split('.'):
+    for part in str.split("."):
         if not part.isdigit():
             return False
         i = int(part)
@@ -101,7 +101,7 @@ def is_domain_rule(rule: Filter) -> bool:
         and not rule.text.endswith("]")
         and not rule.text.endswith(";")
         and not rule.options
-        and not is_ipaddr(rule.text.replace("||","").replace("^",""))
+        and not is_ipaddr(rule.text.replace("||", "").replace("^", ""))
     ):
         return True
     else:
