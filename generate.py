@@ -1,9 +1,14 @@
+import logging
+import logging.config
 import re
 from pathlib import Path
 from time import time_ns
 
 from abp.filters.parser import Filter, parse_filterlist
 from requests import Session
+
+logging.config.fileConfig("logging.conf")
+logger = logging.getLogger("root")
 
 TARGETS = ["surge", "clash", "surge-compatible", "clash-compatible"]
 PATH_DOMAIN_LIST = Path("./domain-list-community/data/")
@@ -152,7 +157,7 @@ def rules_dump(src: list, target: str, dst: Path) -> None:
 
 def rules_batch_dump(src: list, targets: list, dst_path: Path, filename: str) -> None:
     for target in targets:
-        rules_dump(src, target, dst_path / target / filename)
+        rules_dump(src, target, dst_path/target/filename)
 
 
 def set_to_sorted_list(src: set) -> list:
@@ -162,7 +167,7 @@ def set_to_sorted_list(src: set) -> list:
 
 
 # Stage 1: Sync reject and exclude rules.
-print("START Stage 1: Sync reject and exclude rules.")
+logger.info("START Stage 1: Sync reject and exclude rules.")
 START_TIME = time_ns()
 connection = Session()
 ## AdGuard Base Filter
@@ -186,7 +191,10 @@ src_rejections = (
     + connection.get(URL_MOBILE).text
     + connection.get(URL_CN_EXTEND).text
 ).splitlines()
+logger.debug(f"Imported {format(str(len(src_rejections)))} lines of reject rules.")
+
 src_exclusions = (connection.get(URL_EXCLUSIONS_1).text + connection.get(URL_EXCLUSIONS_2).text).splitlines()
+logger.debug(f"Imported {format(str(len(src_exclusions)))} lines of exclude rules.")
 
 set_rejections = set()
 set_exclusions_raw = set()
@@ -195,34 +203,55 @@ for line in parse_filterlist(src_rejections):
     if is_domain_rule(line) and line.action == "block" and not line.text.endswith("|"):
         if line.text.startswith("."):
             set_rejections.add(line.text.replace("^", ""))
+            logger.debug(f'Line "{line.text}" is added to reject set, converted to "{line.text.replace("^", "")}".')
         else:
             set_rejections.add(line.text.replace("||", ".").replace("^", ""))
+            logger.debug(
+                f'Line "{line.text}" is added to reject set, converted to "{line.text.replace("||", ".").replace("^", "")}".'
+            )
     elif is_domain_rule(line) and line.action == "allow" and not line.text.endswith("|"):
         src_exclusions.append(line.text)
+        logger.debug(f'Line "{line.text}" is added to exclude set.')
 
 for line in parse_filterlist(src_exclusions):
     if is_domain_rule(line):
         domain = line.text.replace("@", "").replace("^", "").replace("|", "")
         if not domain.startswith("-"):
             set_exclusions_raw.add(domain)
+            logger.debug(f'Line "{line.text}" is added to raw exclude set, converted to "{domain}".')
 
 list_rejections_v2fly = open(PATH_DOMAIN_LIST/"category-ads-all", mode="r").read().splitlines()
 set_rejections |= geosite_convert(geosite_import(list_rejections_v2fly))
+logger.debug(
+    f"Imported {str(len(geosite_convert(geosite_import(list_rejections_v2fly))))} reject rules from v2fly category-ads-all list."
+)
 set_rejections |= custom_convert(PATH_CUSTOM_APPEND/"reject.txt")
+logger.debug(
+    f'Imported {str(len(custom_convert(PATH_CUSTOM_APPEND/"reject.txt")))} reject rules from "Custom/Append/reject.txt".'
+)
 set_exclusions_raw |= custom_convert(PATH_CUSTOM_REMOVE/"reject.txt")
+logger.debug(
+    f'Imported {str(len(custom_convert(PATH_CUSTOM_REMOVE/"reject.txt")))} exclude rules from "Custom/Remove/reject.txt".'
+)
 set_exclusions_raw |= custom_convert(PATH_CUSTOM_APPEND/"exclude.txt")
+logger.debug(
+    f'Imported {str(len(custom_convert(PATH_CUSTOM_APPEND/"exclude.txt")))} exclude rules from "Custom/Append/exclude.txt".'
+)
 
 set_exclusions = set()
+logger.debug("Start deduplicating reject and exclude set.")
 for domain_exclude in set_exclusions_raw.copy():
     for domain_reject in set_rejections.copy():
         if domain_reject == domain_exclude or domain_reject == "." + domain_exclude:
             set_rejections.remove(domain_reject)
             set_exclusions_raw.remove(domain_exclude)
+            logger.debug(f"{domain_reject} is removed as duplicate with {domain_exclude}.")
 
 for domain_exclude in set_exclusions_raw:
     for domain_reject in set_rejections:
         if domain_exclude.endswith(domain_reject):
             set_exclusions.add(domain_exclude)
+            logger.debug(f"{domain_exclude} is added to final exclude set.")
 
 
 list_rejections_sorted = set_to_sorted_list(set_rejections)
@@ -232,16 +261,20 @@ rules_batch_dump(list_rejections_sorted, TARGETS, PATH_DIST, "reject.txt")
 rules_batch_dump(list_exclusions_sorted, TARGETS, PATH_DIST, "exclude.txt")
 
 END_TIME = time_ns()
-print(f"FINISHED Stage 1\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
+logger.info(f"FINISHED Stage 1. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 1 finished.
 
 # Stage 2: Sync domestic rules.
-print("START Stage 2: Sync domestic rules.")
+logger.info("START Stage 2: Sync domestic rules.")
 START_TIME = time_ns()
 
 src_domestic_raw = geosite_import(open(PATH_DOMAIN_LIST/"geolocation-cn", mode="r").read().splitlines())
+logger.debug(f"Imported {str(len(src_domestic_raw))} domestic rules from v2fly geolocation-cn list.")
 set_domestic_raw = geosite_convert(src_domestic_raw)
 set_domestic_raw |= custom_convert(PATH_CUSTOM_APPEND/"domestic.txt")
+logger.debug(
+    f'Imported {str(len(custom_convert(PATH_CUSTOM_APPEND/"domestic.txt")))} domestic rules from "Custom/Append/domestic.txt".'
+)
 
 ## Add all domestic TLDs to domestic rules, then remove domestic domains with domestic TLDs.
 set_domestic_tld = set()
@@ -249,12 +282,16 @@ for line in open(PATH_DOMAIN_LIST/"tld-cn", mode="r").read().splitlines():
     if line and not line.startswith("#"):
         if "#" in line:
             set_domestic_tld.add("." + line.split(" #")[0])
+            logger.debug(f'TLD "{"." + line.split(" #")[0]}" is added to domestic set.')
         else:
             set_domestic_tld.add("." + line)
+            logger.debug(f'TLD "{"." + line}" is added to domestic set.')
+logger.debug(f"Imported {str(len(set_domestic_tld))} domestic TLDs.")
 for domain in set_domestic_raw.copy():
     for tld in set_domestic_tld:
         if domain.endswith(tld):
             set_domestic_raw.remove(domain)
+            logger.debug(f'"{domain}"" is removed for having a domestic TLD "{tld}"".')
             break
 set_domestic_raw |= set_domestic_tld
 
@@ -262,11 +299,11 @@ list_domestic_sorted = set_to_sorted_list(set_domestic_raw)
 rules_batch_dump(list_domestic_sorted, TARGETS, PATH_DIST, "domestic.txt")
 
 END_TIME = time_ns()
-print(f"FINISHED Stage 2\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
+logger.info(f"FINISHED Stage 2. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 2 finished.
 
 # Stage 3: Sync v2fly community rules.
-print("START Stage 3: Sync v2fly community rules.")
+logger.info("START Stage 3: Sync v2fly community rules.")
 START_TIME = time_ns()
 
 CATEGORIES = [
@@ -287,25 +324,29 @@ EXCLUSIONS = [
 geosite_batch_convert(CATEGORIES, TARGETS, EXCLUSIONS)
 
 END_TIME = time_ns()
-print(f"FINISHED Stage 3\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
+logger.info(f"FINISHED Stage 3. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 3 finished.
 
 # Stage 4: Build custom rules.
-print("START Stage 4: Build custom rules.")
+logger.info("START Stage 4: Build custom rules.")
 START_TIME = time_ns()
 list_file_custom = Path.iterdir(PATH_CUSTOM_BUILD)
 for filename in list_file_custom:
     if filename.is_file():
+        logger.debug(f'Start converting "{filename.name}".')
         set_custom = custom_convert(filename)
         list_custom_sorted = set_to_sorted_list(set_custom)
         rules_batch_dump(list_custom_sorted, TARGETS, PATH_DIST, filename.name)
+        logger.debug(f"Converted {str(len(list_custom_sorted))} rules.")
 
-list_file_personal = Path.iterdir(PATH_CUSTOM_BUILD / "personal")
+list_file_personal = Path.iterdir(PATH_CUSTOM_BUILD/"personal")
 for filename in list_file_personal:
+    logger.debug(f'Start converting "{filename.name}".')
     set_personal = custom_convert(filename)
     list_personal_sorted = set_to_sorted_list(set_personal)
     rules_batch_dump(list_personal_sorted, TARGETS, PATH_DIST, "personal/" + filename.name)
+    logger.debug(f"Converted {str(len(list_personal_sorted))} rules.")
 
 END_TIME = time_ns()
-print(f"FINISHED Stage 4\nTotal time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
+logger.info(f"FINISHED Stage 4. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 4 finished
