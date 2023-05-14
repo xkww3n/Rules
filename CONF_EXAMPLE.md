@@ -4,6 +4,8 @@
 Shdaowrocket 不提供在配置文件内指定引用远程规则的功能，只可在软件内手动指定，故不提供配置示例。
 
 ## Clash Premium
+致 Stash 用户：Stash 的规则集配置格式和 Clash Premium **不同**，请继续向下阅读以查看 Stash 规则集的配置方法。
+
 适用于 **2023.04.13** 及更新版本：
 
 ```yaml
@@ -20,55 +22,56 @@ rule-providers:
   CJMarketing:
     type: http
     behavior: domain
-    format: 'text'
+    format: text
     url: https://rules.xkww3n.cyou/text/cjmarketing.txt
     path: ./Rules/CJMarketing
     interval: 86400
   Reject:
     type: http
     behavior: domain
-    format: 'text'
+    format: text
     url: https://rules.xkww3n.cyou/text/reject.txt
     path: ./Rules/Reject
     interval: 86400
   Exclude:
     type: http
     behavior: domain
-    format: 'text'
+    format: text
     url: https://rules.xkww3n.cyou/text/exclude.txt
     path: ./Rules/Exclude
     interval: 86400
   CN:
     type: http
     behavior: domain
-    format: 'text'
+    format: text
     url: https://rules.xkww3n.cyou/text/domestic.txt
     path: ./Rules/CN
     interval: 86400
   Microsoft:
     type: http
     behavior: domain
-    format: 'text'
+    format: text
     url: https://rules.xkww3n.cyou/text/microsoft.txt
     path: ./Rules/Microsoft
     interval: 86400
   niconico:
     type: http
     behavior: domain
-    format: 'text'
+    format: text
     url: https://rules.xkww3n.cyou/text/niconico.txt
     path: ./Rules/niconico
     interval: 86400
   BanG Dream:
     type: http
     behavior: domain
-    format: 'text'
+    format: text
     url: https://rules.xkww3n.cyou/text/bangdream-jp.txt
     path: ./Rules/BanG Dream
     interval: 86400
 ```
 
 适用于 **2023.04.13 以前**的版本：
+
 ```yaml
 rules:
 - RULE-SET,CJMarketing,REJECT
@@ -120,6 +123,62 @@ rule-providers:
     type: http
     behavior: domain
     url: https://rules.xkww3n.cyou/yaml/bangdream-jp.txt
+    path: ./Rules/BanG Dream
+    interval: 86400
+```
+
+## Stash
+```yaml
+rules:
+- RULE-SET,CJMarketing,REJECT
+- RULE-SET,Reject,REJECT
+- RULE-SET,Exclude,Final
+- RULE-SET,CN,DIRECT
+- RULE-SET,Microsoft,Proxy
+- RULE-SET,niconico,JP
+- RULE-SET,BanG Dream,Gaming
+
+rule-providers:
+  CJMarketing:
+    type: http
+    behavior: domain-text
+    url: https://rules.xkww3n.cyou/text/cjmarketing.txt
+    path: ./Rules/CJMarketing
+    interval: 86400
+  Reject:
+    type: http
+    behavior: domain-text
+    url: https://rules.xkww3n.cyou/text/reject.txt
+    path: ./Rules/Reject
+    interval: 86400
+  Exclude:
+    type: http
+    behavior: domain-text
+    url: https://rules.xkww3n.cyou/text/exclude.txt
+    path: ./Rules/Exclude
+    interval: 86400
+  CN:
+    type: http
+    behavior: domain-text
+    url: https://rules.xkww3n.cyou/text/domestic.txt
+    path: ./Rules/CN
+    interval: 86400
+  Microsoft:
+    type: http
+    behavior: domain-text
+    url: https://rules.xkww3n.cyou/text/microsoft.txt
+    path: ./Rules/Microsoft
+    interval: 86400
+  niconico:
+    type: http
+    behavior: domain-text
+    url: https://rules.xkww3n.cyou/text/niconico.txt
+    path: ./Rules/niconico
+    interval: 86400
+  BanG Dream:
+    type: http
+    behavior: domain-text
+    url: https://rules.xkww3n.cyou/text/bangdream-jp.txt
     path: ./Rules/BanG Dream
     interval: 86400
 ```
