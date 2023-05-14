@@ -2,6 +2,7 @@ import logging
 import logging.config
 import re
 from pathlib import Path
+from shutil import copytree
 from time import time_ns
 
 from abp.filters.parser import Filter, parse_filterlist
@@ -10,7 +11,7 @@ from requests import Session
 logging.config.fileConfig("logging.conf")
 logger = logging.getLogger("root")
 
-TARGETS = ["surge", "clash", "surge-compatible", "clash-compatible"]
+TARGETS = ["text", "yaml", "surge-compatible", "clash-compatible"]
 PATH_DOMAIN_LIST = Path("./domain-list-community/data/")
 PATH_CUSTOM_BUILD = Path("./Source/")
 PATH_CUSTOM_APPEND = Path("./Custom/Append/")
@@ -120,14 +121,14 @@ def rules_dump(src: list, target: str, dst: Path) -> None:
         dst.parent.mkdir(parents=True)
         dist = open(dst, mode="w")
     match target:
-        case "surge":
+        case "text":
             for domain in src:
                 if domain:
                     if domain.startswith("."):
                         dist.writelines(domain + "\n")
                     elif not domain.startswith("#"):
                         dist.writelines(domain + "\n")
-        case "clash":
+        case "yaml":
             dist.writelines("payload:\n")
             for domain in src:
                 if domain:
@@ -151,7 +152,7 @@ def rules_dump(src: list, target: str, dst: Path) -> None:
                         dist.writelines("DOMAIN," + domain + ",Policy\n")
         case _:
             raise TypeError(
-                "Target type unsupported, only accept 'surge', 'clash', 'surge-compatible' or 'clash-compatible'."
+                "Target type unsupported, only accept 'text', 'yaml', 'surge-compatible' or 'clash-compatible'."
             )
 
 
@@ -350,3 +351,7 @@ for filename in list_file_personal:
 END_TIME = time_ns()
 logger.info(f"FINISHED Stage 4. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 4 finished
+
+# For backward compatibility
+copytree(PATH_DIST/"text", PATH_DIST/"surge")
+copytree(PATH_DIST/"yaml", PATH_DIST/"clash")
