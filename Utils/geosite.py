@@ -1,5 +1,4 @@
 import logging
-import logging.config
 
 from . import rule
 from . import consts
