@@ -375,5 +375,5 @@ logger.info(f"FINISHED Stage 4. Total time: {format((END_TIME - START_TIME) / 1e
 # Stage 4 finished
 
 # For backward compatibility
-copytree(PATH_DIST/"text", PATH_DIST/"surge")
-copytree(PATH_DIST/"yaml", PATH_DIST/"clash")
+copytree(PATH_DIST/"text", PATH_DIST/"surge", dirs_exist_ok=True)
+copytree(PATH_DIST/"yaml", PATH_DIST/"clash", dirs_exist_ok=True)
