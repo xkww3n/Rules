@@ -1,3 +1,4 @@
 dists/ 
 domain-list-community/
 .vscode/
+**/__pycache__/
