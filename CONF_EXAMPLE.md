@@ -1,8 +1,6 @@
 # 示例配置
 以下配置仅供参考，你可能需要自行选择需要引用的列表，并将其与你自己的代理策略匹配。
 
-Shdaowrocket 不提供在配置文件内指定引用远程规则的功能，只可在软件内手动指定，故不提供配置示例。
-
 ## Clash Premium
 致 Stash 用户：Stash 的规则集配置格式和 Clash Premium **不同**，请继续向下阅读以查看 Stash 规则集的配置方法。
 
@@ -183,7 +181,7 @@ rule-providers:
     interval: 86400
 ```
 
-## Surge 3
+## Surge 3 / Shadowrocket
 ```
 [Rule]
 DOMAIN-SET,https://rules.xkww3n.cyou/text/cjmarketing.txt,REJECT

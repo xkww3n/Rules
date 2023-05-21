@@ -7,11 +7,11 @@
 - 纯文本规则集
   - 适用于 [Clash Premium](https://github.com/Dreamacro/clash/wiki/Premium%3A-Introduction)（2023.04.13 及更新的版本）、[Clash Meta](https://github.com/MetaCubeX/Clash.Meta/)（v1.14.4 及更新的版本）、[Surge](https://nssurge.com/)（v3 及更新的版本） 、[Stash](https://stash.ws/) 和 [Surfboard](https://getsurfboard.com)。
 - YAML 规则集
-  - 适用用于低于 2023.04.13 版本的 [Clash Premium](https://github.com/Dreamacro/clash/wiki/Premium%3A-Introduction) 、低于 v1.14.4 版本的 [Clash Meta](https://github.com/MetaCubeX/Clash.Meta/) 和 [Choc](https://apps.apple.com/us/app/choc/id1582542227)。
+  - 仅建议用于低于 2023.04.13 版本的 [Clash Premium](https://github.com/Dreamacro/clash/wiki/Premium%3A-Introduction) 、低于 v1.14.4 版本的 [Clash Meta](https://github.com/MetaCubeX/Clash.Meta/) 和 [Choc](https://apps.apple.com/us/app/choc/id1582542227)。
 - Clash 传统规则
-  - 适用于兼容传统 Clash 规则的代理软件，如 [Quantumult](https://quantumult.app/) [(X)](https://quantumult.app/x/) 和 [Shadowrocket](https://apps.apple.com/us/app/shadowrocket/id932747118)。
+  - 适用于兼容传统 Clash 规则的代理软件，如 [Quantumult](https://quantumult.app/) [(X)](https://quantumult.app/x/)。
 - Surge 传统规则
-  - 适用于兼容传统 Surge 规则的代理软件，如低于 v3 版本的 Surge 和 [Loon](https://www.nsloon.com/)。
+  - 适用于兼容传统 Surge 规则的代理软件，如低于 v3 版本的 Surge、[Loon](https://www.nsloon.com/) 和 [Shadowrocket](https://apps.apple.com/us/app/shadowrocket/id932747118)。
 
 ## 规则列表
 请查看 [RULES_LIST.md](./RULES_LIST.md)
