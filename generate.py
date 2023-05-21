@@ -9,7 +9,7 @@ from requests import Session
 
 from Utils import consts, geosite, rule
 
-logging.config.fileConfig("logging.conf")
+logging.config.fileConfig("logging.ini")
 logger = logging.getLogger("root")
 
 
