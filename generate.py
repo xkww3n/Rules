@@ -135,7 +135,7 @@ def is_domain_rule(rule: Filter) -> bool:
         and not rule.text.endswith("]")
         and not rule.text.endswith(";")
         and not rule.options
-        and not is_ipaddr(rule.text.replace("||", "").replace("^", ""))
+        and not is_ipaddr(rule.text.strip("||").strip("^"))
     ):
         return True
     else:
@@ -231,12 +231,12 @@ set_exclusions_raw = set()
 for line in parse_filterlist(src_rejections):
     if is_domain_rule(line) and line.action == "block" and not line.text.endswith("|"):
         if line.text.startswith("."):
-            set_rejections.add(line.text.replace("^", ""))
-            logger.debug(f'Line "{line.text}" is added to reject set, converted to "{line.text.replace("^", "")}".')
+            set_rejections.add(line.text.strip("^"))
+            logger.debug(f'Line "{line.text}" is added to reject set, converted to "{line.text.strip("^")}".')
         else:
-            set_rejections.add(line.text.replace("||", ".").replace("^", ""))
+            set_rejections.add(line.text.replace("||", ".").strip("^"))
             logger.debug(
-                f'Line "{line.text}" is added to reject set, converted to "{line.text.replace("||", ".").replace("^", "")}".'
+                f'Line "{line.text}" is added to reject set, converted to "{line.text.replace("||", ".").strip("^")}".'
             )
     elif is_domain_rule(line) and line.action == "allow" and not line.text.endswith("|"):
         src_exclusions.append(line.text)
@@ -244,7 +244,7 @@ for line in parse_filterlist(src_rejections):
 
 for line in parse_filterlist(src_exclusions):
     if is_domain_rule(line):
-        domain = line.text.replace("@", "").replace("^", "").replace("|", "")
+        domain = line.text.strip("@").strip("^").strip("|")
         if not domain.startswith("-"):
             set_exclusions_raw.add(domain)
             logger.debug(f'Line "{line.text}" is added to raw exclude set, converted to "{domain}".')
