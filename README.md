@@ -11,7 +11,7 @@
 - Clash 传统规则
   - 适用于兼容传统 Clash 规则的代理软件，如 [Quantumult](https://quantumult.app/) [(X)](https://quantumult.app/x/)。
 - Surge 传统规则
-  - 适用于兼容传统 Surge 规则的代理软件，如低于 v3 版本的 Surge、[Loon](https://www.nsloon.com/) 和 [Shadowrocket](https://apps.apple.com/us/app/shadowrocket/id932747118)。
+  - 适用于兼容传统 Surge 规则的代理软件，如低于 v3 版本的 Surge、[Loon](https://www.nsloon.com/)、[Shadowrocket](https://apps.apple.com/us/app/shadowrocket/id932747118) 和 [LanceX](https://shadowboat.app/lancex/)。
 
 ## 规则列表
 请查看 [RULES_LIST.md](./RULES_LIST.md)
