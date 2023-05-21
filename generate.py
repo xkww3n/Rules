@@ -1,6 +1,5 @@
 import logging
 import logging.config
-import re
 from pathlib import Path
 from shutil import copytree
 from time import time_ns
@@ -19,47 +18,76 @@ PATH_CUSTOM_REMOVE = Path("./Custom/Remove/")
 PATH_DIST = Path("./dists/")
 
 
-def geosite_import(src: list, exclusions: list = []) -> set:
-    set_converted = set()
-    for line in src:
-        if line.startswith("include:"):
-            name_import = line.split("include:")[1]
-            if "#" in name_import:
-                name_import = name_import.split(" #")[0]
-                if name_import not in exclusions:
-                    src_import = open(PATH_DOMAIN_LIST/name_import, mode="r").read().splitlines()
-                    set_converted |= geosite_import(src_import)
-            else:
-                if name_import not in exclusions:
-                    src_import = open(PATH_DOMAIN_LIST/name_import, mode="r").read().splitlines()
-                    set_converted |= geosite_import(src_import)
+class Rule:
+    def __init__(self):
+        self.Type = None
+        self.Payload = None
+        self.Tag = None
+
+    def type(self, rule_type):
+        self.Type = rule_type
+
+    def payload(self, payload):
+        self.Payload = payload
+
+    def tag(self, tag):
+        self.Tag = tag
+
+    def __str__(self):
+        return f'Type: "{self.Type}", Payload: "{self.Payload}", Tag: "{self.Tag if self.Tag else ""}"'
+
+
+def geosite_parse(src: set, excluded_import: list = []) -> set:
+    set_parsed = set()
+    for raw_line in src:
+        line = raw_line.split("#")[0].strip()
+        if not line:
             continue
-        set_converted.add(line)
-    return set_converted
+        rule = Rule()
+        if "@" in line:
+            rule.tag(line.split("@")[1])
+            line = line.split(" @")[0]
+        if ":" not in line:
+            rule.type("Suffix")
+            rule.payload(line)
+        elif line.startswith("full:"):
+            rule.type("Full")
+            rule.payload(line.strip("full:"))
+        elif line.startswith("include:"):
+            name_import = line.split("include:")[1]
+            if name_import not in excluded_import:
+                logger.debug(f'Line "{raw_line}" is a import rule. Start importing "{name_import}".')
+                src_import = set(open(PATH_DOMAIN_LIST/name_import, mode="r").read().splitlines())
+                set_parsed |= geosite_parse(src_import, excluded_import)
+                logger.debug(f'Imported "{name_import}".')
+                continue
+            else:
+                logger.debug(f'Line "{raw_line}" is a import rule, but hit exclusion "{name_import}", skipped.')
+                continue
+        else:
+            logger.debug(f'Unsupported rule: "{raw_line}", skipped.')
+            continue
+        set_parsed.add(rule)
+        logger.debug(f"Line {raw_line} is parsed: {rule}")
+    return set_parsed
 
 
-def geosite_convert(src: set) -> set:
-    # The following 2 regexes' group 1 matches domains without "@cn" directive.
-    REGEX_FULLDOMAIN = re.compile(r"^full\:([-\.a-zA-Z\d]{1,}?(?:\.[-\.a-zA-Z\d]{1,}))(?: @cn){0,1}?$")
-    REGEX_SUBDOMAIN = re.compile(r"^([-a-zA-Z\d]{1,}(?:\.\S*)?)(?: @cn){0,1}?$")
+def geosite_convert(src: set, excluded_tag: list = []) -> set:
     set_converted = set()
-    for line in src:
-        if not line.startswith("regexp:") or line.startswith("keyword:") or line.startswith("#"):
-            fulldomain = REGEX_FULLDOMAIN.match(line)
-            subdomain = REGEX_SUBDOMAIN.match(line)
-            if fulldomain:
-                set_converted.add(fulldomain.group(1))
-            elif subdomain:
-                set_converted.add("." + subdomain.group(1))
+    for rule in src:
+        if rule.Tag not in excluded_tag:
+            if rule.Type == "Suffix":
+                set_converted.add("." + rule.Payload)
+            elif rule.Type == "Full":
+                set_converted.add(rule.Payload)
     return set_converted
 
 
 def geosite_batch_convert(categories: list, tools: list, exclusions: list = []) -> None:
     for tool in tools:
         for category in categories:
-            src_geosite = open(PATH_DOMAIN_LIST/category, mode="r").read().splitlines()
-            src_geosite_imported = geosite_import(src_geosite, exclusions)
-            set_geosite = geosite_convert(src_geosite_imported)
+            src_geosite = set(open(PATH_DOMAIN_LIST/category, mode="r").read().splitlines())
+            set_geosite = geosite_convert(geosite_parse(src_geosite, exclusions))
             list_geosite_sorted = set_to_sorted_list(set_geosite)
             rules_dump(list_geosite_sorted, tool, PATH_DIST/tool/(category + ".txt"))
 
@@ -221,10 +249,11 @@ for line in parse_filterlist(src_exclusions):
             set_exclusions_raw.add(domain)
             logger.debug(f'Line "{line.text}" is added to raw exclude set, converted to "{domain}".')
 
-list_rejections_v2fly = open(PATH_DOMAIN_LIST/"category-ads-all", mode="r").read().splitlines()
-set_rejections |= geosite_convert(geosite_import(list_rejections_v2fly))
+src_rejections_v2fly = set(open(PATH_DOMAIN_LIST/"category-ads-all", mode="r").read().splitlines())
+set_rejections_v2fly = geosite_convert(geosite_parse(src_rejections_v2fly))
+set_rejections |= set_rejections_v2fly
 logger.debug(
-    f"Imported {str(len(geosite_convert(geosite_import(list_rejections_v2fly))))} reject rules from v2fly category-ads-all list."
+    f"Imported {str(len(set_rejections_v2fly))} reject rules from v2fly category-ads-all list."
 )
 set_rejections |= custom_convert(PATH_CUSTOM_APPEND/"reject.txt")
 logger.debug(
@@ -269,32 +298,25 @@ logger.info(f"FINISHED Stage 1. Total time: {format((END_TIME - START_TIME) / 1e
 logger.info("START Stage 2: Sync domestic rules.")
 START_TIME = time_ns()
 
-src_domestic_raw = geosite_import(open(PATH_DOMAIN_LIST/"geolocation-cn", mode="r").read().splitlines())
+src_domestic_raw = set(open(PATH_DOMAIN_LIST/"geolocation-cn", mode="r").read().splitlines())
 logger.debug(f"Imported {str(len(src_domestic_raw))} domestic rules from v2fly geolocation-cn list.")
-set_domestic_raw = geosite_convert(src_domestic_raw)
+set_domestic_raw = geosite_convert(geosite_parse(src_domestic_raw), ["!cn"])
 set_domestic_raw |= custom_convert(PATH_CUSTOM_APPEND/"domestic.txt")
 logger.debug(
     f'Imported {str(len(custom_convert(PATH_CUSTOM_APPEND/"domestic.txt")))} domestic rules from "Custom/Append/domestic.txt".'
 )
 
 ## Add all domestic TLDs to domestic rules, then remove domestic domains with domestic TLDs.
-set_domestic_tld = set()
-for line in open(PATH_DOMAIN_LIST/"tld-cn", mode="r").read().splitlines():
-    if line and not line.startswith("#"):
-        if "#" in line:
-            set_domestic_tld.add("." + line.split(" #")[0])
-            logger.debug(f'TLD "{"." + line.split(" #")[0]}" is added to domestic set.')
-        else:
-            set_domestic_tld.add("." + line)
-            logger.debug(f'TLD "{"." + line}" is added to domestic set.')
-logger.debug(f"Imported {str(len(set_domestic_tld))} domestic TLDs.")
+src_domestic_tlds = set(open(PATH_DOMAIN_LIST/"tld-cn", mode="r").read().splitlines())
+set_domestic_tlds = geosite_convert(geosite_parse(src_domestic_tlds))
+logger.debug(f"Imported {str(len(set_domestic_tlds))} domestic TLDs.")
 for domain in set_domestic_raw.copy():
-    for tld in set_domestic_tld:
+    for tld in set_domestic_tlds:
         if domain.endswith(tld):
             set_domestic_raw.remove(domain)
             logger.debug(f'"{domain}"" is removed for having a domestic TLD "{tld}"".')
             break
-set_domestic_raw |= set_domestic_tld
+set_domestic_raw |= set_domestic_tlds
 
 list_domestic_sorted = set_to_sorted_list(set_domestic_raw)
 rules_batch_dump(list_domestic_sorted, TARGETS, PATH_DIST, "domestic.txt")
