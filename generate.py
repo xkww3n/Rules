@@ -25,12 +25,12 @@ src_rejections = (
     + connection.get(consts.URL_MOBILE).text
     + connection.get(consts.URL_CN_EXTEND).text
 ).splitlines()
-logger.debug(f"Imported {format(str(len(src_rejections)))} lines of reject rules.")
+logger.debug(f"Imported {str(len(src_rejections))} lines of reject rules.")
 
 src_exclusions = (
     connection.get(consts.URL_EXCLUSIONS_1).text + connection.get(consts.URL_EXCLUSIONS_2).text
 ).splitlines()
-logger.debug(f"Imported {format(str(len(src_exclusions)))} lines of exclude rules.")
+logger.debug(f"Imported {str(len(src_exclusions))} lines of exclude rules.")
 
 set_rejections = set()
 set_exclusions_raw = set()
