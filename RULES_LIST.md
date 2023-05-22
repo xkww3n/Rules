@@ -1,5 +1,5 @@
-# 规则列表
-**⚠注意：规则文件的路径或文件名在需要时可能会发生更改。更改后，旧路径/文件名将继续保留 30 天作为缓冲期。在此期间，建议尽早更新至新路径/文件名。30 天后，旧路径/名称将不再可用，代理软件试图更新时将会报错。⚠**
+# 规则集列表
+**⚠注意：规则集文件的路径或文件名在需要时可能会发生更改。更改后，旧路径/文件名将继续保留 30 天作为缓冲期。在此期间，建议尽早更新至新路径/文件名。30 天后，旧路径/名称将不再可用，代理软件试图更新时将会报错。⚠**
 
 当前处于缓冲期的路径/文件名：
 
@@ -15,9 +15,9 @@
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/reject.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/reject.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/reject.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/reject.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/reject.txt>
 
 - 自动生成
 - 拦截在中国与日本常见的广告提供商和跟踪服务商的服务域名。
@@ -38,9 +38,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/reject.txt>
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/exclude.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/exclude.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/exclude.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/exclude.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/exclude.txt>
 
 - 自动生成
 - 包含一些不应被拦截规则拦截的域名。
@@ -57,9 +57,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/exclude.txt>
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/domestic.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/domestic.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/domestic.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/domestic.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/domestic.txt>
 
 - 自动生成
 - 包含各大中国大陆网络服务提供商的域名。
@@ -79,9 +79,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/domestic.txt>
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/apple-music.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/apple-music.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/apple-music.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/apple-music.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/apple-music.txt>
 
 - 手动维护
 - 包含 Apple Music 和 iTunes Store 的服务域名。
@@ -93,9 +93,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/apple-music.txt
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/bahamut.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/bahamut.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/bahamut.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/bahamut.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/bahamut.txt>
 
 - 自动生成
 - 包含巴哈姆特主站和巴哈姆特动画疯的服务域名。
@@ -109,9 +109,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/bahamut.txt>
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/bing.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/bing.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/bing.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/bing.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/bing.txt>
 
 - 自动生成
 - 包含微软必应搜索的服务域名。
@@ -125,9 +125,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/bing.txt>
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/bilibili.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/bilibili.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/bilibili.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/bilibili.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/bilibili.txt>
 
 - 手动维护
 - 包含哔哩哔哩面向中国、东南亚和除此上述两者之外地区的服务域名。
@@ -140,9 +140,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/bilibili.txt>
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/cjmarketing.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/cjmarketing.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/cjmarketing.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/cjmarketing.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/cjmarketing.txt>
 
 - 手动维护
 - 包含苏州思杰马克丁软件有限公司的公司官网、软件商城和其伪造的各个软件的“中国官网”用于进行**拦截**。
@@ -155,9 +155,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/cjmarketing.txt
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/dmm.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/dmm.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/dmm.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/dmm.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/dmm.txt>
 
 - 自动生成
 - 包含 DMM 主站和 R18 站点（Fanza）的服务域名。
@@ -171,9 +171,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/dmm.txt>
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/googlefcm.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/googlefcm.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/googlefcm.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/googlefcm.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/googlefcm.txt>
 
 - 自动生成
 - 包含 Firebase Cloud Messaging 的服务域名。
@@ -187,9 +187,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/googlefcm.txt>
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/microsoft.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/microsoft.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/microsoft.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/microsoft.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/microsoft.txt>
 
 - 自动生成
 - 包含微软旗下网络服务的域名。
@@ -205,9 +205,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/microsoft.txt>
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/niconico.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/niconico.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/niconico.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/niconico.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/niconico.txt>
 
 - 自动生成
 - 包含 niconico 动画的服务域名。
@@ -221,9 +221,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/niconico.txt>
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/openai.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/openai.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/openai.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/openai.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/openai.txt>
 
 - 自动生成
 - 包含 OpenAI 的服务域名。
@@ -237,9 +237,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/openai.txt>
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/paypal.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/paypal.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/paypal.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/paypal.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/paypal.txt>
 
 - 自动生成
 - 包含 PayPal 的服务域名。
@@ -253,9 +253,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/paypal.txt>
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/steam.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/steam.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/steam.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/steam.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/steam.txt>
 
 - 手动维护
 - 包含 Steam（**非**中国大陆的蒸汽平台）的网络服务
@@ -268,9 +268,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/steam.txt>
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/youtube.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/youtube.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/youtube.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/youtube.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/youtube.txt>
 
 - 自动生成
 - 包含 YouTube 的服务域名。
@@ -284,26 +284,26 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/youtube.txt>
     - 纯文本规则集（Surge 标准，点号通配符）：<https://rules.xkww3n.cyou/text/azurlane-en.txt>  
       纯文本规则集（Clash 标准，加号通配符）：<https://rules.xkww3n.cyou/text-plus/azurlane-en.txt>  
       YAML 规则集：<https://rules.xkww3n.cyou/yaml/azurlane-en.txt>  
-      Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/azurlane-en.txt>  
-      Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/azurlane-en.txt>  
+      Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/azurlane-en.txt>  
+      Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/azurlane-en.txt>  
   - [BanG Dream！少女乐团派对！（日文版）](https://bang-dream.bushimo.jp/)
     - 纯文本规则集（Surge 标准，点号通配符）：<https://rules.xkww3n.cyou/text/bangdream-jp.txt>  
       纯文本规则集（Clash 标准，加号通配符）：<https://rules.xkww3n.cyou/text-plus/bangdream-jp.txt>  
       YAML 规则集：<https://rules.xkww3n.cyou/yaml/bangdream-jp.txt>  
-      Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/bangdream-jp.txt>  
-      Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/bangdream-jp.txt>  
+      Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/bangdream-jp.txt>  
+      Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/bangdream-jp.txt>  
   - [绯染天空](https://heaven-burns-red.com/)
     - 纯文本规则集（Surge 标准，点号通配符）：<https://rules.xkww3n.cyou/text/heavenburnsred.txt>  
       纯文本规则集（Clash 标准，加号通配符）：<https://rules.xkww3n.cyou/text-plus/heavenburnsred.txt>  
       YAML 规则集：<https://rules.xkww3n.cyou/yaml/heavenburnsred.txt>  
-      Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/heavenburnsred.txt>  
-      Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/heavenburnsred.txt>  
+      Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/heavenburnsred.txt>  
+      Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/heavenburnsred.txt>  
   - [Love Live! 学园偶像祭2 MIRACLE LIVE!（日文版）](https://lovelive-sif2.bushimo.jp/)
     - 纯文本规则集（Surge 标准，点号通配符）：<https://rules.xkww3n.cyou/text/lovelivesif2-jp.txt>  
       纯文本规则集（Clash 标准，加号通配符）：<https://rules.xkww3n.cyou/text-plus/lovelivesif2-jp.txt>  
       YAML 规则集：<https://rules.xkww3n.cyou/yaml/lovelivesif2-jp.txt>  
-      Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/lovelivesif2-jp.txt>  
-      Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/lovelivesif2-jp.txt>  
+      Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/lovelivesif2-jp.txt>  
+      Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/lovelivesif2-jp.txt>  
 
 ## IP 归属地检测服务
 纯文本规则集（Surge 标准，点号通配符）：<https://rules.xkww3n.cyou/text/ipgeo.txt>
@@ -312,9 +312,9 @@ Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/youtube.txt>
 
 YAML 规则集：<https://rules.xkww3n.cyou/yaml/ipgeo.txt>
 
-Clash 传统规则：<https://rules.xkww3n.cyou/clash-compatible/ipgeo.txt>
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/ipgeo.txt>
 
-Surge 传统规则：<https://rules.xkww3n.cyou/surge-compatible/ipgeo.txt>
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/ipgeo.txt>
 
 - 手动维护
 - 针对（主页、评论区等）公开展示用户 IP 归属地的网站，通过代理此规则内含的域名，可以实现更改对应网站检测到的 IP 归属地而（基本）不影响其他功能。

@@ -1,5 +1,5 @@
 # 示例配置
-以下配置仅供参考，你可能需要自行选择需要引用的列表，并将其与你自己的代理策略匹配。
+以下配置仅供参考，你可能需要自行选择需要引用的规则集，并将其与你自己的代理策略匹配。
 
 ## Clash Premium
 致 Stash 用户：Stash 的规则集配置格式和 Clash Premium **不同**，请继续向下阅读以查看 Stash 规则集的配置方法。
@@ -194,7 +194,7 @@ DOMAIN-SET,https://rules.xkww3n.cyou/text/bangdream-jp.txt,Gaming
 ```
 
 ## Quantumult X
-该软件需要使用 Clash 传统规则。
+该软件需要使用 Clash 传统规则集。
 
 **每个策略组都必须指定 `force-policy` 字段！**
 
@@ -210,7 +210,7 @@ https://rules.xkww3n.cyou/clash-compatible/bangdream-jp.txt,tag=BanG Dream,force
 ```
 
 ## Loon
-该软件需要使用 Surge 传统规则。
+该软件需要使用 Surge 传统规则集。
 
 ```
 [Remote Rule]
