@@ -7,7 +7,7 @@ from time import time_ns
 from abp.filters.parser import parse_filterlist
 from requests import Session
 
-from Utils import consts, geosite, rule
+from Utils import const, geosite, rule
 
 logging.config.fileConfig("logging.ini")
 logger = logging.getLogger("root")
@@ -19,16 +19,16 @@ START_TIME = time_ns()
 connection = Session()
 
 src_rejections = (
-    connection.get(consts.URL_BASE).text
-    + connection.get(consts.URL_CN).text
-    + connection.get(consts.URL_JP).text
-    + connection.get(consts.URL_MOBILE).text
-    + connection.get(consts.URL_CN_EXTEND).text
+    connection.get(const.URL_BASE).text
+    + connection.get(const.URL_CN).text
+    + connection.get(const.URL_JP).text
+    + connection.get(const.URL_MOBILE).text
+    + connection.get(const.URL_CN_EXTEND).text
 ).splitlines()
 logger.debug(f"Imported {str(len(src_rejections))} lines of reject rules.")
 
 src_exclusions = (
-    connection.get(consts.URL_EXCLUSIONS_1).text + connection.get(consts.URL_EXCLUSIONS_2).text
+    connection.get(const.URL_EXCLUSIONS_1).text + connection.get(const.URL_EXCLUSIONS_2).text
 ).splitlines()
 logger.debug(f"Imported {str(len(src_exclusions))} lines of exclude rules.")
 
@@ -56,21 +56,21 @@ for line in parse_filterlist(src_exclusions):
             set_exclusions_raw.add(domain)
             logger.debug(f'Line "{line.text}" is added to raw exclude set, converted to "{domain}".')
 
-src_rejections_v2fly = set(open(consts.PATH_DOMAIN_LIST/"category-ads-all", mode="r").read().splitlines())
+src_rejections_v2fly = set(open(const.PATH_DOMAIN_LIST/"category-ads-all", mode="r").read().splitlines())
 set_rejections_v2fly = geosite.convert(geosite.parse(src_rejections_v2fly))
 set_rejections |= set_rejections_v2fly
 logger.debug(f"Imported {str(len(set_rejections_v2fly))} reject rules from v2fly category-ads-all list.")
-set_rejections |= rule.custom_convert(consts.PATH_CUSTOM_APPEND/"reject.txt")
+set_rejections |= rule.custom_convert(const.PATH_CUSTOM_APPEND/"reject.txt")
 logger.debug(
-    f'Imported {str(len(rule.custom_convert(consts.PATH_CUSTOM_APPEND/"reject.txt")))} reject rules from "Custom/Append/reject.txt".'
+    f'Imported {str(len(rule.custom_convert(const.PATH_CUSTOM_APPEND/"reject.txt")))} reject rules from "Custom/Append/reject.txt".'
 )
-set_exclusions_raw |= rule.custom_convert(consts.PATH_CUSTOM_REMOVE/"reject.txt")
+set_exclusions_raw |= rule.custom_convert(const.PATH_CUSTOM_REMOVE/"reject.txt")
 logger.debug(
-    f'Imported {str(len(rule.custom_convert(consts.PATH_CUSTOM_REMOVE/"reject.txt")))} exclude rules from "Custom/Remove/reject.txt".'
+    f'Imported {str(len(rule.custom_convert(const.PATH_CUSTOM_REMOVE/"reject.txt")))} exclude rules from "Custom/Remove/reject.txt".'
 )
-set_exclusions_raw |= rule.custom_convert(consts.PATH_CUSTOM_APPEND/"exclude.txt")
+set_exclusions_raw |= rule.custom_convert(const.PATH_CUSTOM_APPEND/"exclude.txt")
 logger.debug(
-    f'Imported {str(len(rule.custom_convert(consts.PATH_CUSTOM_APPEND/"exclude.txt")))} exclude rules from "Custom/Append/exclude.txt".'
+    f'Imported {str(len(rule.custom_convert(const.PATH_CUSTOM_APPEND/"exclude.txt")))} exclude rules from "Custom/Append/exclude.txt".'
 )
 
 set_exclusions = set()
@@ -92,8 +92,8 @@ for domain_exclude in set_exclusions_raw:
 list_rejections_sorted = rule.set_to_sorted_list(set_rejections)
 list_exclusions_sorted = rule.set_to_sorted_list(set_exclusions)
 
-rule.batch_dump(list_rejections_sorted, consts.TARGETS, consts.PATH_DIST, "reject.txt")
-rule.batch_dump(list_exclusions_sorted, consts.TARGETS, consts.PATH_DIST, "exclude.txt")
+rule.batch_dump(list_rejections_sorted, const.TARGETS, const.PATH_DIST, "reject.txt")
+rule.batch_dump(list_exclusions_sorted, const.TARGETS, const.PATH_DIST, "exclude.txt")
 
 END_TIME = time_ns()
 logger.info(f"FINISHED Stage 1. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
@@ -103,16 +103,16 @@ logger.info(f"FINISHED Stage 1. Total time: {format((END_TIME - START_TIME) / 1e
 logger.info("START Stage 2: Sync domestic rules.")
 START_TIME = time_ns()
 
-src_domestic_raw = set(open(consts.PATH_DOMAIN_LIST/"geolocation-cn", mode="r").read().splitlines())
+src_domestic_raw = set(open(const.PATH_DOMAIN_LIST/"geolocation-cn", mode="r").read().splitlines())
 logger.debug(f"Imported {str(len(src_domestic_raw))} domestic rules from v2fly geolocation-cn list.")
 set_domestic_raw = geosite.convert(geosite.parse(src_domestic_raw), ["!cn"])
-set_domestic_raw |= rule.custom_convert(consts.PATH_CUSTOM_APPEND/"domestic.txt")
+set_domestic_raw |= rule.custom_convert(const.PATH_CUSTOM_APPEND/"domestic.txt")
 logger.debug(
-    f'Imported {str(len(rule.custom_convert(consts.PATH_CUSTOM_APPEND/"domestic.txt")))} domestic rules from "Custom/Append/domestic.txt".'
+    f'Imported {str(len(rule.custom_convert(const.PATH_CUSTOM_APPEND/"domestic.txt")))} domestic rules from "Custom/Append/domestic.txt".'
 )
 
 ## Add all domestic TLDs to domestic rules, then remove domestic domains with domestic TLDs.
-src_domestic_tlds = set(open(consts.PATH_DOMAIN_LIST/"tld-cn", mode="r").read().splitlines())
+src_domestic_tlds = set(open(const.PATH_DOMAIN_LIST/"tld-cn", mode="r").read().splitlines())
 set_domestic_tlds = geosite.convert(geosite.parse(src_domestic_tlds))
 logger.debug(f"Imported {str(len(set_domestic_tlds))} domestic TLDs.")
 for domain in set_domestic_raw.copy():
@@ -124,7 +124,7 @@ for domain in set_domestic_raw.copy():
 set_domestic_raw |= set_domestic_tlds
 
 list_domestic_sorted = rule.set_to_sorted_list(set_domestic_raw)
-rule.batch_dump(list_domestic_sorted, consts.TARGETS, consts.PATH_DIST, "domestic.txt")
+rule.batch_dump(list_domestic_sorted, const.TARGETS, const.PATH_DIST, "domestic.txt")
 
 END_TIME = time_ns()
 logger.info(f"FINISHED Stage 2. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
@@ -149,7 +149,7 @@ EXCLUSIONS = [
     "github",  ## GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
     "bing",  ## Bing has a more restricted ver for Mainland China.
 ]
-geosite.batch_convert(CATEGORIES, consts.TARGETS, EXCLUSIONS)
+geosite.batch_convert(CATEGORIES, const.TARGETS, EXCLUSIONS)
 
 END_TIME = time_ns()
 logger.info(f"FINISHED Stage 3. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
@@ -158,21 +158,21 @@ logger.info(f"FINISHED Stage 3. Total time: {format((END_TIME - START_TIME) / 1e
 # Stage 4: Build custom rules.
 logger.info("START Stage 4: Build custom rules.")
 START_TIME = time_ns()
-list_file_custom = Path.iterdir(consts.PATH_CUSTOM_BUILD)
+list_file_custom = Path.iterdir(const.PATH_CUSTOM_BUILD)
 for filename in list_file_custom:
     if filename.is_file():
         logger.debug(f'Start converting "{filename.name}".')
         set_custom = rule.custom_convert(filename)
         list_custom_sorted = rule.set_to_sorted_list(set_custom)
-        rule.batch_dump(list_custom_sorted, consts.TARGETS, consts.PATH_DIST, filename.name)
+        rule.batch_dump(list_custom_sorted, const.TARGETS, const.PATH_DIST, filename.name)
         logger.debug(f"Converted {str(len(list_custom_sorted))} rules.")
 
-list_file_personal = Path.iterdir(consts.PATH_CUSTOM_BUILD/"personal")
+list_file_personal = Path.iterdir(const.PATH_CUSTOM_BUILD/"personal")
 for filename in list_file_personal:
     logger.debug(f'Start converting "{filename.name}".')
     set_personal = rule.custom_convert(filename)
     list_personal_sorted = rule.set_to_sorted_list(set_personal)
-    rule.batch_dump(list_personal_sorted, consts.TARGETS, consts.PATH_DIST, "personal/" + filename.name)
+    rule.batch_dump(list_personal_sorted, const.TARGETS, const.PATH_DIST, "personal/" + filename.name)
     logger.debug(f"Converted {str(len(list_personal_sorted))} rules.")
 
 END_TIME = time_ns()
@@ -180,5 +180,5 @@ logger.info(f"FINISHED Stage 4. Total time: {format((END_TIME - START_TIME) / 1e
 # Stage 4 finished
 
 # For backward compatibility
-copytree(consts.PATH_DIST/"text", consts.PATH_DIST/"surge", dirs_exist_ok=True)
-copytree(consts.PATH_DIST/"yaml", consts.PATH_DIST/"clash", dirs_exist_ok=True)
+copytree(const.PATH_DIST/"text", const.PATH_DIST/"surge", dirs_exist_ok=True)
+copytree(const.PATH_DIST/"yaml", const.PATH_DIST/"clash", dirs_exist_ok=True)

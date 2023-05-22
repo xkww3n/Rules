@@ -1,7 +1,7 @@
 import logging
 
 from . import rule
-from . import consts
+from . import const
 
 
 class Rule:
@@ -43,7 +43,7 @@ def parse(src: set, excluded_import: list = []) -> set:
             name_import = line.split("include:")[1]
             if name_import not in excluded_import:
                 logging.debug(f'Line "{raw_line}" is a import rule. Start importing "{name_import}".')
-                src_import = set(open(consts.PATH_DOMAIN_LIST/name_import, mode="r").read().splitlines())
+                src_import = set(open(const.PATH_DOMAIN_LIST/name_import, mode="r").read().splitlines())
                 set_parsed |= parse(src_import, excluded_import)
                 logging.debug(f'Imported "{name_import}".')
                 continue
@@ -72,7 +72,7 @@ def convert(src: set, excluded_tag: list = []) -> set:
 def batch_convert(categories: list, tools: list, exclusions: list = []) -> None:
     for tool in tools:
         for category in categories:
-            src_geosite = set(open(consts.PATH_DOMAIN_LIST/category, mode="r").read().splitlines())
+            src_geosite = set(open(const.PATH_DOMAIN_LIST/category, mode="r").read().splitlines())
             set_geosite = convert(parse(src_geosite, exclusions))
             list_geosite_sorted = rule.set_to_sorted_list(set_geosite)
-            rule.dump(list_geosite_sorted, tool, consts.PATH_DIST/tool/(category + ".txt"))
+            rule.dump(list_geosite_sorted, tool, const.PATH_DIST/tool/(category + ".txt"))
