@@ -21,15 +21,16 @@ jobs:
           python-version: '3.10'
           cache: 'pip'
       - name: Setup environment
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
       - name: Pull v2fly community domain list
         uses: actions/checkout@v3
         with:
           repository: 'v2fly/domain-list-community'
           path: 'domain-list-community'
       - name: Generate rules
-        run: python generate.py
+        run: |
+              python generate.py
+              python generate_homepage.py
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
