@@ -3,7 +3,7 @@
 
 一套由 xkww3n 搜集、整理与维护的，适用于大多数主流代理软件的规则列表。
 
-本仓库提供四种格式的规则列表：
+本仓库提供以下格式的规则列表：
 - 纯文本规则集（Surge 标准，点号通配符）
   - 适用于 [Surge](https://nssurge.com/)（v3 及更新的版本）、[Stash](https://stash.ws/) 和 [Surfboard](https://getsurfboard.com)。
 - 纯文本规则集（Clash 标准，加号通配符）
