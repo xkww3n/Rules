@@ -21,49 +21,49 @@ rule-providers:
     type: http
     behavior: domain
     format: text
-    url: https://rules.xkww3n.cyou/text/cjmarketing.txt
+    url: https://rules.xkww3n.cyou/text-plus/cjmarketing.txt
     path: ./Rules/CJMarketing
     interval: 86400
   Reject:
     type: http
     behavior: domain
     format: text
-    url: https://rules.xkww3n.cyou/text/reject.txt
+    url: https://rules.xkww3n.cyou/text-plus/reject.txt
     path: ./Rules/Reject
     interval: 86400
   Exclude:
     type: http
     behavior: domain
     format: text
-    url: https://rules.xkww3n.cyou/text/exclude.txt
+    url: https://rules.xkww3n.cyou/text-plus/exclude.txt
     path: ./Rules/Exclude
     interval: 86400
   CN:
     type: http
     behavior: domain
     format: text
-    url: https://rules.xkww3n.cyou/text/domestic.txt
+    url: https://rules.xkww3n.cyou/text-plus/domestic.txt
     path: ./Rules/CN
     interval: 86400
   Microsoft:
     type: http
     behavior: domain
     format: text
-    url: https://rules.xkww3n.cyou/text/microsoft.txt
+    url: https://rules.xkww3n.cyou/text-plus/microsoft.txt
     path: ./Rules/Microsoft
     interval: 86400
   niconico:
     type: http
     behavior: domain
     format: text
-    url: https://rules.xkww3n.cyou/text/niconico.txt
+    url: https://rules.xkww3n.cyou/text-plus/niconico.txt
     path: ./Rules/niconico
     interval: 86400
   BanG Dream:
     type: http
     behavior: domain
     format: text
-    url: https://rules.xkww3n.cyou/text/bangdream-jp.txt
+    url: https://rules.xkww3n.cyou/text-plus/bangdream-jp.txt
     path: ./Rules/BanG Dream
     interval: 86400
 ```

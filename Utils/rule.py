@@ -67,6 +67,13 @@ def dump(src: list, target: str, dst: Path) -> None:
                         dist.writelines(domain + "\n")
                     elif not domain.startswith("#"):
                         dist.writelines(domain + "\n")
+        case "text-plus":
+            for domain in src:
+                if domain:
+                    if domain.startswith("."):
+                        dist.writelines("+" + domain + "\n")
+                    elif not domain.startswith("#"):
+                        dist.writelines(domain + "\n")
         case "yaml":
             dist.writelines("payload:\n")
             for domain in src:
@@ -91,7 +98,7 @@ def dump(src: list, target: str, dst: Path) -> None:
                         dist.writelines("DOMAIN," + domain + ",Policy\n")
         case _:
             raise TypeError(
-                "Target type unsupported, only accept 'text', 'yaml', 'surge-compatible' or 'clash-compatible'."
+                "Target type unsupported, only accept 'text', 'text-plus', 'yaml', 'surge-compatible' or 'clash-compatible'."
             )
 
 

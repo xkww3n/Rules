@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-TARGETS = ["text", "yaml", "surge-compatible", "clash-compatible"]
+TARGETS = ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"]
 PATH_DOMAIN_LIST = Path("./domain-list-community/data/")
 PATH_CUSTOM_BUILD = Path("./Source/")
 PATH_CUSTOM_APPEND = Path("./Custom/Append/")
