@@ -39,3 +39,4 @@ jobs:
           projectName: xkww3n-rules
           directory: ./dists
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          wranglerVersion: '3'
