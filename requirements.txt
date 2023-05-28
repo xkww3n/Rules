@@ -1,2 +1,2 @@
 python-abp==0.2.0
-requests==2.30.0
+requests==2.31.0
