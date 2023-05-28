@@ -18,18 +18,16 @@ logger.info("START Stage 1: Sync reject and exclude rules.")
 START_TIME = time_ns()
 connection = Session()
 
-src_rejections = (
-    connection.get(const.URL_BASE).text
-    + connection.get(const.URL_CN).text
-    + connection.get(const.URL_JP).text
-    + connection.get(const.URL_MOBILE).text
-    + connection.get(const.URL_CN_EXTEND).text
-).splitlines()
+src_rejections = []
+for url in const.LIST_REJECT_URL:
+    src_rejections += (connection.get(url).text.splitlines())
+
 logger.debug(f"Imported {str(len(src_rejections))} lines of reject rules.")
 
-src_exclusions = (
-    connection.get(const.URL_EXCLUSIONS_1).text + connection.get(const.URL_EXCLUSIONS_2).text
-).splitlines()
+src_exclusions = []
+for url in const.LIST_EXCL_URL:
+    src_exclusions += connection.get(url).text.splitlines()
+
 logger.debug(f"Imported {str(len(src_exclusions))} lines of exclude rules.")
 
 set_rejections = set()

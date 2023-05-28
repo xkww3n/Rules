@@ -8,16 +8,21 @@ PATH_CUSTOM_APPEND = Path("./Custom/Append/")
 PATH_CUSTOM_REMOVE = Path("./Custom/Remove/")
 PATH_DIST = Path("./dists/")
 
-## AdGuard Base Filter
-URL_BASE = "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt"
-## Easylist China
-URL_CN = "https://easylist-downloads.adblockplus.org/easylistchina.txt"
-## もちフィルタ
-URL_JP = "https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi_filter.txt"
-## AdGuard Mobile Filter
-URL_MOBILE = "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt"
-## ADgk
-URL_CN_EXTEND = "https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt"
+LIST_REJECT_URL = [
+    ## AdGuard Base Filter
+    "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt",
+    ## Easylist China
+    "https://easylist-downloads.adblockplus.org/easylistchina.txt",
+    ## もちフィルタ
+    "https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi_filter.txt",
+    ## AdGuard Mobile Filter
+    "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt",
+    ## ADgk
+    "https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt",
+]
+
 ## AdGuard DNS Filter Whitelist
-URL_EXCLUSIONS_1 = "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt"
-URL_EXCLUSIONS_2 = "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt"
+LIST_EXCL_URL = [
+    "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt",
+    "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt",
+]
