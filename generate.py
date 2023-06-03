@@ -1,4 +1,3 @@
-import logging
 import logging.config
 from pathlib import Path
 from shutil import copytree
@@ -11,7 +10,6 @@ from Utils import const, geosite, rule
 
 logging.config.fileConfig("logging.ini")
 logger = logging.getLogger("root")
-
 
 # Stage 1: Sync reject and exclude rules.
 logger.info("START Stage 1: Sync reject and exclude rules.")
@@ -60,15 +58,18 @@ set_rejections |= set_rejections_v2fly
 logger.info(f"Imported {(len(set_rejections_v2fly))} reject rules from v2fly category-ads-all list.")
 set_rejections |= rule.custom_convert(const.PATH_CUSTOM_APPEND/"reject.txt")
 logger.info(
-    f'Imported {len(rule.custom_convert(const.PATH_CUSTOM_APPEND/"reject.txt"))} reject rules from "Custom/Append/reject.txt".'
+    f'Imported {len(rule.custom_convert(const.PATH_CUSTOM_APPEND/"reject.txt"))} '
+    f'reject rules from "Custom/Append/reject.txt".'
 )
 set_exclusions_raw |= rule.custom_convert(const.PATH_CUSTOM_REMOVE/"reject.txt")
 logger.info(
-    f'Imported {len(rule.custom_convert(const.PATH_CUSTOM_REMOVE/"reject.txt"))} exclude rules from "Custom/Remove/reject.txt".'
+    f'Imported {len(rule.custom_convert(const.PATH_CUSTOM_REMOVE/"reject.txt"))} '
+    f'exclude rules from "Custom/Remove/reject.txt".'
 )
 set_exclusions_raw |= rule.custom_convert(const.PATH_CUSTOM_APPEND/"exclude.txt")
 logger.info(
-    f'Imported {len(rule.custom_convert(const.PATH_CUSTOM_APPEND/"exclude.txt"))} exclude rules from "Custom/Append/exclude.txt".'
+    f'Imported {len(rule.custom_convert(const.PATH_CUSTOM_APPEND/"exclude.txt"))} '
+    f'exclude rules from "Custom/Append/exclude.txt".'
 )
 
 set_exclusions = set()
@@ -108,7 +109,8 @@ logger.info(f"Imported {len(src_domestic_raw)} domestic rules from v2fly geoloca
 set_domestic_raw = geosite.convert(geosite.parse(src_domestic_raw), ["!cn"])
 set_domestic_raw |= rule.custom_convert(const.PATH_CUSTOM_APPEND/"domestic.txt")
 logger.info(
-    f'Imported {len(rule.custom_convert(const.PATH_CUSTOM_APPEND/"domestic.txt"))} domestic rules from "Custom/Append/domestic.txt".'
+    f'Imported {len(rule.custom_convert(const.PATH_CUSTOM_APPEND/"domestic.txt"))} '
+    f'domestic rules from "Custom/Append/domestic.txt".'
 )
 
 # Add all domestic TLDs to domestic rules, then remove domestic domains with domestic TLDs.

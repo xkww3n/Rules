@@ -12,10 +12,10 @@ def custom_convert(src: Path) -> set:
     return set_converted
 
 
-def is_ipaddr(str: str) -> bool:
-    if str.count(".") != 3:
+def is_ipaddr(addr: str) -> bool:
+    if addr.count(".") != 3:
         return False
-    for part in str.split("."):
+    for part in addr.split("."):
         if not part.isdigit():
             return False
         i = int(part)
@@ -26,27 +26,27 @@ def is_ipaddr(str: str) -> bool:
 
 def is_domain(rule: Filter) -> bool:
     if (
-        rule.type == "filter"
-        and rule.selector["type"] == "url-pattern"
-        and "." in rule.text
-        and "/" not in rule.text
-        and "*" not in rule.text
-        and "=" not in rule.text
-        and "~" not in rule.text
-        and "?" not in rule.text
-        and "#" not in rule.text
-        and "," not in rule.text
-        and ":" not in rule.text
-        and not rule.text.startswith("_")
-        and not rule.text.startswith("-")
-        and not rule.text.startswith("^")
-        and not rule.text.startswith("[")
-        and not rule.text.endswith(".")
-        and not rule.text.endswith("_")
-        and not rule.text.endswith("]")
-        and not rule.text.endswith(";")
-        and not rule.options
-        and not is_ipaddr(rule.text.strip("||").strip("^"))
+            rule.type == "filter"
+            and rule.selector["type"] == "url-pattern"
+            and "." in rule.text
+            and "/" not in rule.text
+            and "*" not in rule.text
+            and "=" not in rule.text
+            and "~" not in rule.text
+            and "?" not in rule.text
+            and "#" not in rule.text
+            and "," not in rule.text
+            and ":" not in rule.text
+            and not rule.text.startswith("_")
+            and not rule.text.startswith("-")
+            and not rule.text.startswith("^")
+            and not rule.text.startswith("[")
+            and not rule.text.endswith(".")
+            and not rule.text.endswith("_")
+            and not rule.text.endswith("]")
+            and not rule.text.endswith(";")
+            and not rule.options
+            and not is_ipaddr(rule.text.strip("||").strip("^"))
     ):
         return True
     else:
@@ -97,9 +97,9 @@ def dump(src: list, target: str, dst: Path) -> None:
                     elif not domain.startswith("#"):
                         dist.writelines("DOMAIN," + domain + ",Policy\n")
         case _:
-            raise TypeError(
-                "Target type unsupported, only accept 'text', 'text-plus', 'yaml', 'surge-compatible' or 'clash-compatible'."
-            )
+            raise TypeError("Target type unsupported, "
+                            "only accept 'text', 'text-plus', 'yaml', 'surge-compatible' or 'clash-compatible'."
+                            )
 
 
 def batch_dump(src: list, targets: list, dst_path: Path, filename: str) -> None:
