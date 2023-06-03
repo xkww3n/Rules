@@ -111,7 +111,7 @@ logger.info(
     f'Imported {len(rule.custom_convert(const.PATH_CUSTOM_APPEND/"domestic.txt"))} domestic rules from "Custom/Append/domestic.txt".'
 )
 
-## Add all domestic TLDs to domestic rules, then remove domestic domains with domestic TLDs.
+# Add all domestic TLDs to domestic rules, then remove domestic domains with domestic TLDs.
 src_domestic_tlds = set(open(const.PATH_DOMAIN_LIST/"tld-cn", mode="r").read().splitlines())
 set_domestic_tlds = geosite.convert(geosite.parse(src_domestic_tlds))
 logger.info(f"Imported {len(set_domestic_tlds)} domestic TLDs.")
@@ -146,8 +146,8 @@ CATEGORIES = [
     "youtube",
 ]
 EXCLUSIONS = [
-    "github",  ## GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
-    "bing",  ## Bing has a more restricted ver for Mainland China.
+    "github",  # GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
+    "bing",  # Bing has a more restricted ver for Mainland China.
 ]
 geosite.batch_convert(CATEGORIES, const.TARGETS, EXCLUSIONS)
 
