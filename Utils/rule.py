@@ -4,7 +4,7 @@ from abp.filters.parser import Filter
 
 
 def custom_convert(src: Path) -> set:
-    src_custom = open(src, mode="r").read().splitlines()
+    src_custom = open(src, mode="r", encoding="utf-8").read().splitlines()
     set_converted = set()
     for line in src_custom:
         if line and not line.startswith("#"):
@@ -55,7 +55,7 @@ def is_domain(rule: Filter) -> bool:
 
 def dump(src: list, target: str, dst: Path) -> None:
     try:
-        dist = open(dst, mode="w")
+        dist = open(dst, mode="w", encoding="utf-8")
     except FileNotFoundError:
         dst.parent.mkdir(parents=True)
         dist = open(dst, mode="w")

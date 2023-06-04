@@ -52,7 +52,8 @@ for line in parse_filterlist(src_exclusions):
             set_exclusions_raw.add(domain)
             logger.debug(f'Line "{line.text}" is added to raw exclude set, converted to "{domain}".')
 
-src_rejections_v2fly = set(open(const.PATH_DOMAIN_LIST/"category-ads-all", mode="r").read().splitlines())
+src_rejections_v2fly = set(
+    open(const.PATH_DOMAIN_LIST/"category-ads-all", mode="r", encoding="utf-8").read().splitlines())
 set_rejections_v2fly = geosite.convert(geosite.parse(src_rejections_v2fly))
 set_rejections |= set_rejections_v2fly
 logger.info(f"Imported {(len(set_rejections_v2fly))} reject rules from v2fly category-ads-all list.")
@@ -104,7 +105,7 @@ logger.info(f"FINISHED Stage 1. Total time: {format((END_TIME - START_TIME) / 1e
 logger.info("START Stage 2: Sync domestic rules.")
 START_TIME = time_ns()
 
-src_domestic_raw = set(open(const.PATH_DOMAIN_LIST/"geolocation-cn", mode="r").read().splitlines())
+src_domestic_raw = set(open(const.PATH_DOMAIN_LIST/"geolocation-cn", mode="r", encoding="utf-8").read().splitlines())
 logger.info(f"Imported {len(src_domestic_raw)} domestic rules from v2fly geolocation-cn list.")
 set_domestic_raw = geosite.convert(geosite.parse(src_domestic_raw), ["!cn"])
 set_domestic_raw |= rule.custom_convert(const.PATH_CUSTOM_APPEND/"domestic.txt")
@@ -114,7 +115,7 @@ logger.info(
 )
 
 # Add all domestic TLDs to domestic rules, then remove domestic domains with domestic TLDs.
-src_domestic_tlds = set(open(const.PATH_DOMAIN_LIST/"tld-cn", mode="r").read().splitlines())
+src_domestic_tlds = set(open(const.PATH_DOMAIN_LIST/"tld-cn", mode="r", encoding="utf-8").read().splitlines())
 set_domestic_tlds = geosite.convert(geosite.parse(src_domestic_tlds))
 logger.info(f"Imported {len(set_domestic_tlds)} domestic TLDs.")
 for domain in set_domestic_raw.copy():

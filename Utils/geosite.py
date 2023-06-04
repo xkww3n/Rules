@@ -45,7 +45,8 @@ def parse(src: set, excluded_import=None) -> set:
             name_import = line.split("include:")[1]
             if name_import not in excluded_import:
                 logging.debug(f'Line "{raw_line}" is a import rule. Start importing "{name_import}".')
-                src_import = set(open(const.PATH_DOMAIN_LIST/name_import, mode="r").read().splitlines())
+                src_import = set(
+                    open(const.PATH_DOMAIN_LIST/name_import, mode="r", encoding="utf-8").read().splitlines())
                 set_parsed |= parse(src_import, excluded_import)
                 logging.debug(f'Imported "{name_import}".')
                 continue
@@ -78,7 +79,7 @@ def batch_convert(categories: list, tools: list, exclusions=None) -> None:
         exclusions = []
     for tool in tools:
         for category in categories:
-            src_geosite = set(open(const.PATH_DOMAIN_LIST/category, mode="r").read().splitlines())
+            src_geosite = set(open(const.PATH_DOMAIN_LIST/category, mode="r", encoding="utf-8").read().splitlines())
             set_geosite = convert(parse(src_geosite, exclusions))
             list_geosite_sorted = rule.set_to_sorted_list(set_geosite)
             rule.dump(list_geosite_sorted, tool, const.PATH_DIST/tool/(category + ".txt"))
