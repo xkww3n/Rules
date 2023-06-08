@@ -24,8 +24,7 @@ class Rule:
 
 
 def parse(src: set, excluded_import=None) -> set:
-    if not excluded_import:
-        excluded_import = []
+    excluded_import = [] if not excluded_import else excluded_import
     set_parsed = set()
     for raw_line in src:
         line = raw_line.split("#")[0].strip()
@@ -62,8 +61,7 @@ def parse(src: set, excluded_import=None) -> set:
 
 
 def convert(src: set, excluded_tag=None) -> set:
-    if not excluded_tag:
-        excluded_tag = []
+    excluded_tag = [] if not excluded_tag else excluded_tag
     set_converted = set()
     for input_rule in src:
         if input_rule.Tag not in excluded_tag:
@@ -75,8 +73,7 @@ def convert(src: set, excluded_tag=None) -> set:
 
 
 def batch_convert(categories: list, tools: list, exclusions=None) -> None:
-    if exclusions is None:
-        exclusions = []
+    exclusions = [] if not exclusions else exclusions
     for tool in tools:
         for category in categories:
             src_geosite = set(open(const.PATH_DOMAIN_LIST/category, mode="r", encoding="utf-8").read().splitlines())
