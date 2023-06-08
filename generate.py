@@ -106,8 +106,8 @@ logger.info("START Stage 2: Sync domestic rules.")
 START_TIME = time_ns()
 
 src_domestic_raw = set(open(const.PATH_DOMAIN_LIST/"geolocation-cn", mode="r", encoding="utf-8").read().splitlines())
-logger.info(f"Imported {len(src_domestic_raw)} domestic rules from v2fly geolocation-cn list.")
 set_domestic_raw = geosite.convert(geosite.parse(src_domestic_raw), ["!cn"])
+logger.info(f"Imported {len(set_domestic_raw)} domestic rules from v2fly geolocation-cn list.")
 set_domestic_raw |= rule.custom_convert(const.PATH_CUSTOM_APPEND/"domestic.txt")
 logger.info(
     f'Imported {len(rule.custom_convert(const.PATH_CUSTOM_APPEND/"domestic.txt"))} '
@@ -118,13 +118,18 @@ logger.info(
 src_domestic_tlds = set(open(const.PATH_DOMAIN_LIST/"tld-cn", mode="r", encoding="utf-8").read().splitlines())
 set_domestic_tlds = geosite.convert(geosite.parse(src_domestic_tlds))
 logger.info(f"Imported {len(set_domestic_tlds)} domestic TLDs.")
+cnt_domestic_removed = 0
 for domain in set_domestic_raw.copy():
     for tld in set_domestic_tlds:
         if domain.endswith(tld):
             set_domestic_raw.remove(domain)
+            cnt_domestic_removed += 1
             logger.debug(f'"{domain}"" is removed for having a domestic TLD "{tld}"".')
             break
+logger.info(f"Removed {cnt_domestic_removed} domestic domains having domestic TLD.")
 set_domestic_raw |= set_domestic_tlds
+
+logger.info(f"Generated {len(set_domestic_raw)} domestic rules.")
 
 list_domestic_sorted = rule.set_to_sorted_list(set_domestic_raw)
 rule.batch_dump(list_domestic_sorted, const.TARGETS, const.PATH_DIST, "domestic.txt")
