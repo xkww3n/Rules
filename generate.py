@@ -1,6 +1,5 @@
 import logging.config
 from pathlib import Path
-from shutil import copytree
 from time import time_ns
 
 from abp.filters.parser import parse_filterlist
@@ -186,7 +185,3 @@ for filename in list_file_personal:
 END_TIME = time_ns()
 logger.info(f"FINISHED Stage 4. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 # Stage 4 finished
-
-# For backward compatibility
-copytree(const.PATH_DIST/"text", const.PATH_DIST/"surge", dirs_exist_ok=True)
-copytree(const.PATH_DIST/"yaml", const.PATH_DIST/"clash", dirs_exist_ok=True)
