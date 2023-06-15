@@ -10,8 +10,8 @@ from Utils import const, geosite, rule
 logging.config.fileConfig("logging.ini")
 logger = logging.getLogger("root")
 
-# Stage 1: Sync reject and exclude rules.
-logger.info("START Stage 1: Sync reject and exclude rules.")
+# Generate reject and exclude rules.
+logger.info("Start generating reject and exclude rules.")
 START_TIME = time_ns()
 connection = Session()
 
@@ -97,11 +97,10 @@ rule.batch_dump(list_rejections_sorted, const.TARGETS, const.PATH_DIST, "reject.
 rule.batch_dump(list_exclusions_sorted, const.TARGETS, const.PATH_DIST, "exclude.txt")
 
 END_TIME = time_ns()
-logger.info(f"FINISHED Stage 1. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
-# Stage 1 finished.
+logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
-# Stage 2: Sync domestic rules.
-logger.info("START Stage 2: Sync domestic rules.")
+# Generate domestic rules.
+logger.info("Start generating domestic rules.")
 START_TIME = time_ns()
 
 src_domestic_raw = set(open(const.PATH_DOMAIN_LIST/"geolocation-cn", mode="r", encoding="utf-8").read().splitlines())
@@ -134,11 +133,10 @@ list_domestic_sorted = rule.set_to_sorted_list(set_domestic_raw)
 rule.batch_dump(list_domestic_sorted, const.TARGETS, const.PATH_DIST, "domestic.txt")
 
 END_TIME = time_ns()
-logger.info(f"FINISHED Stage 2. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
-# Stage 2 finished.
+logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
-# Stage 3: Sync v2fly community rules.
-logger.info("START Stage 3: Sync v2fly community rules.")
+# Convert v2fly community rules.
+logger.info("Start converting v2fly community rules.")
 START_TIME = time_ns()
 
 CATEGORIES = [
@@ -159,11 +157,10 @@ EXCLUSIONS = [
 geosite.batch_convert(CATEGORIES, const.TARGETS, EXCLUSIONS)
 
 END_TIME = time_ns()
-logger.info(f"FINISHED Stage 3. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
-# Stage 3 finished.
+logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
-# Stage 4: Build custom rules.
-logger.info("START Stage 4: Build custom rules.")
+# Generate custom rules.
+logger.info("Start generating custom rules.")
 START_TIME = time_ns()
 list_file_custom = Path.iterdir(const.PATH_CUSTOM_BUILD)
 for filename in list_file_custom:
@@ -183,5 +180,4 @@ for filename in list_file_personal:
     logger.debug(f"Converted {len(list_personal_sorted)} rules.")
 
 END_TIME = time_ns()
-logger.info(f"FINISHED Stage 4. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
-# Stage 4 finished
+logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
