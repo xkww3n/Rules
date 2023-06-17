@@ -7,3 +7,4 @@
 .steamserver.net
 .steamstatic.com
 .steamusercontent.com
+.steamgames.com
