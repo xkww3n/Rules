@@ -1,2 +1,3 @@
 .zen.com
 go.eset.com
+.steamserver.net
