@@ -5,26 +5,30 @@ from . import const
 
 
 class Rule:
-    def __init__(self):
-        self.Type = None
-        self.Payload = None
-        self.Tag = None
+    Type: str
+    Payload: str
+    Tag: str
 
-    def type(self, rule_type):
+    def __init__(self):
+        self.Type = ""
+        self.Payload = ""
+        self.Tag = ""
+
+    def type(self, rule_type: str):
         self.Type = rule_type
 
-    def payload(self, payload):
+    def payload(self, payload: str):
         self.Payload = payload
 
-    def tag(self, tag):
+    def tag(self, tag: str):
         self.Tag = tag
 
     def __str__(self):
         return f'Type: "{self.Type}", Payload: "{self.Payload}", Tag: "{self.Tag if self.Tag else ""}"'
 
 
-def parse(src: set, excluded_import=None) -> set:
-    excluded_import = [] if not excluded_import else excluded_import
+def parse(src: set, excluded_imports: list = None) -> set:
+    excluded_imports = [] if not excluded_imports else excluded_imports
     set_parsed = set()
     for raw_line in src:
         line = raw_line.split("#")[0].strip()
@@ -42,11 +46,11 @@ def parse(src: set, excluded_import=None) -> set:
             parsed_rule.payload(line.strip("full:"))
         elif line.startswith("include:"):
             name_import = line.split("include:")[1]
-            if name_import not in excluded_import:
+            if name_import not in excluded_imports:
                 logging.debug(f'Line "{raw_line}" is a import rule. Start importing "{name_import}".')
                 src_import = set(
                     open(const.PATH_DOMAIN_LIST/name_import, mode="r", encoding="utf-8").read().splitlines())
-                set_parsed |= parse(src_import, excluded_import)
+                set_parsed |= parse(src_import, excluded_imports)
                 logging.debug(f'Imported "{name_import}".')
                 continue
             else:
@@ -60,11 +64,11 @@ def parse(src: set, excluded_import=None) -> set:
     return set_parsed
 
 
-def convert(src: set, excluded_tag=None) -> set:
-    excluded_tag = [] if not excluded_tag else excluded_tag
+def convert(src: set, excluded_tags: list = None) -> set:
+    excluded_tags = [] if not excluded_tags else excluded_tags
     set_converted = set()
     for input_rule in src:
-        if input_rule.Tag not in excluded_tag:
+        if input_rule.Tag not in excluded_tags:
             if input_rule.Type == "Suffix":
                 set_converted.add("." + input_rule.Payload)
             elif input_rule.Type == "Full":
@@ -72,7 +76,7 @@ def convert(src: set, excluded_tag=None) -> set:
     return set_converted
 
 
-def batch_convert(categories: list, tools: list, exclusions=None) -> None:
+def batch_convert(categories: list, tools: list, exclusions: list = None) -> None:
     exclusions = [] if not exclusions else exclusions
     for tool in tools:
         for category in categories:
