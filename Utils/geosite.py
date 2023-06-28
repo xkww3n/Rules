@@ -14,15 +14,6 @@ class Rule:
         self.Payload = ""
         self.Tag = ""
 
-    def type(self, rule_type: str):
-        self.Type = rule_type
-
-    def payload(self, payload: str):
-        self.Payload = payload
-
-    def tag(self, tag: str):
-        self.Tag = tag
-
     def __str__(self):
         return f'Type: "{self.Type}", Payload: "{self.Payload}", Tag: "{self.Tag if self.Tag else ""}"'
 
@@ -36,14 +27,14 @@ def parse(src: set, excluded_imports: list = None) -> set:
             continue
         parsed_rule = Rule()
         if "@" in line:
-            parsed_rule.tag(line.split("@")[1])
+            parsed_rule.Tag = line.split("@")[1]
             line = line.split(" @")[0]
         if ":" not in line:
-            parsed_rule.type("Suffix")
-            parsed_rule.payload(line)
+            parsed_rule.Type = "Suffix"
+            parsed_rule.Payload = line
         elif line.startswith("full:"):
-            parsed_rule.type("Full")
-            parsed_rule.payload(line.strip("full:"))
+            parsed_rule.Type = "Full"
+            parsed_rule.Payload = line.strip("full:")
         elif line.startswith("include:"):
             name_import = line.split("include:")[1]
             if name_import not in excluded_imports:
