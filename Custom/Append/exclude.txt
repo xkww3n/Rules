@@ -14,3 +14,5 @@ dash.adjust.com
 www.appsflyer.com
 hq1.appsflyer.com
 support.appsflyer.com
+
+www.googleadservices.com
