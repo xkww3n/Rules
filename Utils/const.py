@@ -25,3 +25,5 @@ LIST_EXCL_URL = [
     "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt",
     "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt",
 ]
+
+URL_CHNROUTES2 = "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"

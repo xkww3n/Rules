@@ -18,7 +18,7 @@ class Rule:
         return f'Type: "{self.Type}", Payload: "{self.Payload}", Tag: "{self.Tag if self.Tag else ""}"'
 
 
-def parse(src: set, excluded_imports: list = None) -> set:
+def parse(src: set, excluded_imports=None) -> set:
     excluded_imports = [] if not excluded_imports else excluded_imports
     set_parsed = set()
     for raw_line in src:
@@ -55,7 +55,7 @@ def parse(src: set, excluded_imports: list = None) -> set:
     return set_parsed
 
 
-def convert(src: set, excluded_tags: list = None) -> set:
+def convert(src: set, excluded_tags=None) -> set:
     excluded_tags = [] if not excluded_tags else excluded_tags
     set_converted = set()
     for input_rule in src:
@@ -67,11 +67,11 @@ def convert(src: set, excluded_tags: list = None) -> set:
     return set_converted
 
 
-def batch_convert(categories: list, tools: list, exclusions: list = None) -> None:
+def batch_convert(categories: list, tools: list, exclusions=None) -> None:
     exclusions = [] if not exclusions else exclusions
     for tool in tools:
         for category in categories:
             src_geosite = set(open(const.PATH_DOMAIN_LIST/category, mode="r", encoding="utf-8").read().splitlines())
             set_geosite = convert(parse(src_geosite, exclusions))
             list_geosite_sorted = rule.set_to_sorted_list(set_geosite)
-            rule.dump(list_geosite_sorted, tool, const.PATH_DIST/tool/(category + ".txt"))
+            rule.dump("domain", list_geosite_sorted, tool, const.PATH_DIST/tool/(category + ".txt"))

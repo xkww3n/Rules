@@ -93,8 +93,8 @@ logger.info(f"Generated {len(set_exclusions)} exclude rules.")
 list_rejections_sorted = rule.set_to_sorted_list(set_rejections)
 list_exclusions_sorted = rule.set_to_sorted_list(set_exclusions)
 
-rule.batch_dump(list_rejections_sorted, const.TARGETS, const.PATH_DIST, "reject.txt")
-rule.batch_dump(list_exclusions_sorted, const.TARGETS, const.PATH_DIST, "exclude.txt")
+rule.batch_dump("domain", list_rejections_sorted, const.TARGETS, const.PATH_DIST, "reject.txt")
+rule.batch_dump("domain", list_exclusions_sorted, const.TARGETS, const.PATH_DIST, "exclude.txt")
 
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
@@ -130,7 +130,7 @@ set_domestic_raw |= set_domestic_tlds
 logger.info(f"Generated {len(set_domestic_raw)} domestic rules.")
 
 list_domestic_sorted = rule.set_to_sorted_list(set_domestic_raw)
-rule.batch_dump(list_domestic_sorted, const.TARGETS, const.PATH_DIST, "domestic.txt")
+rule.batch_dump("domain", list_domestic_sorted, const.TARGETS, const.PATH_DIST, "domestic.txt")
 
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
@@ -159,6 +159,14 @@ geosite.batch_convert(CATEGORIES, const.TARGETS, EXCLUSIONS)
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
+# Convert chnroutes2 CIDR rules.
+logger.info("Start converting chnroutes2 CIDR rules.")
+START_TIME = time_ns()
+src_cidr = connection.get(const.URL_CHNROUTES2).text.splitlines()
+rule.batch_dump("ipcidr", src_cidr, const.TARGETS, const.PATH_DIST, "domestic_ip.txt")
+END_TIME = time_ns()
+logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
+
 # Generate custom rules.
 logger.info("Start generating custom rules.")
 START_TIME = time_ns()
@@ -168,7 +176,7 @@ for filename in list_file_custom:
         logger.debug(f'Start converting "{filename.name}".')
         set_custom = rule.custom_convert(filename)
         list_custom_sorted = rule.set_to_sorted_list(set_custom)
-        rule.batch_dump(list_custom_sorted, const.TARGETS, const.PATH_DIST, filename.name)
+        rule.batch_dump("domain", list_custom_sorted, const.TARGETS, const.PATH_DIST, filename.name)
         logger.debug(f"Converted {len(list_custom_sorted)} rules.")
 
 list_file_personal = Path.iterdir(const.PATH_CUSTOM_BUILD/"personal")
@@ -176,7 +184,7 @@ for filename in list_file_personal:
     logger.debug(f'Start converting "{filename.name}".')
     set_personal = rule.custom_convert(filename)
     list_personal_sorted = rule.set_to_sorted_list(set_personal)
-    rule.batch_dump(list_personal_sorted, const.TARGETS, const.PATH_DIST, "personal/" + filename.name)
+    rule.batch_dump("domain", list_personal_sorted, const.TARGETS, const.PATH_DIST, "personal/" + filename.name)
     logger.debug(f"Converted {len(list_personal_sorted)} rules.")
 
 END_TIME = time_ns()

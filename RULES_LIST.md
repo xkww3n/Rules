@@ -62,6 +62,22 @@ Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/domestic.txt
   - [本仓库](./Custom/)
   - [v2fly / domain-list-community](https://github.com/v2fly/domain-list-community/)
 
+## 中国大陆 IP 地址块
+纯文本规则集（Surge 标准，点号通配符）：<https://rules.xkww3n.cyou/text/domestic_ip.txt>
+
+纯文本规则集（Clash 标准，加号通配符）：<https://rules.xkww3n.cyou/text-plus/domestic_ip.txt>
+
+YAML 规则集：<https://rules.xkww3n.cyou/yaml/domestic_ip.txt>
+
+Clash 传统规则集：<https://rules.xkww3n.cyou/clash-compatible/domestic_ip.txt>
+
+Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/domestic_ip.txt>
+
+- 自动生成
+- 包含中国大陆所属 IP 地址块。
+- 数据来源：
+  - [misakaio / chnroutes2](https://github.com/misakaio/chnroutes2/)
+
 ## 特定网站/服务
 
 ### Apple Music

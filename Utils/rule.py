@@ -53,7 +53,7 @@ def is_domain(rule: Filter) -> bool:
         return False
 
 
-def dump(src: list, target: str, dst: Path) -> None:
+def dump(content_type: str, src: list, target: str, dst: Path) -> None:
     try:
         dist = open(dst, mode="w", encoding="utf-8")
     except FileNotFoundError:
@@ -61,50 +61,58 @@ def dump(src: list, target: str, dst: Path) -> None:
         dist = open(dst, mode="w")
     match target:
         case "text":
-            for domain in src:
-                if domain:
-                    if domain.startswith("."):
-                        dist.writelines(domain + "\n")
-                    elif not domain.startswith("#"):
-                        dist.writelines(domain + "\n")
+            for line in src:
+                if line:
+                    if line.startswith("."):
+                        dist.writelines(line + "\n")
+                    elif not line.startswith("#"):
+                        dist.writelines(line + "\n")
         case "text-plus":
-            for domain in src:
-                if domain:
-                    if domain.startswith("."):
-                        dist.writelines("+" + domain + "\n")
-                    elif not domain.startswith("#"):
-                        dist.writelines(domain + "\n")
+            for line in src:
+                if line:
+                    if line.startswith("."):
+                        dist.writelines("+" + line + "\n")
+                    elif not line.startswith("#"):
+                        dist.writelines(line + "\n")
         case "yaml":
             dist.writelines("payload:\n")
-            for domain in src:
-                if domain:
-                    if domain.startswith("."):
-                        dist.writelines("  - '+" + domain + "'\n")
-                    elif not domain.startswith("#"):
-                        dist.writelines("  - '" + domain + "'\n")
+            for line in src:
+                if line:
+                    if line.startswith("."):
+                        dist.writelines("  - '+" + line + "'\n")
+                    elif not line.startswith("#"):
+                        dist.writelines("  - '" + line + "'\n")
         case "surge-compatible":
-            for domain in src:
-                if domain:
-                    if domain.startswith("."):
-                        dist.writelines(domain.replace(".", "DOMAIN-SUFFIX,", 1) + "\n")
-                    elif not domain.startswith("#"):
-                        dist.writelines("DOMAIN," + domain + "\n")
+            for line in src:
+                if line:
+                    if content_type == "domain":
+                        if line.startswith("."):
+                            dist.writelines(line.replace(".", "DOMAIN-SUFFIX,", 1) + "\n")
+                        elif not line.startswith("#"):
+                            dist.writelines("DOMAIN," + line + "\n")
+                    elif content_type == "ipcidr":
+                        if not line.startswith("#"):
+                            dist.writelines("IP-CIDR," + line + "\n")
         case "clash-compatible":
-            for domain in src:
-                if domain:
-                    if domain.startswith("."):
-                        dist.writelines(domain.replace(".", "DOMAIN-SUFFIX,", 1) + ",Policy\n")
-                    elif not domain.startswith("#"):
-                        dist.writelines("DOMAIN," + domain + ",Policy\n")
+            for line in src:
+                if line:
+                    if content_type == "domain":
+                        if line.startswith("."):
+                            dist.writelines(line.replace(".", "DOMAIN-SUFFIX,", 1) + ",Policy\n")
+                        elif not line.startswith("#"):
+                            dist.writelines("DOMAIN," + line + ",Policy\n")
+                    elif content_type == "ipcidr":
+                        if not line.startswith("#"):
+                            dist.writelines("IP-CIDR," + line + ",Policy\n")
         case _:
             raise TypeError("Target type unsupported, "
                             "only accept 'text', 'text-plus', 'yaml', 'surge-compatible' or 'clash-compatible'."
                             )
 
 
-def batch_dump(src: list, targets: list, dst_path: Path, filename: str) -> None:
+def batch_dump(content_type: str, src: list, targets: list, dst_path: Path, filename: str) -> None:
     for target in targets:
-        dump(src, target, dst_path/target/filename)
+        dump(content_type, src, target, dst_path/target/filename)
 
 
 def set_to_sorted_list(src: set) -> list:
