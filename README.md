@@ -15,11 +15,8 @@
 - Surge 传统规则集
   - 适用于兼容传统 Surge 规则的代理软件，如低于 v3 版本的 Surge、[Loon](https://www.nsloon.com/)、[Shadowrocket](https://apps.apple.com/us/app/shadowrocket/id932747118) 和 [LanceX](https://shadowboat.app/lancex/)。
 
-## 规则集列表
-请查看 [RULES_LIST.md](./RULES_LIST.md)
-
-## 配置示例
-请查看 [CONF_EXAMPLE.md](./CONF_EXAMPLE.md)
+## 文档
+请查看[本项目的 GitHub Wiki](https://github.com/xkww3n/Rules/wiki)
 
 ## 许可证
 如无特别声明，本项目的一切内容均使用 MIT 许可证授权。
