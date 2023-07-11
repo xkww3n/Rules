@@ -164,6 +164,13 @@ logger.info("Start converting chnroutes2 CIDR rules.")
 START_TIME = time_ns()
 src_cidr = connection.get(const.URL_CHNROUTES2).text.splitlines()
 rule.batch_dump("ipcidr", src_cidr, const.TARGETS, const.PATH_DIST, "domestic_ip.txt")
+src_cidr6 = connection.get(const.URL_CHNROUTES_V6).text.splitlines()
+set_cidr6 = []
+for line in src_cidr6:
+    if "apnic|CN|ipv6" in line:
+        parts = line.split("|")
+        set_cidr6.append(f"{parts[3]}/{parts[4]}")
+rule.batch_dump("ipcidr", set_cidr6, const.TARGETS, const.PATH_DIST, "domestic_ip6.txt")
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
