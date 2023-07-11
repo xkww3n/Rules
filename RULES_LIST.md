@@ -75,6 +75,7 @@ Surge 传统规则集：<https://rules.xkww3n.cyou/surge-compatible/domestic_ip.
 
 - 自动生成
 - 包含中国大陆所属 IP 地址块。
+- 对于某些内存或存储空间极其有限，难以载入完整的 GeoIP 库（通常重达 3~4MB）的设备，这个规则集（60KB 左右）可能更适合。
 - 数据来源：
   - [misakaio / chnroutes2](https://github.com/misakaio/chnroutes2/)
 
