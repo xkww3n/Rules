@@ -177,7 +177,7 @@ list_cidr6 = []
 for line in src_cidr6:
     if "apnic|CN|ipv6" in line:
         parts = line.split("|")
-        list_cidr6.append(rule.Rule("IPCIDR", f"{parts[3]}/{parts[4]}"))
+        list_cidr6.append(rule.Rule("IPCIDR6", f"{parts[3]}/{parts[4]}"))
 rule.batch_dump(list_cidr6, const.TARGETS, const.PATH_DIST, "domestic_ip6.txt")
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")

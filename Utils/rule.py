@@ -80,20 +80,20 @@ def dump(src: list, target: str, dst: Path) -> None:
             for rule in src:
                 if rule.Type == "DomainSuffix":
                     dist.writelines(f".{rule.Payload}\n")
-                elif rule.Type == "DomainFull" or "IPCIDR":
+                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6":
                     dist.writelines(f"{rule.Payload}\n")
         case "text-plus":
             for rule in src:
                 if rule.Type == "DomainSuffix":
                     dist.writelines(f"+.{rule.Payload}\n")
-                elif rule.Type == "DomainFull" or "IPCIDR":
+                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6":
                     dist.writelines(f"{rule.Payload}\n")
         case "yaml":
             dist.writelines("payload:\n")
             for rule in src:
                 if rule.Type == "DomainSuffix":
                     dist.writelines(f"  - '+.{rule.Payload}'\n")
-                elif rule.Type == "DomainFull" or "IPCIDR":
+                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6":
                     dist.writelines(f"  - '{rule.Payload}'\n")
         case "surge-compatible":
             for rule in src:
@@ -102,7 +102,9 @@ def dump(src: list, target: str, dst: Path) -> None:
                 elif rule.Type == "DomainFull":
                     dist.writelines(f"DOMAIN,{rule.Payload}\n")
                 elif rule.Type == "IPCIDR":
-                    dist.writelines(f"IP-CIDR,{rule}\n")
+                    dist.writelines(f"IP-CIDR,{rule.Payload}\n")
+                elif rule.Type == "IPCIDR6":
+                    dist.writelines(f"IP-CIDR6,{rule.Payload}\n")
         case "clash-compatible":
             for rule in src:
                 if rule.Type == "DomainSuffix":
@@ -111,6 +113,8 @@ def dump(src: list, target: str, dst: Path) -> None:
                     dist.writelines(f"DOMAIN,{rule.Payload},Policy\n")
                 elif rule.Type == "IPCIDR":
                     dist.writelines(f"IP-CIDR,{rule.Payload},Policy\n")
+                elif rule.Type == "IPCIDR6":
+                    dist.writelines(f"IP-CIDR6,{rule.Payload},Policy\n")
         case _:
             raise TypeError("Target type unsupported, "
                             "only accept 'text', 'text-plus', 'yaml', 'surge-compatible' or 'clash-compatible'."
