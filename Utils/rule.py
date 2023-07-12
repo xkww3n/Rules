@@ -9,7 +9,7 @@ class Rule:
     Tag: str
 
     def __init__(self, content_type: str = "", payload: str = "", tag: str = ""):
-        self.Type = content_type
+        self.Type = content_type  # DomainSuffix / DomainFull / IPCIDR / IPCIDR6
         self.Payload = payload
         self.Tag = tag
 
