@@ -3,12 +3,28 @@ from pathlib import Path
 from abp.filters.parser import Filter
 
 
+class Rule:
+    Type: str
+    Payload: str
+    Tag: str
+
+    def __init__(self, content_type: str = "", payload: str = "", tag: str = ""):
+        self.Type = content_type
+        self.Payload = payload
+        self.Tag = tag
+
+    def __str__(self):
+        return f'Type: "{self.Type}", Payload: "{self.Payload}", Tag: {self.Tag if self.Tag else "NONE"}'
+
+
 def custom_convert(src: Path) -> set:
     src_custom = open(src, mode="r", encoding="utf-8").read().splitlines()
     set_converted = set()
     for line in src_custom:
-        if line and not line.startswith("#"):
-            set_converted.add(line)
+        if line.startswith("."):
+            set_converted.add(Rule("DomainSuffix", line.strip(".")))
+        elif line and not line.startswith("#"):
+            set_converted.add(Rule("DomainFull", line))
     return set_converted
 
 
@@ -53,7 +69,7 @@ def is_domain(rule: Filter) -> bool:
         return False
 
 
-def dump(content_type: str, src: list, target: str, dst: Path) -> None:
+def dump(src: list, target: str, dst: Path) -> None:
     try:
         dist = open(dst, mode="w", encoding="utf-8")
     except FileNotFoundError:
@@ -61,61 +77,52 @@ def dump(content_type: str, src: list, target: str, dst: Path) -> None:
         dist = open(dst, mode="w")
     match target:
         case "text":
-            for line in src:
-                if line:
-                    if line.startswith("."):
-                        dist.writelines(line + "\n")
-                    elif not line.startswith("#"):
-                        dist.writelines(line + "\n")
+            for rule in src:
+                if rule.Type == "DomainSuffix":
+                    dist.writelines(f".{rule.Payload}\n")
+                elif rule.Type == "DomainFull" or "IPCIDR":
+                    dist.writelines(f"{rule.Payload}\n")
         case "text-plus":
-            for line in src:
-                if line:
-                    if line.startswith("."):
-                        dist.writelines("+" + line + "\n")
-                    elif not line.startswith("#"):
-                        dist.writelines(line + "\n")
+            for rule in src:
+                if rule.Type == "DomainSuffix":
+                    dist.writelines(f"+.{rule.Payload}\n")
+                elif rule.Type == "DomainFull" or "IPCIDR":
+                    dist.writelines(f"{rule.Payload}\n")
         case "yaml":
             dist.writelines("payload:\n")
-            for line in src:
-                if line:
-                    if line.startswith("."):
-                        dist.writelines("  - '+" + line + "'\n")
-                    elif not line.startswith("#"):
-                        dist.writelines("  - '" + line + "'\n")
+            for rule in src:
+                if rule.Type == "DomainSuffix":
+                    dist.writelines(f"  - '+.{rule.Payload}'\n")
+                elif rule.Type == "DomainFull" or "IPCIDR":
+                    dist.writelines(f"  - '{rule.Payload}'\n")
         case "surge-compatible":
-            for line in src:
-                if line:
-                    if content_type == "domain":
-                        if line.startswith("."):
-                            dist.writelines(line.replace(".", "DOMAIN-SUFFIX,", 1) + "\n")
-                        elif not line.startswith("#"):
-                            dist.writelines("DOMAIN," + line + "\n")
-                    elif content_type == "ipcidr":
-                        if not line.startswith("#"):
-                            dist.writelines("IP-CIDR," + line + "\n")
+            for rule in src:
+                if rule.Type == "DomainSuffix":
+                    dist.writelines(f"DOMAIN-SUFFIX,{rule.Payload}\n")
+                elif rule.Type == "DomainFull":
+                    dist.writelines(f"DOMAIN,{rule.Payload}\n")
+                elif rule.Type == "IPCIDR":
+                    dist.writelines(f"IP-CIDR,{rule}\n")
         case "clash-compatible":
-            for line in src:
-                if line:
-                    if content_type == "domain":
-                        if line.startswith("."):
-                            dist.writelines(line.replace(".", "DOMAIN-SUFFIX,", 1) + ",Policy\n")
-                        elif not line.startswith("#"):
-                            dist.writelines("DOMAIN," + line + ",Policy\n")
-                    elif content_type == "ipcidr":
-                        if not line.startswith("#"):
-                            dist.writelines("IP-CIDR," + line + ",Policy\n")
+            for rule in src:
+                if rule.Type == "DomainSuffix":
+                    dist.writelines(f"DOMAIN-SUFFIX,{rule.Payload},Policy\n")
+                elif rule.Type == "DomainFull":
+                    dist.writelines(f"DOMAIN,{rule.Payload},Policy\n")
+                elif rule.Type == "IPCIDR":
+                    dist.writelines(f"IP-CIDR,{rule.Payload},Policy\n")
         case _:
             raise TypeError("Target type unsupported, "
                             "only accept 'text', 'text-plus', 'yaml', 'surge-compatible' or 'clash-compatible'."
                             )
 
 
-def batch_dump(content_type: str, src: list, targets: list, dst_path: Path, filename: str) -> None:
+def batch_dump(src: list, targets: list, dst_path: Path, filename: str) -> None:
     for target in targets:
-        dump(content_type, src, target, dst_path/target/filename)
+        dump(src, target, dst_path/target/filename)
 
 
 def set_to_sorted_list(src: set) -> list:
     list_sorted = [item for item in src]
-    list_sorted.sort()
+    list_sorted.sort(key=lambda item: str(item))
     return list_sorted
