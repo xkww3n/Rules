@@ -1,3 +1,4 @@
 .zen.com
-go.eset.com
 .steamserver.net
+.kaspersky.com
+.kaspersky-labs.com
