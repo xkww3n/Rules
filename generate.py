@@ -55,23 +55,23 @@ for line in parse_filterlist(src_exclusions):
             logger.debug(f'Line "{line.text}" is added to raw exclude set. "{rule_exclude}".')
 
 src_rejections_v2fly = set(
-    open(const.PATH_DOMAIN_LIST/"category-ads-all", mode="r", encoding="utf-8").read().splitlines())
+    open(const.PATH_SOURCE_V2FLY/"category-ads-all", mode="r", encoding="utf-8").read().splitlines())
 set_rejections_v2fly = geosite.parse(src_rejections_v2fly)
 set_rejections |= set_rejections_v2fly
 logger.info(f"Imported {(len(set_rejections_v2fly))} reject rules from v2fly category-ads-all list.")
-set_rejections |= rule.custom_convert(const.PATH_CUSTOM_APPEND/"reject.txt")
+set_rejections |= rule.custom_convert(const.PATH_PATCH_APPEND/"reject.txt")
 logger.info(
-    f'Imported {len(rule.custom_convert(const.PATH_CUSTOM_APPEND/"reject.txt"))} '
+    f'Imported {len(rule.custom_convert(const.PATH_PATCH_APPEND/"reject.txt"))} '
     f'reject rules from "Custom/Append/reject.txt".'
 )
-set_exclusions_raw |= rule.custom_convert(const.PATH_CUSTOM_REMOVE/"reject.txt")
+set_exclusions_raw |= rule.custom_convert(const.PATH_PATCH_REMOVE/"reject.txt")
 logger.info(
-    f'Imported {len(rule.custom_convert(const.PATH_CUSTOM_REMOVE/"reject.txt"))} '
+    f'Imported {len(rule.custom_convert(const.PATH_PATCH_REMOVE/"reject.txt"))} '
     f'exclude rules from "Custom/Remove/reject.txt".'
 )
-set_exclusions_raw |= rule.custom_convert(const.PATH_CUSTOM_APPEND/"exclude.txt")
+set_exclusions_raw |= rule.custom_convert(const.PATH_PATCH_APPEND/"exclude.txt")
 logger.info(
-    f'Imported {len(rule.custom_convert(const.PATH_CUSTOM_APPEND/"exclude.txt"))} '
+    f'Imported {len(rule.custom_convert(const.PATH_PATCH_APPEND/"exclude.txt"))} '
     f'exclude rules from "Custom/Append/exclude.txt".'
 )
 
@@ -79,7 +79,7 @@ set_exclusions = set()
 logger.debug("Start deduplicating reject and exclude set.")
 for domain_exclude in set_exclusions_raw.copy():
     for domain_reject in set_rejections.copy():
-        if (domain_reject.Payload == domain_exclude.Payload and domain_reject.Type == domain_exclude.Type)\
+        if (domain_reject.Payload == domain_exclude.Payload and domain_reject.Type == domain_exclude.Type) \
                 or (domain_reject.Type == "DomainFull" and domain_exclude.Type == "DomainSuffix"):
             set_rejections.remove(domain_reject)
             set_exclusions_raw.remove(domain_exclude)
@@ -107,17 +107,17 @@ logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f'
 logger.info("Start generating domestic rules.")
 START_TIME = time_ns()
 
-src_domestic_raw = set(open(const.PATH_DOMAIN_LIST/"geolocation-cn", mode="r", encoding="utf-8").read().splitlines())
+src_domestic_raw = set(open(const.PATH_SOURCE_V2FLY/"geolocation-cn", mode="r", encoding="utf-8").read().splitlines())
 set_domestic_raw = geosite.parse(src_domestic_raw, ["!cn"])
 logger.info(f"Imported {len(set_domestic_raw)} domestic rules from v2fly geolocation-cn list.")
-set_domestic_raw |= rule.custom_convert(const.PATH_CUSTOM_APPEND/"domestic.txt")
+set_domestic_raw |= rule.custom_convert(const.PATH_PATCH_APPEND/"domestic.txt")
 logger.info(
-    f'Imported {len(rule.custom_convert(const.PATH_CUSTOM_APPEND/"domestic.txt"))} '
+    f'Imported {len(rule.custom_convert(const.PATH_PATCH_APPEND/"domestic.txt"))} '
     f'domestic rules from "Custom/Append/domestic.txt".'
 )
 
 # Add all domestic TLDs to domestic rules, then remove domestic domains with domestic TLDs.
-src_domestic_tlds = set(open(const.PATH_DOMAIN_LIST/"tld-cn", mode="r", encoding="utf-8").read().splitlines())
+src_domestic_tlds = set(open(const.PATH_SOURCE_V2FLY/"tld-cn", mode="r", encoding="utf-8").read().splitlines())
 set_domestic_tlds = geosite.parse(src_domestic_tlds)
 logger.info(f"Imported {len(set_domestic_tlds)} domestic TLDs.")
 cnt_domestic_removed = 0
@@ -187,7 +187,7 @@ logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f'
 # Generate custom rules.
 logger.info("Start generating custom rules.")
 START_TIME = time_ns()
-list_file_custom = Path.iterdir(const.PATH_CUSTOM_BUILD)
+list_file_custom = Path.iterdir(const.PATH_SOURCE_CUSTOM)
 for filename in list_file_custom:
     if filename.is_file():
         logger.debug(f'Start converting "{filename.name}".')
@@ -196,7 +196,7 @@ for filename in list_file_custom:
         rule.batch_dump(list_custom_sorted, const.TARGETS, const.PATH_DIST, filename.name)
         logger.debug(f"Converted {len(list_custom_sorted)} rules.")
 
-list_file_personal = Path.iterdir(const.PATH_CUSTOM_BUILD/"personal")
+list_file_personal = Path.iterdir(const.PATH_SOURCE_CUSTOM/"personal")
 for filename in list_file_personal:
     logger.debug(f'Start converting "{filename.name}".')
     set_personal = rule.custom_convert(filename)

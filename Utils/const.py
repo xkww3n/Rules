@@ -1,10 +1,10 @@
 from pathlib import Path
 
 TARGETS = ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"]
-PATH_DOMAIN_LIST = Path("./domain-list-community/data/")
-PATH_CUSTOM_BUILD = Path("./Source/")
-PATH_CUSTOM_APPEND = Path("./Custom/Append/")
-PATH_CUSTOM_REMOVE = Path("./Custom/Remove/")
+PATH_SOURCE_V2FLY = Path("./domain-list-community/data/")
+PATH_SOURCE_CUSTOM = Path("./Source/")
+PATH_PATCH_APPEND = Path("./Patch/Append/")
+PATH_PATCH_REMOVE = Path("./Patch/Remove/")
 PATH_DIST = Path("./dists/")
 
 LIST_REJECT_URL = [
