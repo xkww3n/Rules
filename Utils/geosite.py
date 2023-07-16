@@ -1,7 +1,6 @@
 import logging
 
-from . import rule
-from . import const
+from . import const, rule
 
 
 def parse(src: set, excluded_imports=None, excluded_tags=None) -> set:

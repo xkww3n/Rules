@@ -139,6 +139,27 @@ rule.batch_dump(list_domestic_sorted, const.TARGETS, const.PATH_DIST, "domestic.
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
+# Convert domestic CIDR rules.
+logger.info("Start converting domestic CIDR rules.")
+START_TIME = time_ns()
+src_cidr = connection.get(const.URL_CHNROUTES2).text.splitlines()
+list_cidr = []
+for line in src_cidr:
+    if not line.startswith("#"):
+        list_cidr.append(rule.Rule("IPCIDR", line))
+logger.info(f"Generated {len(list_cidr)} domestic IPv4 rules.")
+rule.batch_dump(list_cidr, const.TARGETS, const.PATH_DIST, "domestic_ip.txt")
+src_cidr6 = connection.get(const.URL_CHNROUTES_V6).text.splitlines()
+list_cidr6 = []
+for line in src_cidr6:
+    if "apnic|CN|ipv6" in line:
+        parts = line.split("|")
+        list_cidr6.append(rule.Rule("IPCIDR6", f"{parts[3]}/{parts[4]}"))
+logger.info(f"Generated {len(list_cidr6)} domestic IPv6 rules.")
+rule.batch_dump(list_cidr6, const.TARGETS, const.PATH_DIST, "domestic_ip6.txt")
+END_TIME = time_ns()
+logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
+
 # Convert v2fly community rules.
 logger.info("Start converting v2fly community rules.")
 START_TIME = time_ns()
@@ -160,27 +181,6 @@ EXCLUSIONS = [
 ]
 geosite.batch_convert(CATEGORIES, const.TARGETS, EXCLUSIONS)
 
-END_TIME = time_ns()
-logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
-
-# Convert domestic CIDR rules.
-logger.info("Start converting domestic CIDR rules.")
-START_TIME = time_ns()
-src_cidr = connection.get(const.URL_CHNROUTES2).text.splitlines()
-list_cidr = []
-for line in src_cidr:
-    if not line.startswith("#"):
-        list_cidr.append(rule.Rule("IPCIDR", line))
-logger.info(f"Generated {len(list_cidr)} domestic IPv4 rules.")
-rule.batch_dump(list_cidr, const.TARGETS, const.PATH_DIST, "domestic_ip.txt")
-src_cidr6 = connection.get(const.URL_CHNROUTES_V6).text.splitlines()
-list_cidr6 = []
-for line in src_cidr6:
-    if "apnic|CN|ipv6" in line:
-        parts = line.split("|")
-        list_cidr6.append(rule.Rule("IPCIDR6", f"{parts[3]}/{parts[4]}"))
-logger.info(f"Generated {len(list_cidr6)} domestic IPv6 rules.")
-rule.batch_dump(list_cidr6, const.TARGETS, const.PATH_DIST, "domestic_ip6.txt")
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
