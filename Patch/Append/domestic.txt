@@ -1,2 +1,3 @@
+#@@TYPE:DOMAIN
 masuit.com
 anime1.me

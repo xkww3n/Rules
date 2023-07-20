@@ -1,3 +1,4 @@
+#@@TYPE:DOMAIN
 # Bilibili
 .biliapi.com
 .biliapi.net

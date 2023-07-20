@@ -1,4 +1,4 @@
-.zen.com
+#@@TYPE:DOMAIN
 .steamserver.net
 .kaspersky.com
 .kaspersky-labs.com

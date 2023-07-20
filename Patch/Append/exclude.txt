@@ -1,3 +1,4 @@
+#@@TYPE:DOMAIN
 # Adjust web portal
 www.adjust.com
 help.adjust.com

@@ -1,3 +1,4 @@
+#@@TYPE:DOMAIN
 .pangolin-sdk-toutiao.com
 .pglstatp-toutiao.com
 .adukwai.com

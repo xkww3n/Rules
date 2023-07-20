@@ -1,3 +1,4 @@
+#@@TYPE:DOMAIN
 .s.team
 .steam-api.com
 .steam-chat.com

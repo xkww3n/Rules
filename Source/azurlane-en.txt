@@ -1,2 +1,3 @@
+#@@TYPE:DOMAIN
 azurusapi.yo-star.com
 blhxusgate.yo-star.com

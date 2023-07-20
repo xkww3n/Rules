@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from abp.filters.parser import Filter
@@ -20,11 +21,20 @@ class Rule:
 def custom_convert(src: Path) -> set:
     src_custom = open(src, mode="r", encoding="utf-8").read().splitlines()
     set_converted = set()
+    try:
+        rule_type = src_custom[0].split("#@@TYPE:")[1]
+    except IndexError:
+        logging.warning(f"File {src} doesn't have a valid type header, treat as domain type.")
+        rule_type = "DOMAIN"
     for line in src_custom:
-        if line.startswith("."):
-            set_converted.add(Rule("DomainSuffix", line.strip(".")))
-        elif line and not line.startswith("#"):
-            set_converted.add(Rule("DomainFull", line))
+        if rule_type == "DOMAIN":
+            if line.startswith("."):
+                set_converted.add(Rule("DomainSuffix", line.strip(".")))
+            elif line and not line.startswith("#"):
+                set_converted.add(Rule("DomainFull", line))
+        elif rule_type == "IP":
+            if not line.startswith("#"):
+                set_converted.add(Rule("IPCIDR", line))
     return set_converted
 
 

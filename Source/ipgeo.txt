@@ -1,3 +1,4 @@
+#@@TYPE:DOMAIN
 # 小红书
 t.xiaohongshu.com
 t2.xiaohongshu.com

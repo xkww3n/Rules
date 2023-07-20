@@ -1,1 +1,2 @@
+#@@TYPE:DOMAIN
 api.app.lovelive-sif2.bushimo.jp
