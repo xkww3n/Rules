@@ -3,6 +3,7 @@ from pathlib import Path
 from time import time_ns
 
 from abp.filters.parser import parse_filterlist
+from aggregate6 import aggregate
 from requests import Session
 
 from Utils import const, geosite, rule
@@ -150,11 +151,15 @@ for line in src_cidr:
 logger.info(f"Generated {len(list_cidr)} domestic IPv4 rules.")
 rule.batch_dump(list_cidr, const.TARGETS, const.PATH_DIST, "domestic_ip.txt")
 src_cidr6 = connection.get(const.URL_CHNROUTES_V6).text.splitlines()
-list_cidr6 = []
+list_cidr6_raw = []
 for line in src_cidr6:
     if "apnic|CN|ipv6" in line:
         parts = line.split("|")
-        list_cidr6.append(rule.Rule("IPCIDR6", f"{parts[3]}/{parts[4]}"))
+        list_cidr6_raw.append(f"{parts[3]}/{parts[4]}")
+list_cidr6_raw = aggregate(list_cidr6_raw)
+list_cidr6 = []
+for cidr in list_cidr6_raw:
+    list_cidr6.append(rule.Rule("IPCIDR", cidr))
 logger.info(f"Generated {len(list_cidr6)} domestic IPv6 rules.")
 rule.batch_dump(list_cidr6, const.TARGETS, const.PATH_DIST, "domestic_ip6.txt")
 END_TIME = time_ns()
