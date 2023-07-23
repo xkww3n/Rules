@@ -1,4 +1,4 @@
 #@@TYPE:DOMAIN
 .steamserver.net
-.kaspersky.com
-.kaspersky-labs.com
+.activation-v2.kaspersky.com
+.activation.kaspersky.com
