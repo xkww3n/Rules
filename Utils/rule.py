@@ -33,7 +33,7 @@ def custom_convert(src: Path) -> set:
             elif line and not line.startswith("#"):
                 set_converted.add(Rule("DomainFull", line))
         elif rule_type == "IP":
-            if not line.startswith("#"):
+            if line and not line.startswith("#"):
                 set_converted.add(Rule("IPCIDR", line))
     return set_converted
 

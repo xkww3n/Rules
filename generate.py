@@ -159,7 +159,7 @@ for line in src_cidr6:
 list_cidr6_raw = aggregate(list_cidr6_raw)
 list_cidr6 = []
 for cidr in list_cidr6_raw:
-    list_cidr6.append(rule.Rule("IPCIDR", cidr))
+    list_cidr6.append(rule.Rule("IPCIDR6", cidr))
 logger.info(f"Generated {len(list_cidr6)} domestic IPv6 rules.")
 rule.batch_dump(list_cidr6, const.TARGETS, const.PATH_DIST, "domestic_ip6.txt")
 END_TIME = time_ns()
