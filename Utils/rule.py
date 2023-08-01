@@ -10,7 +10,7 @@ class Rule:
     Tag: str
 
     def __init__(self, content_type: str = "", payload: str = "", tag: str = ""):
-        self.Type = content_type  # DomainSuffix / DomainFull / IPCIDR / IPCIDR6
+        self.Type = content_type  # DomainSuffix / DomainFull / IPCIDR / IPCIDR6 / Classic
         self.Payload = payload
         self.Tag = tag
 
@@ -35,6 +35,9 @@ def custom_convert(src: Path) -> set:
         elif rule_type == "IP":
             if line and not line.startswith("#"):
                 set_converted.add(Rule("IPCIDR", line))
+        elif rule_type == "CLASSIC":
+            if line and not line.startswith("#"):
+                set_converted.add(Rule("Classic", line))
     return set_converted
 
 
@@ -90,41 +93,57 @@ def dump(src: list, target: str, dst: Path) -> None:
             for rule in src:
                 if rule.Type == "DomainSuffix":
                     dist.writelines(f".{rule.Payload}\n")
-                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6":
+                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6" or "Classic":
                     dist.writelines(f"{rule.Payload}\n")
+                else:
+                    raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
         case "text-plus":
             for rule in src:
                 if rule.Type == "DomainSuffix":
                     dist.writelines(f"+.{rule.Payload}\n")
-                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6":
+                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6" or "Classic":
                     dist.writelines(f"{rule.Payload}\n")
+                else:
+                    raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
         case "yaml":
             dist.writelines("payload:\n")
             for rule in src:
                 if rule.Type == "DomainSuffix":
                     dist.writelines(f"  - '+.{rule.Payload}'\n")
-                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6":
+                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6" or "Classic":
                     dist.writelines(f"  - '{rule.Payload}'\n")
+                else:
+                    raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
         case "surge-compatible":
             for rule in src:
-                if rule.Type == "DomainSuffix":
-                    dist.writelines(f"DOMAIN-SUFFIX,{rule.Payload}\n")
-                elif rule.Type == "DomainFull":
-                    dist.writelines(f"DOMAIN,{rule.Payload}\n")
-                elif rule.Type == "IPCIDR":
-                    dist.writelines(f"IP-CIDR,{rule.Payload}\n")
-                elif rule.Type == "IPCIDR6":
-                    dist.writelines(f"IP-CIDR6,{rule.Payload}\n")
+                match rule.Type:
+                    case "DomainSuffix":
+                        dist.writelines(f"DOMAIN-SUFFIX,{rule.Payload}\n")
+                    case "DomainFull":
+                        dist.writelines(f"DOMAIN,{rule.Payload}\n")
+                    case "IPCIDR":
+                        dist.writelines(f"IP-CIDR,{rule.Payload}\n")
+                    case "IPCIDR6":
+                        dist.writelines(f"IP-CIDR6,{rule.Payload}\n")
+                    case "Classic":
+                        dist.writelines(f"{rule.Payload}\n")
+                    case _:
+                        raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
         case "clash-compatible":
             for rule in src:
-                if rule.Type == "DomainSuffix":
-                    dist.writelines(f"DOMAIN-SUFFIX,{rule.Payload},Policy\n")
-                elif rule.Type == "DomainFull":
-                    dist.writelines(f"DOMAIN,{rule.Payload},Policy\n")
-                elif rule.Type == "IPCIDR":
-                    dist.writelines(f"IP-CIDR,{rule.Payload},Policy\n")
-                elif rule.Type == "IPCIDR6":
-                    dist.writelines(f"IP-CIDR6,{rule.Payload},Policy\n")
+                match rule.Type:
+                    case "DomainSuffix":
+                        dist.writelines(f"DOMAIN-SUFFIX,{rule.Payload},Policy\n")
+                    case "DomainFull":
+                        dist.writelines(f"DOMAIN,{rule.Payload},Policy\n")
+                    case "IPCIDR":
+                        dist.writelines(f"IP-CIDR,{rule.Payload},Policy\n")
+                    case "IPCIDR6":
+                        dist.writelines(f"IP-CIDR6,{rule.Payload},Policy\n")
+                    case "Classic":
+                        dist.writelines(f"{rule.Payload},Policy\n")
+                    case _:
+                        raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
         case _:
             raise TypeError("Target type unsupported, "
                             "only accept 'text', 'text-plus', 'yaml', 'surge-compatible' or 'clash-compatible'."
