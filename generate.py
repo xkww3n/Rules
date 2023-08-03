@@ -109,7 +109,7 @@ logger.info("Start generating domestic rules.")
 START_TIME = time_ns()
 
 src_domestic_raw = set(open(const.PATH_SOURCE_V2FLY/"geolocation-cn", mode="r", encoding="utf-8").read().splitlines())
-set_domestic_raw = geosite.parse(src_domestic_raw, ["!cn"])
+set_domestic_raw = geosite.parse(src_domestic_raw, None, ["!cn"])
 logger.info(f"Imported {len(set_domestic_raw)} domestic rules from v2fly geolocation-cn list.")
 set_domestic_raw |= rule.custom_convert(const.PATH_PATCH_APPEND/"domestic.txt")
 logger.info(
