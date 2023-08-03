@@ -60,21 +60,6 @@ src_rejections_v2fly = set(
 set_rejections_v2fly = geosite.parse(src_rejections_v2fly)
 set_rejections |= set_rejections_v2fly
 logger.info(f"Imported {(len(set_rejections_v2fly))} reject rules from v2fly category-ads-all list.")
-set_rejections |= rule.custom_convert(const.PATH_PATCH_APPEND/"reject.txt")
-logger.info(
-    f'Imported {len(rule.custom_convert(const.PATH_PATCH_APPEND/"reject.txt"))} '
-    f'reject rules from "Custom/Append/reject.txt".'
-)
-set_exclusions_raw |= rule.custom_convert(const.PATH_PATCH_REMOVE/"reject.txt")
-logger.info(
-    f'Imported {len(rule.custom_convert(const.PATH_PATCH_REMOVE/"reject.txt"))} '
-    f'exclude rules from "Custom/Remove/reject.txt".'
-)
-set_exclusions_raw |= rule.custom_convert(const.PATH_PATCH_APPEND/"exclude.txt")
-logger.info(
-    f'Imported {len(rule.custom_convert(const.PATH_PATCH_APPEND/"exclude.txt"))} '
-    f'exclude rules from "Custom/Append/exclude.txt".'
-)
 
 set_exclusions = set()
 logger.debug("Start deduplicating reject and exclude set.")
@@ -91,6 +76,9 @@ for domain_exclude in set_exclusions_raw:
         if domain_exclude.Payload.endswith(domain_reject.Payload):
             set_exclusions.add(domain_exclude)
             logger.debug(f"{domain_exclude} is added to final exclude set.")
+
+set_rejections = rule.apply_patch(set_rejections, "reject")
+set_exclusions = rule.apply_patch(set_exclusions, "exclude")
 
 logger.info(f"Generated {len(set_rejections)} reject rules.")
 logger.info(f"Generated {len(set_exclusions)} exclude rules.")
@@ -111,30 +99,27 @@ START_TIME = time_ns()
 src_domestic_raw = set(open(const.PATH_SOURCE_V2FLY/"geolocation-cn", mode="r", encoding="utf-8").read().splitlines())
 set_domestic_raw = geosite.parse(src_domestic_raw, None, ["!cn"])
 logger.info(f"Imported {len(set_domestic_raw)} domestic rules from v2fly geolocation-cn list.")
-set_domestic_raw |= rule.custom_convert(const.PATH_PATCH_APPEND/"domestic.txt")
-logger.info(
-    f'Imported {len(rule.custom_convert(const.PATH_PATCH_APPEND/"domestic.txt"))} '
-    f'domestic rules from "Custom/Append/domestic.txt".'
-)
 
 # Add all domestic TLDs to domestic rules, then remove domestic domains with domestic TLDs.
 src_domestic_tlds = set(open(const.PATH_SOURCE_V2FLY/"tld-cn", mode="r", encoding="utf-8").read().splitlines())
 set_domestic_tlds = geosite.parse(src_domestic_tlds)
 logger.info(f"Imported {len(set_domestic_tlds)} domestic TLDs.")
-cnt_domestic_removed = 0
-for domain in set_domestic_raw.copy():
+set_domestic = set()
+for domain in set_domestic_raw:
+    is_domestic = False
     for tld in set_domestic_tlds:
         if domain.Payload.endswith(tld.Payload):
-            set_domestic_raw.remove(domain)
-            cnt_domestic_removed += 1
             logger.debug(f'"{domain.Payload}"" is removed for having a domestic TLD "{tld.Payload}"".')
+            is_domestic = True
             break
-logger.info(f"Removed {cnt_domestic_removed} domestic domains having domestic TLD.")
-set_domestic_raw |= set_domestic_tlds
+    if not is_domestic:
+        set_domestic.add(domain)
+logger.info(f"Removed {len(set_domestic_raw) - len(set_domestic)} domestic domains having domestic TLD.")
+set_domestic |= set_domestic_tlds
+set_domestic = rule.apply_patch(set_domestic, "domestic")
+logger.info(f"Generated {len(set_domestic)} domestic rules.")
 
-logger.info(f"Generated {len(set_domestic_raw)} domestic rules.")
-
-list_domestic_sorted = rule.set_to_sorted_list(set_domestic_raw)
+list_domestic_sorted = rule.set_to_sorted_list(set_domestic)
 rule.batch_dump(list_domestic_sorted, const.TARGETS, const.PATH_DIST, "domestic.txt")
 
 END_TIME = time_ns()

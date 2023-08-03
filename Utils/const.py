@@ -3,8 +3,7 @@ from pathlib import Path
 TARGETS = ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"]
 PATH_SOURCE_V2FLY = Path("./domain-list-community/data/")
 PATH_SOURCE_CUSTOM = Path("./Source/")
-PATH_PATCH_APPEND = Path("./Patch/Append/")
-PATH_PATCH_REMOVE = Path("./Patch/Remove/")
+PATH_SOURCE_PATCH = Path("./Patch/")
 PATH_DIST = Path("./dists/")
 
 LIST_REJECT_URL = [

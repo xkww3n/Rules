@@ -1,0 +1,13 @@
+REM:.gsp0.baidu.com
+
+ADD:.pangolin-sdk-toutiao.com
+ADD:.pglstatp-toutiao.com
+ADD:.adukwai.com
+ADD:.zijieapi.com
+ADD:.mediav.com
+ADD:optimus-ads.amap.com
+ADD:.partwithner.com
+ADD:.rxeosevsso.com
+ADD:.mc7clurd09pla4nrtat7ion.com
+ADD:.e67repidwnfu7gcha.com
+ADD:.wuzbhjpvsf.com

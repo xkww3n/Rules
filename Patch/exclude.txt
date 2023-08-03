@@ -1,0 +1,19 @@
+# Adjust web portal
+ADD:www.adjust.com
+ADD:help.adjust.com
+ADD:suite.adjust.com
+ADD:try.adjust.com
+ADD:mobilespreeconf.adjust.com
+ADD:craft.adjust.com
+ADD:atom.adjust.com
+ADD:insights.adjust.com
+ADD:events.adjust.com
+ADD:dash.adjust.com
+
+# AppsFlyer web portal
+ADD:www.appsflyer.com
+ADD:hq1.appsflyer.com
+ADD:support.appsflyer.com
+
+ADD:www.googleadservices.com
+ADD:wwads.cn

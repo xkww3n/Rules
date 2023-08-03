@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 
 from abp.filters.parser import Filter
+from . import const
 
 
 class Rule:
@@ -16,6 +17,12 @@ class Rule:
 
     def __str__(self):
         return f'Type: "{self.Type}", Payload: "{self.Payload}", Tag: {self.Tag if self.Tag else "NONE"}'
+
+    def __hash__(self):
+        return hash(("type" + self.Type, "payload" + self.Payload, "tag" + self.Tag))
+
+    def __eq__(self, other):
+        return self.Type == other.Type and self.Payload == other.Payload and self.Tag == other.Tag
 
 
 def custom_convert(src: Path) -> set:
@@ -159,3 +166,38 @@ def set_to_sorted_list(src: set) -> list:
     list_sorted = [item for item in src]
     list_sorted.sort(key=lambda item: str(item))
     return list_sorted
+
+
+def apply_patch(src: set, name: str) -> set:
+    try:
+        patch = open(const.PATH_SOURCE_PATCH/(name + ".txt"), mode="r").read().splitlines()
+    except FileNotFoundError:
+        logging.warning(f'Patch "{name + ".txt"}" not found.')
+        return src
+    logging.info(f'Start applying patch "{name + ".txt"}"')
+    for line in patch:
+        if line.startswith("#"):
+            continue
+        parsed_line = line.split(":")
+        if parsed_line[0] == "ADD":
+            if parsed_line[1].startswith("."):
+                rule = Rule("DomainSuffix", parsed_line[1].strip("."))
+            else:
+                rule = Rule("DomainFull", parsed_line[1])
+            if rule not in src:
+                src.add(rule)
+                logging.debug(f'Rule "{rule}" added.')
+            else:
+                logging.warning(f"Already exist: {rule}")
+        elif parsed_line[0] == "REM":
+            if parsed_line[1].startswith("."):
+                rule = Rule("DomainSuffix", parsed_line[1].strip("."))
+            else:
+                rule = Rule("DomainFull", parsed_line[1])
+            if rule in src:
+                src.remove(rule)
+                logging.debug(f'Rule "{rule}" Removed.')
+            else:
+                logging.warning(f"Not found: {rule}")
+    logging.info(f'Patch "{name + ".txt"}" applied.')
+    return src
