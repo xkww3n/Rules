@@ -66,7 +66,8 @@ logger.debug("Start deduplicating reject and exclude set.")
 for domain_exclude in set_exclusions_raw.copy():
     for domain_reject in set_rejections.copy():
         if (domain_reject.Payload == domain_exclude.Payload and domain_reject.Type == domain_exclude.Type) \
-                or (domain_reject.Type == "DomainFull" and domain_exclude.Type == "DomainSuffix"):
+                or (domain_reject.Payload == domain_exclude.Payload and
+                    domain_reject.Type == "DomainFull" and domain_exclude.Type == "DomainSuffix"):
             set_rejections.remove(domain_reject)
             set_exclusions_raw.remove(domain_exclude)
             logger.debug(f"{domain_reject} is removed as duplicated with {domain_exclude}.")
