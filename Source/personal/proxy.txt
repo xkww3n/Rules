@@ -1,3 +1,0 @@
-#@@TYPE:DOMAIN
-sgshort.wechat.com
-sgminorshort.wechat.com
