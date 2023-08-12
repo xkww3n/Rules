@@ -183,10 +183,25 @@ for filename in list_file_custom:
     if filename.is_file():
         logger.debug(f'Start converting "{filename.name}".')
         set_custom = rule.custom_convert(filename)
+        is_classical = False
+        for item in set_custom:
+            if item.Type == "Classic":
+                is_classical = True  # If one rule's type is "Classic", this is a classical ruleset.
+                break
+            else:
+                break
         list_custom_sorted = rule.set_to_sorted_list(set_custom)
-        rule.batch_dump(list_custom_sorted, const.TARGETS, const.PATH_DIST, filename.name)
+        if is_classical:
+            targets = const.TARGETS
+            rule.batch_dump(list_custom_sorted,
+                            ["yaml", "surge-compatible", "clash-compatible"],
+                            # Classical ruleset doesn't have plain text type.
+                            const.PATH_DIST, filename.name)
+        else:
+            rule.batch_dump(list_custom_sorted, const.TARGETS, const.PATH_DIST, filename.name)
         logger.debug(f"Converted {len(list_custom_sorted)} rules.")
 
+# There's no personal classical type ruleset. So no logic about that.
 list_file_personal = Path.iterdir(const.PATH_SOURCE_CUSTOM/"personal")
 for filename in list_file_personal:
     logger.debug(f'Start converting "{filename.name}".')
