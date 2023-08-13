@@ -5,7 +5,7 @@ from Utils import const
 
 def template(urls: list) -> str:
     url_list = "".join(
-        [f'<li><a href="{url}" target="_blank">{url}</a></li>\n' for url in urls]
+        [f'<li><a href="{"https://rules.xkww3n.cyou/"+url}" target="_blank">{url}</a></li>\n' for url in urls]
     )
     build_date = str(datetime.utcnow()) + " UTC"
     return f"""
@@ -22,7 +22,8 @@ def template(urls: list) -> str:
         <h1>xkww3n's Rules</h1>
         <p>由 <a href="https://www.xkww3n.cyou">xkww3n</a> 维护的，面向多个代理软件的规则集</p>
         <p>支持： Surge、Clash (Premium / Meta)、Stash、Choc、Quantumult (X)、Loon、Shadowrocket、LanceX 等</p>
-        <p>项目源代码托管于 <a href="https://github.com/xkww3n/Rules/">GitHub</a>，以 <a href="https://github.com/xkww3n/Rules/blob/main/LICENSE" target="_blank">MIT</a> 协议授权</p>
+        <p>项目源代码托管于 <a href="https://github.com/xkww3n/Rules/">GitHub</a>，
+        以 <a href="https://github.com/xkww3n/Rules/blob/main/LICENSE" target="_blank">MIT</a> 协议授权</p>
         <p>构建日期：{build_date}</p>
         <hr>
         <ul>
@@ -34,7 +35,7 @@ def template(urls: list) -> str:
     """
 
 
-blacklist = ["surge", "clash", "personal"]
+blacklist = ["personal"]
 dists_list = []
 for filename in (
     sorted((const.PATH_DIST/"text").rglob("**/*.txt"))
