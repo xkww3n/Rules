@@ -5,6 +5,7 @@ DOMAIN,sglong.wechat.com
 DOMAIN,sgquic.wechat.com
 DOMAIN,sgreport.wechat.com
 DOMAIN,sgminorshort.wechat.com
+DOMAIN,support.wechat.com
 DOMAIN,hkshort.wechat.com
 DOMAIN,hklong.wechat.com
 DOMAIN,tencentmap.wechat.com
