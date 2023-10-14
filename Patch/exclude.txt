@@ -19,3 +19,4 @@ ADD:www.googleadservices.com
 ADD:wwads.cn
 
 ADD:ssl.p.jwpcdn.com
+ADD:click.mz.simba.taobao.com
