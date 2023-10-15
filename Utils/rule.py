@@ -74,6 +74,8 @@ def is_domain(rule: Filter) -> bool:
             and "#" not in rule.text
             and "," not in rule.text
             and ":" not in rule.text
+            and " " not in rule.text
+            and ("(" or ")") not in rule.text
             and not rule.text.startswith("_")
             and not rule.text.startswith("-")
             and not rule.text.startswith("^")
