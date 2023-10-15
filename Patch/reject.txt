@@ -2,8 +2,6 @@ REM:.gsp0.baidu.com
 REM:.qhres2.com
 REM:.onelink.me
 
-ADD:.pangolin-sdk-toutiao.com
-ADD:.pglstatp-toutiao.com
 ADD:.adukwai.com
 ADD:.zijieapi.com
 ADD:.mediav.com

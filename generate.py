@@ -50,10 +50,9 @@ for line in parse_filterlist(src_rejections):
 for line in parse_filterlist(src_exclusions):
     if rule.is_domain(line):
         domain = line.text.strip("@").strip("^").strip("|")
-        if not domain.startswith("-"):
-            rule_exclude = rule.Rule("DomainFull", domain)
-            set_exclusions_raw.add(rule_exclude)
-            logger.debug(f'Line "{line.text}" is added to raw exclude set. "{rule_exclude}".')
+        rule_exclude = rule.Rule("DomainFull", domain)
+        set_exclusions_raw.add(rule_exclude)
+        logger.debug(f'Line "{line.text}" is added to raw exclude set. "{rule_exclude}".')
 
 src_rejections_v2fly = set(
     open(const.PATH_SOURCE_V2FLY/"category-ads-all", mode="r", encoding="utf-8").read().splitlines())
