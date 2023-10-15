@@ -1,6 +1,12 @@
 REM:.gsp0.baidu.com
 REM:.qhres2.com
 REM:.onelink.me
+REM:.app-measurement.com
+REM:.google-analytics.com
+REM:.googleanalytics.com
+REM:.googletagmanager.com
+REM:.googletagservices.com
+REM:analytics.google.com
 
 ADD:.adukwai.com
 ADD:.zijieapi.com
