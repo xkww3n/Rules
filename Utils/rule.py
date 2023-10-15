@@ -66,28 +66,14 @@ def is_ipaddr(addr: str) -> bool:
 
 
 def is_domain(rule: Filter) -> bool:
+    blacklist_include = ("/", "*", "=", "~", "?", "#", ",", ":", " ", "(", ")", "[", "]", "_")
     if (
             rule.type == "filter"
             and rule.selector["type"] == "url-pattern"
             and "." in rule.text
-            and "/" not in rule.text
-            and "*" not in rule.text
-            and "=" not in rule.text
-            and "~" not in rule.text
-            and "?" not in rule.text
-            and "#" not in rule.text
-            and "," not in rule.text
-            and ":" not in rule.text
-            and " " not in rule.text
-            and ("(" or ")") not in rule.text
-            and not rule.text.startswith("_")
+            and not any([bl_char in rule.text for bl_char in blacklist_include])
             and not rule.text.startswith("-")
-            and not rule.text.startswith("^")
-            and not rule.text.startswith("[")
             and not rule.text.endswith(".")
-            and not rule.text.endswith("_")
-            and not rule.text.endswith("]")
-            and not rule.text.endswith(";")
             and not rule.options
             and not is_ipaddr(rule.text.strip("||").strip("^"))
     ):
