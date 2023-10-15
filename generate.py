@@ -62,6 +62,7 @@ logger.info(f"Imported {(len(set_rejections_v2fly))} reject rules from v2fly cat
 
 set_exclusions = set()
 logger.debug("Start deduplicating reject and exclude set.")
+set_rejections = rule.dedup(set_rejections)
 for domain_exclude in set_exclusions_raw.copy():
     for domain_reject in set_rejections.copy():
         if (domain_reject.Payload == domain_exclude.Payload and domain_reject.Type == domain_exclude.Type) \
@@ -69,7 +70,7 @@ for domain_exclude in set_exclusions_raw.copy():
                     domain_reject.Type == "DomainFull" and domain_exclude.Type == "DomainSuffix"):
             set_rejections.remove(domain_reject)
             set_exclusions_raw.remove(domain_exclude)
-            logger.debug(f"{domain_reject} is removed as duplicated with {domain_exclude}.")
+            logger.debug(f"{domain_reject} is removed as excluded by {domain_exclude}.")
 
 for domain_exclude in set_exclusions_raw:
     for domain_reject in set_rejections:
@@ -96,27 +97,17 @@ logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f'
 logger.info("Start generating domestic rules.")
 START_TIME = time_ns()
 
-src_domestic_raw = set(open(const.PATH_SOURCE_V2FLY/"geolocation-cn", mode="r", encoding="utf-8").read().splitlines())
-set_domestic_raw = geosite.parse(src_domestic_raw, None, ["!cn"])
-logger.info(f"Imported {len(set_domestic_raw)} domestic rules from v2fly geolocation-cn list.")
+src_domestic = set(open(const.PATH_SOURCE_V2FLY/"geolocation-cn", mode="r", encoding="utf-8").read().splitlines())
+set_domestic = geosite.parse(src_domestic, None, ["!cn"])
+logger.info(f"Imported {len(set_domestic)} domestic rules from v2fly geolocation-cn list.")
 
-# Add all domestic TLDs to domestic rules, then remove domestic domains with domestic TLDs.
+# Add all domestic TLDs to domestic rules, then perform deduplication.
 src_domestic_tlds = set(open(const.PATH_SOURCE_V2FLY/"tld-cn", mode="r", encoding="utf-8").read().splitlines())
 set_domestic_tlds = geosite.parse(src_domestic_tlds)
 logger.info(f"Imported {len(set_domestic_tlds)} domestic TLDs.")
-set_domestic = set()
-for domain in set_domestic_raw:
-    is_domestic = False
-    for tld in set_domestic_tlds:
-        if domain.Payload.endswith(tld.Payload):
-            logger.debug(f'"{domain.Payload}"" is removed for having a domestic TLD "{tld.Payload}"".')
-            is_domestic = True
-            break
-    if not is_domestic:
-        set_domestic.add(domain)
-logger.info(f"Removed {len(set_domestic_raw) - len(set_domestic)} domestic domains having domestic TLD.")
 set_domestic |= set_domestic_tlds
 set_domestic = rule.apply_patch(set_domestic, "domestic")
+set_domestic = rule.dedup(set_domestic)
 logger.info(f"Generated {len(set_domestic)} domestic rules.")
 
 list_domestic_sorted = rule.set_to_sorted_list(set_domestic)

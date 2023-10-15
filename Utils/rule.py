@@ -25,6 +25,10 @@ class Rule:
     def __eq__(self, other):
         return self.Type == other.Type and self.Payload == other.Payload
 
+    def includes(self, other):
+        return ("." + other.Payload if other.Type == "DomainSuffix" else other.Payload).endswith(
+            "." + self.Payload if self.Type == "DomainSuffix" else self.Payload)
+
 
 def custom_convert(src: Path) -> set:
     src_custom = open(src, mode="r", encoding="utf-8").read().splitlines()
@@ -204,3 +208,18 @@ def apply_patch(src: set, name: str) -> set:
                 logging.warning(f"Not found: {rule}")
     logging.info(f'Patch "{name + ".txt"}" applied.')
     return src
+
+
+def dedup(src: set):
+    list_length_sorted = [item for item in src]
+    list_length_sorted.sort(key=lambda item: len(str(item)))
+    set_unique = set()
+    for item in list_length_sorted:
+        flag_unique = True
+        for added in set_unique:
+            if added.includes(item):
+                flag_unique = False
+                logging.debug(f"{item} is removed as duplicated with {added}.")
+        if flag_unique:
+            set_unique.add(item)
+    return set_unique
