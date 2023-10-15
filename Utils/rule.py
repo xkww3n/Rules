@@ -20,10 +20,10 @@ class Rule:
         return f'Type: "{self.Type}", Payload: "{self.Payload}", Tag: {self.Tag if self.Tag else "NONE"}'
 
     def __hash__(self):
-        return hash(("type" + self.Type, "payload" + self.Payload, "tag" + self.Tag))
+        return hash(("type" + self.Type, "payload" + self.Payload))
 
     def __eq__(self, other):
-        return self.Type == other.Type and self.Payload == other.Payload and self.Tag == other.Tag
+        return self.Type == other.Type and self.Payload == other.Payload
 
 
 def custom_convert(src: Path) -> set:
