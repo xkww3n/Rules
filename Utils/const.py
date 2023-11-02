@@ -17,6 +17,8 @@ LIST_REJECT_URL = [
     "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt",
     # ADgk
     "https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt",
+    # AWAvenue 秋风广告规则
+    "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Adblock-Rule/main/AWAvenue-Adblock-Rule.txt",
 ]
 
 # AdGuard DNS Filter Whitelist
