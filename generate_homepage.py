@@ -39,5 +39,8 @@ blacklist = ["personal"]
 dists_list = []
 for filename in sorted(const.PATH_DIST.rglob("*")):
     if filename.is_file() and filename.parent.name not in blacklist:
-        dists_list.append(f"{filename.parent.name}/{filename.name}")
+        if filename.parent.name == "dists":
+            dists_list.append(f"{filename.name}")
+        else:
+            dists_list.append(f"{filename.parent.name}/{filename.name}")
 open(const.PATH_DIST/"index.html", mode='w').write(template(dists_list))
