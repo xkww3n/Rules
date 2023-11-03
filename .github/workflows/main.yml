@@ -82,6 +82,14 @@ jobs:
                     "outputName": "geoip.dat",
                     "outputDir": "./dists"
                   }
+                },
+                {
+                  "type": "maxmindMMDB",
+                  "action": "output",
+                  "args": {
+                    "outputName": "geoip.mmdb",
+                    "outputDir": "./dists"
+                  }
                 }
               ]
               }
