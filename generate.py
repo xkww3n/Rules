@@ -125,7 +125,9 @@ for line in src_cidr:
     if not line.startswith("#"):
         list_cidr.append(rule.Rule("IPCIDR", line))
 logger.info(f"Generated {len(list_cidr)} domestic IPv4 rules.")
-rule.batch_dump(list_cidr, const.TARGETS, const.PATH_DIST, "domestic_ip.txt")
+rule.batch_dump(list_cidr, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
+                const.PATH_DIST, "domestic_ip.txt")
+
 src_cidr6 = connection.get(const.URL_CHNROUTES_V6).text.splitlines()
 list_cidr6_raw = []
 for line in src_cidr6:
@@ -137,7 +139,8 @@ list_cidr6 = []
 for cidr in list_cidr6_raw:
     list_cidr6.append(rule.Rule("IPCIDR6", cidr))
 logger.info(f"Generated {len(list_cidr6)} domestic IPv6 rules.")
-rule.batch_dump(list_cidr6, const.TARGETS, const.PATH_DIST, "domestic_ip6.txt")
+rule.batch_dump(list_cidr6, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
+                const.PATH_DIST, "domestic_ip6.txt")
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
@@ -174,18 +177,24 @@ for filename in list_file_custom:
         logger.debug(f'Start converting "{filename.name}".')
         set_custom = rule.custom_convert(filename)
         is_classical = False
+        is_ipcidr = False
         for item in set_custom:
             if item.Type == "Classic":
                 is_classical = True  # If one rule's type is "Classic", this is a classical ruleset.
                 break
-            else:
+            if item.Type == "IPCIDR":
+                is_ipcidr = True
                 break
+            break
         list_custom_sorted = rule.set_to_sorted_list(set_custom)
         if is_classical:
-            targets = const.TARGETS
             rule.batch_dump(list_custom_sorted,
                             ["yaml", "surge-compatible", "clash-compatible"],
                             # Classical ruleset doesn't have plain text type.
+                            const.PATH_DIST, filename.name)
+        elif is_ipcidr:
+            rule.batch_dump(list_custom_sorted,
+                            ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
                             const.PATH_DIST, filename.name)
         else:
             rule.batch_dump(list_custom_sorted, const.TARGETS, const.PATH_DIST, filename.name)
@@ -197,7 +206,9 @@ for filename in list_file_personal:
     logger.debug(f'Start converting "{filename.name}".')
     set_personal = rule.custom_convert(filename)
     list_personal_sorted = rule.set_to_sorted_list(set_personal)
-    rule.batch_dump(list_personal_sorted, const.TARGETS, const.PATH_DIST, "personal/" + filename.name)
+    rule.batch_dump(list_personal_sorted, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
+                    const.PATH_DIST, "personal/" + filename.name)
+    rule.dump(list_personal_sorted, "geosite", const.PATH_DIST/"geosite"/("personal-" + filename.stem))
     logger.debug(f"Converted {len(list_personal_sorted)} rules.")
 
 END_TIME = time_ns()

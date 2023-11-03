@@ -22,15 +22,79 @@ jobs:
           cache: 'pip'
       - name: Setup environment
         run: pip install -r requirements.txt
+      - name: Set up Go
+        uses: actions/setup-go@v4
       - name: Pull v2fly community domain list
         uses: actions/checkout@v3
         with:
           repository: 'v2fly/domain-list-community'
           path: 'domain-list-community'
+      - name: Pull Loyalsoldier domain-list-custom
+        uses: actions/checkout@v3
+        with:
+          repository: 'Loyalsoldier/domain-list-custom'
+          path: 'tool_geosite'
+      - name: Pull Loyalsoldier's geosite tool
+        uses: actions/checkout@v3
+        with:
+          repository: 'Loyalsoldier/domain-list-custom'
+          path: 'tool_geosite'
+      - name: Install Loyalsoldier's geoip tool
+        run: go install -v github.com/Loyalsoldier/geoip@latest
       - name: Generate rules
         run: |
               python generate.py
-              python generate_homepage.py
+      - name: Generate Geosite DB
+        run: |
+              cd tool_geosite
+              go run ./ --datapath=../dists/geosite --outputpath=../dists
+      - name: Generate GeoIP DB
+        run: |
+              cat <<EOF
+              {
+              "input": [
+                {
+                  "type": "text",
+                  "action": "add",
+                  "args": {
+                    "name": "cn",
+                    "uri": "./dists/text/domestic_ip.txt",
+                    "onlyIPType": "ipv4"
+                  }
+                },
+                {
+                  "type": "text",
+                  "action": "add",
+                  "args": {
+                    "name": "cn",
+                    "uri": "./dists/text/domestic_ip6.txt",
+                    "onlyIPType": "ipv6"
+                  }
+                },
+                {
+                  "type": "clashRuleSetClassical",
+                  "action": "add",
+                  "args": {
+                    "name": "apns",
+                    "uri": "./dists/clash-compatible/apns.txt"
+                  }
+                }
+              ],
+              "output": [
+                {
+                  "type": "v2rayGeoIPDat",
+                  "action": "output",
+                  "args": {
+                    "outputName": "geoip.dat",
+                    "outputDir": "./dists"
+                  }
+                }
+              ]
+              }
+              EOF > config.json
+              geoip -c config.json
+      - name: Remove tmp files
+        run: rm -rf dists/geosite
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:

@@ -144,6 +144,15 @@ def dump(src: list, target: str, dst: Path) -> None:
                         dist.writelines(f"{rule.Payload},Policy\n")
                     case _:
                         raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
+        case "geosite":
+            for rule in src:
+                match rule.Type:
+                    case "DomainSuffix":
+                        dist.writelines(f"{rule.Payload}\n")
+                    case "DomainFull":
+                        dist.writelines(f"full:{rule.Payload}\n")
+                    case _:
+                        raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
         case _:
             raise TypeError("Target type unsupported, "
                             "only accept 'text', 'text-plus', 'yaml', 'surge-compatible' or 'clash-compatible'."
@@ -152,6 +161,8 @@ def dump(src: list, target: str, dst: Path) -> None:
 
 def batch_dump(src: list, targets: list, dst_path: Path, filename: str) -> None:
     for target in targets:
+        if target == "geosite" and ".txt" in filename:
+            filename = filename.split(".")[0]
         dump(src, target, dst_path/target/filename)
 
 
