@@ -6,9 +6,7 @@ REM:.google-analytics.com
 REM:.googleanalytics.com
 REM:.googletagmanager.com
 REM:.googletagservices.com
-REM:analytics.google.com
 
-ADD:.adukwai.com
 ADD:.zijieapi.com
 ADD:.mediav.com
 ADD:optimus-ads.amap.com
