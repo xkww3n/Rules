@@ -14,9 +14,35 @@
   - 适用于兼容传统 Clash 规则的代理软件，如 [Quantumult](https://quantumult.app/) [(X)](https://quantumult.app/x/)。
 - Surge 传统规则集
   - 适用于兼容传统 Surge 规则的代理软件，如低于 v3 版本的 Surge、[Loon](https://www.nsloon.com/)、[Shadowrocket](https://apps.apple.com/us/app/shadowrocket/id932747118) 和 [LanceX](https://shadowboat.app/lancex/)。
+- V2Ray GeoSite/GeoIP 数据库
+  - 适用于 [V2Ray](https://www.v2fly.org/)。
+    - GeoSite 数据库：<https://rules.xkww3n.cyou/geosite.dat>
+    - GeoIP 数据库：<https://rules.xkww3n.cyou/geoip.dat>
+- sing-box GeoSite/GeoIP 数据库
+  - 适用于 [sing-box](https://sing-box.sagernet.org/)。
+    - GeoSite 数据库：<https://rules.xkww3n.cyou/geosite.db>
+    - GeoIP 数据库：<https://rules.xkww3n.cyou/geoip.db>
+- MaxMind MMDB 数据库
+  - GeoIP 数据库：<https://rules.xkww3n.cyou/geoip.mmdb>
 
 ## 文档
 请查看[本项目的 GitHub Wiki](https://github.com/xkww3n/Rules/wiki)
 
 ## 许可证
 如无特别声明，本项目的一切内容均使用 MIT 许可证授权。
+
+## 鸣谢
+本项目离不开其他优质开源项目的支持，在此对这些项目表示感谢：
+- [AdGuard Content Blocking Filters](https://github.com/AdguardTeam/AdguardFilters/)
+- [EasyList](https://easylist.to)
+- [もちフィルタ](https://eeii0a5l.github.io/mochifilter_homepage/mochi.html)
+- [ADgk](https://github.com/banbendalao/ADgk)
+- [-AWAvenue 秋风广告规则（AWAvenue-Adblock-Rule）-](https://github.com/TG-Twilight/AWAvenue-Adblock-Rule)
+- [Domain list community](https://github.com/v2fly/domain-list-community)
+- [chnroutes2 (better-aggregated chnroutes)](https://github.com/misakaio/chnroutes2/)
+- [aggregate6](https://github.com/job/aggregate6)
+- [python-abp](https://hg.adblockplus.org/python-abp/)
+- [Loyalsoldier / domain-list-custom](https://github.com/Loyalsoldier/domain-list-custom/)
+- [Loyalsoldier / geoip](https://github.com/Loyalsoldier/geoip/)
+- [SagerNet / sing-geosite](https://github.com/sagernet/sing-geosite/)
+- [SagerNet / sing-geoip](https://github.com/sagernet/sing-geoip/)
