@@ -36,6 +36,16 @@ jobs:
           path: 'tool_geosite'
       - name: Install Loyalsoldier's geoip tool
         run: go install -v github.com/Loyalsoldier/geoip@latest
+      - name: Pull sing-geoip tool
+        uses: actions/checkout@v3
+        with:
+          repository: 'xkww3n/sing-geoip'
+          path: 'tool_sing-geoip'
+      - name: Pull sing-geosite tool
+        uses: actions/checkout@v3
+        with:
+          repository: 'xkww3n/sing-geosite'
+          path: 'tool_sing-geosite'
       - name: Generate rules
         run: python generate.py
       - name: Generate Geosite DB
@@ -95,6 +105,18 @@ jobs:
               }
               EOF
               geoip -c config.json
+      - name: Generate sing-box Geosite DB
+        run: |
+              cp dists/geosite.dat tool_sing-geosite/
+              cd tool_sing-geosite
+              go run .
+              cp geosite.db ../dists/
+      - name: Generate sing-box GeoIP DB
+        run: |
+          cp dists/geoip.mmdb tool_sing-geoip/
+          cd tool_sing-geoip
+          go run .
+          cp geoip.db ../dists/
       - name: Remove tmp files
         run: |
               rm -rf dists/geosite

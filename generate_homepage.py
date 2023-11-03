@@ -37,13 +37,7 @@ def template(urls: list) -> str:
 
 blacklist = ["personal"]
 dists_list = []
-for filename in (
-    sorted((const.PATH_DIST/"text").rglob("**/*.txt"))
-    + sorted((const.PATH_DIST/"text-plus").rglob("**/*.txt"))
-    + sorted((const.PATH_DIST/"yaml").rglob("**/*.txt"))
-    + sorted((const.PATH_DIST/"surge-compatible").rglob("**/*.txt"))
-    + sorted((const.PATH_DIST/"clash-compatible").rglob("**/*.txt"))
-):
-    if filename.parent.name not in blacklist:
+for filename in sorted(const.PATH_DIST.rglob("*")):
+    if filename.is_file() and filename.parent.name not in blacklist:
         dists_list.append(f"{filename.parent.name}/{filename.name}")
 open(const.PATH_DIST/"index.html", mode='w').write(template(dists_list))
