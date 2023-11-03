@@ -51,7 +51,4 @@ def batch_convert(categories: list, tools: list, exclusions=None) -> None:
             src_geosite = set(open(const.PATH_SOURCE_V2FLY/category, mode="r", encoding="utf-8").read().splitlines())
             set_geosite = parse(src_geosite, exclusions)
             list_geosite_sorted = rule.set_to_sorted_list(set_geosite)
-            if tool == "geosite":
-                rule.dump(list_geosite_sorted, tool, const.PATH_DIST/tool/category)
-            else:
-                rule.dump(list_geosite_sorted, tool, const.PATH_DIST/tool/(category + ".txt"))
+            rule.dump(list_geosite_sorted, tool, const.PATH_DIST/tool, category)

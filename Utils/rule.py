@@ -82,12 +82,18 @@ def is_domain(rule: Filter) -> bool:
         return False
 
 
-def dump(src: list, target: str, dst: Path) -> None:
+def dump(src: list, target: str, dst: Path, filename: str) -> None:
     try:
-        dist = open(dst, mode="w", encoding="utf-8")
+        if target == "yaml":
+            filename = filename + ".yaml"
+        elif target == "geosite":
+            filename = filename
+        else:
+            filename = filename + ".txt"
+        dist = open(dst/filename, mode="w", encoding="utf-8")
     except FileNotFoundError:
-        dst.parent.mkdir(parents=True)
-        dist = open(dst, mode="w")
+        dst.mkdir(parents=True)
+        dist = open(dst/filename, mode="w")
     match target:
         case "text":
             for rule in src:
@@ -161,9 +167,7 @@ def dump(src: list, target: str, dst: Path) -> None:
 
 def batch_dump(src: list, targets: list, dst_path: Path, filename: str) -> None:
     for target in targets:
-        if target == "geosite" and ".txt" in filename:
-            filename = filename.split(".")[0]
-        dump(src, target, dst_path/target/filename)
+        dump(src, target, dst_path/target, filename)
 
 
 def set_to_sorted_list(src: set) -> list:

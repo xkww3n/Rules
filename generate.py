@@ -87,8 +87,8 @@ logger.info(f"Generated {len(set_exclusions)} exclude rules.")
 list_rejections_sorted = rule.set_to_sorted_list(set_rejections)
 list_exclusions_sorted = rule.set_to_sorted_list(set_exclusions)
 
-rule.batch_dump(list_rejections_sorted, const.TARGETS, const.PATH_DIST, "reject.txt")
-rule.batch_dump(list_exclusions_sorted, const.TARGETS, const.PATH_DIST, "exclude.txt")
+rule.batch_dump(list_rejections_sorted, const.TARGETS, const.PATH_DIST, "reject")
+rule.batch_dump(list_exclusions_sorted, const.TARGETS, const.PATH_DIST, "exclude")
 
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
@@ -116,7 +116,7 @@ for item in set_domestic.copy():
 logger.info(f"Generated {len(set_domestic)} domestic rules.")
 
 list_domestic_sorted = rule.set_to_sorted_list(set_domestic)
-rule.batch_dump(list_domestic_sorted, const.TARGETS, const.PATH_DIST, "domestic.txt")
+rule.batch_dump(list_domestic_sorted, const.TARGETS, const.PATH_DIST, "domestic")
 
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
@@ -131,7 +131,7 @@ for line in src_cidr:
         list_cidr.append(rule.Rule("IPCIDR", line))
 logger.info(f"Generated {len(list_cidr)} domestic IPv4 rules.")
 rule.batch_dump(list_cidr, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
-                const.PATH_DIST, "domestic_ip.txt")
+                const.PATH_DIST, "domestic_ip")
 
 src_cidr6 = connection.get(const.URL_CHNROUTES_V6).text.splitlines()
 list_cidr6_raw = []
@@ -145,7 +145,7 @@ for cidr in list_cidr6_raw:
     list_cidr6.append(rule.Rule("IPCIDR6", cidr))
 logger.info(f"Generated {len(list_cidr6)} domestic IPv6 rules.")
 rule.batch_dump(list_cidr6, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
-                const.PATH_DIST, "domestic_ip6.txt")
+                const.PATH_DIST, "domestic_ip6")
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
@@ -196,13 +196,13 @@ for filename in list_file_custom:
             rule.batch_dump(list_custom_sorted,
                             ["yaml", "surge-compatible", "clash-compatible"],
                             # Classical ruleset doesn't have plain text type.
-                            const.PATH_DIST, filename.name)
+                            const.PATH_DIST, filename.stem)
         elif is_ipcidr:
             rule.batch_dump(list_custom_sorted,
                             ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
-                            const.PATH_DIST, filename.name)
+                            const.PATH_DIST, filename.stem)
         else:
-            rule.batch_dump(list_custom_sorted, const.TARGETS, const.PATH_DIST, filename.name)
+            rule.batch_dump(list_custom_sorted, const.TARGETS, const.PATH_DIST, filename.stem)
         logger.debug(f"Converted {len(list_custom_sorted)} rules.")
 
 # There's no personal classical type ruleset. So no logic about that.
@@ -212,8 +212,8 @@ for filename in list_file_personal:
     set_personal = rule.custom_convert(filename)
     list_personal_sorted = rule.set_to_sorted_list(set_personal)
     rule.batch_dump(list_personal_sorted, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
-                    const.PATH_DIST, "personal/" + filename.name)
-    rule.dump(list_personal_sorted, "geosite", const.PATH_DIST/"geosite"/("personal-" + filename.stem))
+                    const.PATH_DIST/"personal", filename.stem)
+    rule.dump(list_personal_sorted, "geosite", const.PATH_DIST/"geosite", ("personal-" + filename.stem))
     logger.debug(f"Converted {len(list_personal_sorted)} rules.")
 
 END_TIME = time_ns()

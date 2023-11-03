@@ -80,7 +80,7 @@ jobs:
                   "action": "add",
                   "args": {
                     "name": "apns",
-                    "uri": "./dists/yaml/apns.txt"
+                    "uri": "./dists/yaml/apns.yaml"
                   }
                 }
               ],
