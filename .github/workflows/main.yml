@@ -29,11 +29,6 @@ jobs:
         with:
           repository: 'v2fly/domain-list-community'
           path: 'domain-list-community'
-      - name: Pull Loyalsoldier domain-list-custom
-        uses: actions/checkout@v3
-        with:
-          repository: 'Loyalsoldier/domain-list-custom'
-          path: 'tool_geosite'
       - name: Pull Loyalsoldier's geosite tool
         uses: actions/checkout@v3
         with:
@@ -42,15 +37,14 @@ jobs:
       - name: Install Loyalsoldier's geoip tool
         run: go install -v github.com/Loyalsoldier/geoip@latest
       - name: Generate rules
-        run: |
-              python generate.py
+        run: python generate.py
       - name: Generate Geosite DB
         run: |
               cd tool_geosite
-              go run ./ --datapath=../dists/geosite --outputpath=../dists
+              go run ./ --datapath=../dists/geosite --outputpath=../dists --exportlists="" --togfwlist=""
       - name: Generate GeoIP DB
         run: |
-              cat <<EOF
+              cat <<EOF > config.json
               {
               "input": [
                 {
@@ -76,7 +70,7 @@ jobs:
                   "action": "add",
                   "args": {
                     "name": "apns",
-                    "uri": "./dists/clash-compatible/apns.txt"
+                    "uri": "./dists/yaml/apns.txt"
                   }
                 }
               ],
@@ -91,10 +85,14 @@ jobs:
                 }
               ]
               }
-              EOF > config.json
+              EOF
               geoip -c config.json
       - name: Remove tmp files
-        run: rm -rf dists/geosite
+        run: |
+              rm -rf dists/geosite
+              rm dists/gfwlist.txt
+      - name: Generate home page
+        run: python generate_homepage.py
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
