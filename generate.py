@@ -108,6 +108,11 @@ logger.info(f"Imported {len(set_domestic_tlds)} domestic TLDs.")
 set_domestic |= set_domestic_tlds
 set_domestic = rule.apply_patch(set_domestic, "domestic")
 set_domestic = rule.dedup(set_domestic)
+for item in set_domestic.copy():
+    tld_overseas = (".hk", ".kr", ".my", ".sg", ".au", ".tw", ".in", ".ru", ".us", ".fr", ".th", ".id", ".jp")
+    if any([item.Payload.endswith(os_tld) for os_tld in tld_overseas]):
+        set_domestic.remove(item)
+        logger.debug(f"{item} removed for having a overseas TLD.")
 logger.info(f"Generated {len(set_domestic)} domestic rules.")
 
 list_domestic_sorted = rule.set_to_sorted_list(set_domestic)
