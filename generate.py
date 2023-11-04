@@ -101,21 +101,24 @@ src_domestic = set(open(const.PATH_SOURCE_V2FLY/"geolocation-cn", mode="r", enco
 ruleset_domestic = geosite.parse(src_domestic, None, ["!cn"])
 logger.info(f"Imported {len(ruleset_domestic)} domestic rules from v2fly geolocation-cn list.")
 
-# Add all domestic TLDs to domestic rules, then perform deduplication.
-src_domestic_tlds = set(open(const.PATH_SOURCE_V2FLY/"tld-cn", mode="r", encoding="utf-8").read().splitlines())
-ruleset_domestic_tlds = geosite.parse(src_domestic_tlds)
-logger.info(f"Imported {len(ruleset_domestic_tlds)} domestic TLDs.")
-ruleset_domestic |= ruleset_domestic_tlds
-ruleset_domestic = rule.apply_patch(ruleset_domestic, "domestic")
-ruleset_domestic = rule.dedup(ruleset_domestic)
 for item in ruleset_domestic.copy():
     tld_overseas = (".hk", ".kr", ".my", ".sg", ".au", ".tw", ".in", ".ru", ".us", ".fr", ".th", ".id", ".jp")
     if any([item.Payload.endswith(os_tld) for os_tld in tld_overseas]):
         ruleset_domestic.remove(item)
         logger.debug(f"{item} removed for having a overseas TLD.")
-logger.info(f"Generated {len(ruleset_domestic)} domestic rules.")
-
+ruleset_domestic = rule.apply_patch(ruleset_domestic, "domestic")
+ruleset_domestic = rule.dedup(ruleset_domestic)
 ruleset_domestic.sort()
+# Surge ignores eTLDs in the domain set. So it needs a not-optimised version.
+rule.batch_dump(ruleset_domestic, ["text"], const.PATH_DIST, "domestic_withcntld")
+
+# Add all domestic TLDs to domestic rules, then perform deduplication.
+src_domestic_tlds = set(open(const.PATH_SOURCE_V2FLY/"tld-cn", mode="r", encoding="utf-8").read().splitlines())
+ruleset_domestic_tlds = geosite.parse(src_domestic_tlds)
+logger.info(f"Imported {len(ruleset_domestic_tlds)} domestic TLDs.")
+ruleset_domestic |= ruleset_domestic_tlds
+ruleset_domestic = rule.dedup(ruleset_domestic)
+logger.info(f"Generated {len(ruleset_domestic)} domestic rules.")
 rule.batch_dump(ruleset_domestic, const.TARGETS, const.PATH_DIST, "domestic")
 
 END_TIME = time_ns()
