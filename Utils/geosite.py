@@ -3,10 +3,10 @@ import logging
 from . import const, rule
 
 
-def parse(src: set, excluded_imports=None, excluded_tags=None) -> set:
+def parse(src: set, excluded_imports=None, excluded_tags=None) -> rule.RuleSet:
     excluded_imports = [] if not excluded_imports else excluded_imports
     excluded_tags = [] if not excluded_tags else excluded_tags
-    set_parsed = set()
+    ruleset_parsed = rule.RuleSet("DOMAIN", [])
     for raw_line in src:
         line = raw_line.split("#")[0].strip()
         if not line:
@@ -30,7 +30,7 @@ def parse(src: set, excluded_imports=None, excluded_tags=None) -> set:
                 logging.debug(f'Line "{raw_line}" is a import rule. Start importing "{name_import}".')
                 src_import = set(
                     open(const.PATH_SOURCE_V2FLY/name_import, mode="r", encoding="utf-8").read().splitlines())
-                set_parsed |= parse(src_import, excluded_imports, excluded_tags)
+                ruleset_parsed |= parse(src_import, excluded_imports, excluded_tags)
                 logging.debug(f'Imported "{name_import}".')
                 continue
             else:
@@ -39,9 +39,9 @@ def parse(src: set, excluded_imports=None, excluded_tags=None) -> set:
         else:
             logging.debug(f'Unsupported rule: "{raw_line}", skipped.')
             continue
-        set_parsed.add(parsed_rule)
+        ruleset_parsed.add(parsed_rule)
         logging.debug(f'Line "{raw_line}" is parsed: {parsed_rule}')
-    return set_parsed
+    return ruleset_parsed
 
 
 def batch_convert(categories: list, tools: list, exclusions=None) -> None:
@@ -49,6 +49,5 @@ def batch_convert(categories: list, tools: list, exclusions=None) -> None:
     for tool in tools:
         for category in categories:
             src_geosite = set(open(const.PATH_SOURCE_V2FLY/category, mode="r", encoding="utf-8").read().splitlines())
-            set_geosite = parse(src_geosite, exclusions)
-            list_geosite_sorted = rule.set_to_sorted_list(set_geosite)
-            rule.dump(list_geosite_sorted, tool, const.PATH_DIST/tool, category)
+            ruleset_geosite = parse(src_geosite, exclusions)
+            rule.dump(ruleset_geosite, tool, const.PATH_DIST/tool, category)

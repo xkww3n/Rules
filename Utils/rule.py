@@ -1,3 +1,4 @@
+import copy
 import logging
 from pathlib import Path
 
@@ -30,27 +31,66 @@ class Rule:
             "." + self.Payload if self.Type == "DomainSuffix" else self.Payload)
 
 
-def custom_convert(src: Path) -> set:
+class RuleSet:
+    Type: str # DOMAIN / IP / CLASSIC
+    Payload: list[Rule]
+
+    def __init__(self, ruleset_type: str, payload: list):
+        self.Type = ruleset_type
+        self.Payload = payload
+
+    def __hash__(self):
+        return hash("type" + self.Type) + hash(self.Payload)
+
+    def __eq__(self, other):
+        return self.Type == other.Type and self.Payload == other.Payload
+
+    def __len__(self):
+        return len(self.Payload)
+
+    def __or__(self, other):
+        for rule in other.Payload:
+            if rule not in self.Payload:
+                self.Payload.append(rule)
+        return self
+
+    def __contains__(self, item):
+        return item in self.Payload
+
+    def __iter__(self):
+        return iter(self.Payload)
+
+    def copy(self):
+        return copy.copy(self)
+
+    def add(self, rule):
+        self.Payload.append(rule)
+
+    def remove(self, rule):
+        self.Payload.remove(rule)
+
+
+def custom_convert(src: Path) -> RuleSet:
     src_custom = open(src, mode="r", encoding="utf-8").read().splitlines()
-    set_converted = set()
     try:
         rule_type = src_custom[0].split("#@@TYPE:")[1]
     except IndexError:
         logging.warning(f"File {src} doesn't have a valid type header, treat as domain type.")
         rule_type = "DOMAIN"
+    ruleset_converted = RuleSet(rule_type, [])
     for line in src_custom:
         if rule_type == "DOMAIN":
             if line.startswith("."):
-                set_converted.add(Rule("DomainSuffix", line.strip(".")))
+                ruleset_converted.add(Rule("DomainSuffix", line.strip(".")))
             elif line and not line.startswith("#"):
-                set_converted.add(Rule("DomainFull", line))
+                ruleset_converted.add(Rule("DomainFull", line))
         elif rule_type == "IP":
             if line and not line.startswith("#"):
-                set_converted.add(Rule("IPCIDR", line))
+                ruleset_converted.add(Rule("IPCIDR", line))
         elif rule_type == "CLASSIC":
             if line and not line.startswith("#"):
-                set_converted.add(Rule("Classic", line))
-    return set_converted
+                ruleset_converted.add(Rule("Classic", line))
+    return ruleset_converted
 
 
 def is_ipaddr(addr: str) -> bool:
@@ -82,13 +122,19 @@ def is_domain(rule: Filter) -> bool:
         return False
 
 
-def dump(src: list, target: str, dst: Path, filename: str) -> None:
+def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
     try:
         if target == "yaml":
             filename = filename + ".yaml"
         elif target == "geosite":
+            if src.Type == "IP" or src.Type == "CLASSIC":
+                logging.debug(f"{src.Type}-type ruleset can't be exported to GeoSite source, ignored.")
+                return
             filename = filename
         else:
+            if "text" in target and src.Type == "CLASSIC":
+                logging.debug("CLASSIC-type ruleset doesn't need to exported as plain text, skipped.")
+                return
             filename = filename + ".txt"
         dist = open(dst/filename, mode="w", encoding="utf-8")
     except FileNotFoundError:
@@ -165,18 +211,19 @@ def dump(src: list, target: str, dst: Path, filename: str) -> None:
                             )
 
 
-def batch_dump(src: list, targets: list, dst_path: Path, filename: str) -> None:
+def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> None:
     for target in targets:
         dump(src, target, dst_path/target, filename)
 
 
-def set_to_sorted_list(src: set) -> list:
+def set_to_ruleset(ruleset_type: str, src: set) -> RuleSet:
     list_sorted = [item for item in src]
     list_sorted.sort(key=lambda item: str(item))
-    return list_sorted
+    ruleset = RuleSet(ruleset_type, list_sorted)
+    return ruleset
 
 
-def apply_patch(src: set, name: str) -> set:
+def apply_patch(src: RuleSet, name: str) -> RuleSet:
     try:
         patch = open(const.PATH_SOURCE_PATCH/(name + ".txt"), mode="r").read().splitlines()
     except FileNotFoundError:
@@ -211,16 +258,16 @@ def apply_patch(src: set, name: str) -> set:
     return src
 
 
-def dedup(src: set):
+def dedup(src: RuleSet) -> RuleSet:
     list_length_sorted = [item for item in src]
     list_length_sorted.sort(key=lambda item: len(str(item)))
-    set_unique = set()
+    ruleset_unique = RuleSet(src.Type, [])
     for item in list_length_sorted:
         flag_unique = True
-        for added in set_unique:
+        for added in ruleset_unique:
             if added.includes(item):
                 flag_unique = False
                 logging.debug(f"{item} is removed as duplicated with {added}.")
         if flag_unique:
-            set_unique.add(item)
-    return set_unique
+            ruleset_unique.add(item)
+    return ruleset_unique
