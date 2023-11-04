@@ -7,9 +7,9 @@
 - 纯文本规则集（Surge 标准，点号通配符）
   - 适用于 [Surge](https://nssurge.com/)（v3 及更新的版本）、[Stash](https://stash.ws/) 和 [Surfboard](https://getsurfboard.com)。
 - 纯文本规则集（Clash 标准，加号通配符）
-  - 适用于 [Clash Premium](https://dreamacro.github.io/clash/premium/introduction.html)（2023.04.13 及更新的版本）和 [Clash Meta](https://github.com/MetaCubeX/Clash.Meta/)（v1.14.4 及更新的版本）。
+  - 适用于 Clash Premium（2023.04.13 及更新的版本）和 Clash Meta（v1.14.4 及更新的版本）。
 - YAML 规则集
-  - 适用于 [Clash Premium](https://dreamacro.github.io/clash/premium/introduction.html)、[Clash Meta](https://github.com/MetaCubeX/Clash.Meta/)、[Stash](https://stash.ws/) 和 [Choc](https://apps.apple.com/us/app/choc/id1582542227)。
+  - 适用于 Clash Premium、Clash Meta 和 [Stash](https://stash.ws/)。
 - Clash 传统规则集
   - 适用于兼容传统 Clash 规则的代理软件，如 [Quantumult](https://quantumult.app/) [(X)](https://quantumult.app/x/)。
 - Surge 传统规则集
