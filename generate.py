@@ -84,6 +84,9 @@ ruleset_exclusions = rule.apply_patch(ruleset_exclusions, "exclude")
 logger.info(f"Generated {len(ruleset_rejections)} reject rules.")
 logger.info(f"Generated {len(ruleset_exclusions)} exclude rules.")
 
+ruleset_rejections.sort()
+ruleset_exclusions.sort()
+
 rule.batch_dump(ruleset_rejections, const.TARGETS, const.PATH_DIST, "reject")
 rule.batch_dump(ruleset_exclusions, const.TARGETS, const.PATH_DIST, "exclude")
 
@@ -112,6 +115,7 @@ for item in ruleset_domestic.copy():
         logger.debug(f"{item} removed for having a overseas TLD.")
 logger.info(f"Generated {len(ruleset_domestic)} domestic rules.")
 
+ruleset_domestic.sort()
 rule.batch_dump(ruleset_domestic, const.TARGETS, const.PATH_DIST, "domestic")
 
 END_TIME = time_ns()
@@ -126,6 +130,8 @@ for line in src_cidr:
     if not line.startswith("#"):
         ruleset_cidr.add(rule.Rule("IPCIDR", line))
 logger.info(f"Generated {len(ruleset_cidr)} domestic IPv4 rules.")
+
+ruleset_cidr.sort()
 rule.batch_dump(ruleset_cidr, const.TARGETS, const.PATH_DIST, "domestic_ip")
 
 src_cidr6 = connection.get(const.URL_CHNROUTES_V6).text.splitlines()
@@ -139,7 +145,10 @@ ruleset_cidr6 = rule.RuleSet("IP", [])
 for cidr in list_cidr6_raw:
     ruleset_cidr6.add(rule.Rule("IPCIDR6", cidr))
 logger.info(f"Generated {len(ruleset_cidr6)} domestic IPv6 rules.")
+
+ruleset_cidr6.sort()
 rule.batch_dump(ruleset_cidr6, const.TARGETS, const.PATH_DIST, "domestic_ip6")
+
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
@@ -175,6 +184,7 @@ for filename in list_file_custom:
     if filename.is_file():
         logger.debug(f'Start converting "{filename.name}".')
         ruleset_custom = rule.custom_convert(filename)
+        ruleset_custom.sort()
         rule.batch_dump(ruleset_custom, const.TARGETS, const.PATH_DIST, filename.stem)
         logger.debug(f"Converted {len(ruleset_custom)} rules.")
 
@@ -183,6 +193,7 @@ list_file_personal = Path.iterdir(const.PATH_SOURCE_CUSTOM/"personal")
 for filename in list_file_personal:
     logger.debug(f'Start converting "{filename.name}".')
     ruleset_personal = rule.custom_convert(filename)
+    ruleset_personal.sort()
     rule.batch_dump(ruleset_personal, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
                     const.PATH_DIST/"personal", filename.stem)
     rule.dump(ruleset_personal, "geosite", const.PATH_DIST/"geosite", ("personal-" + filename.stem))

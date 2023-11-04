@@ -50,4 +50,5 @@ def batch_convert(categories: list, tools: list, exclusions=None) -> None:
         for category in categories:
             src_geosite = set(open(const.PATH_SOURCE_V2FLY/category, mode="r", encoding="utf-8").read().splitlines())
             ruleset_geosite = parse(src_geosite, exclusions)
+            ruleset_geosite.sort()
             rule.dump(ruleset_geosite, tool, const.PATH_DIST/tool, category)

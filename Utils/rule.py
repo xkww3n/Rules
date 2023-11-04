@@ -32,7 +32,7 @@ class Rule:
 
 
 class RuleSet:
-    Type: str # DOMAIN / IP / CLASSIC
+    Type: str  # DOMAIN / IP / CLASSIC
     Payload: list[Rule]
 
     def __init__(self, ruleset_type: str, payload: list):
@@ -68,6 +68,9 @@ class RuleSet:
 
     def remove(self, rule):
         self.Payload.remove(rule)
+
+    def sort(self):
+        self.Payload.sort(key=lambda item: str(item))
 
 
 def custom_convert(src: Path) -> RuleSet:
@@ -214,13 +217,6 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
 def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> None:
     for target in targets:
         dump(src, target, dst_path/target, filename)
-
-
-def set_to_ruleset(ruleset_type: str, src: set) -> RuleSet:
-    list_sorted = [item for item in src]
-    list_sorted.sort(key=lambda item: str(item))
-    ruleset = RuleSet(ruleset_type, list_sorted)
-    return ruleset
 
 
 def apply_patch(src: RuleSet, name: str) -> RuleSet:
