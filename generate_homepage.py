@@ -41,6 +41,8 @@ for filename in sorted(const.PATH_DIST.rglob("*")):
     if filename.is_file() and filename.parent.name not in blacklist:
         if filename.parent.name == "dists":
             dists_list.append(f"{filename.name}")
+        elif "personal" in str(filename):
+            pass
         else:
             dists_list.append(f"{filename.parent.name}/{filename.name}")
 open(const.PATH_DIST/"index.html", mode='w').write(template(dists_list))
