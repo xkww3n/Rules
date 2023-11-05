@@ -1,21 +1,25 @@
-from copy import copy
 import logging
+from copy import copy
+from ipaddress import ip_network
 from pathlib import Path
-
-from abp.filters.parser import Filter
 
 from . import const
 
 
 class Rule:
-    Type: str
+    Type: str  # DomainSuffix / DomainFull / IPCIDR / IPCIDR6 / Classic
     Payload: str
     Tag: str
 
-    def __init__(self, content_type: str = "", payload: str = "", tag: str = ""):
-        self.Type = content_type  # DomainSuffix / DomainFull / IPCIDR / IPCIDR6 / Classic
-        self.Payload = payload
-        self.Tag = tag
+    def __init__(self, rule_type: str = "", payload: str = "", tag: str = ""):
+        if rule_type or payload:
+            self.set_type(rule_type)
+            self.set_payload(payload)
+            self.set_tag(tag)
+        else:
+            self.Type = ""
+            self.Payload = ""
+            self.Tag = tag
 
     def __str__(self):
         return f'Type: "{self.Type}", Payload: "{self.Payload}", Tag: {self.Tag if self.Tag else "NONE"}'
@@ -25,6 +29,26 @@ class Rule:
 
     def __eq__(self, other):
         return self.Type == other.Type and self.Payload == other.Payload
+
+    def set_type(self, rule_type: str):
+        allowed_type = ("DomainSuffix", "DomainFull", "IPCIDR", "IPCIDR6", "Classic")
+        if rule_type not in allowed_type:
+            raise TypeError(f"Unsupported type: {rule_type}")
+        self.Type = rule_type
+
+    def set_payload(self, payload: str):
+        if "Domain" in self.Type:
+            if not is_domain(payload):
+                raise ValueError(f"Invalid domain: {payload}")
+        elif "IP" in self.Type:
+            try:
+                ip_network(payload)
+            except ValueError:
+                raise ValueError(f"Invalid IP address: {payload}")
+        self.Payload = payload
+
+    def set_tag(self, tag: str = ""):
+        self.Tag = tag
 
     def includes(self, other):
         if self.Type == "DomainSuffix":
@@ -112,21 +136,14 @@ def is_ipaddr(addr: str) -> bool:
     return True
 
 
-def is_domain(rule: Filter) -> bool:
+def is_domain(addr: str) -> bool:
     blacklist_include = ("/", "*", "=", "~", "?", "#", ",", ":", " ", "(", ")", "[", "]", "_")
-    if (
-            rule.type == "filter"
-            and rule.selector["type"] == "url-pattern"
-            and "." in rule.text
-            and not any([bl_char in rule.text for bl_char in blacklist_include])
-            and not rule.text.startswith("-")
-            and not rule.text.endswith(".")
-            and not rule.options
-            and not is_ipaddr(rule.text.strip("||").strip("^"))
-    ):
-        return True
-    else:
+    if (any([bl_char in addr for bl_char in blacklist_include])
+            or addr.startswith("-")
+            or addr.endswith(".")
+            or is_ipaddr(addr)):
         return False
+    return True
 
 
 def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:

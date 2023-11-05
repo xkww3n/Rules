@@ -13,17 +13,17 @@ def parse(src: set, excluded_imports=None, excluded_tags=None) -> rule.RuleSet:
             continue
         parsed_rule = rule.Rule()
         if "@" in line:
-            parsed_rule.Tag = line.split("@")[1]
+            parsed_rule.set_tag(line.split("@")[1])
             if parsed_rule.Tag in excluded_tags:
                 logging.debug(f'Line "{raw_line}" has a excluded tag "{parsed_rule.Tag}", skipped.')
                 continue
             line = line.split(" @")[0]
         if ":" not in line:
-            parsed_rule.Type = "DomainSuffix"
-            parsed_rule.Payload = line
+            parsed_rule.set_type("DomainSuffix")
+            parsed_rule.set_payload(line)
         elif line.startswith("full:"):
-            parsed_rule.Type = "DomainFull"
-            parsed_rule.Payload = line.strip("full:")
+            parsed_rule.set_type("DomainFull")
+            parsed_rule.set_payload(line.strip("full:"))
         elif line.startswith("include:"):
             name_import = line.split("include:")[1]
             if name_import not in excluded_imports:
