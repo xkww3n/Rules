@@ -48,6 +48,13 @@ jobs:
           path: 'tool_sing-geosite'
       - name: Generate rules
         run: python generate.py
+      - name: Download MaxMind GeoLite2 Country DB
+        env:
+          MAXMIND_KEY: ${{ secrets.MAXMIND_KEY }}
+        run: |
+              wget -O ./GeoLite2-Country.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=${MAXMIND_KEY}&suffix=tar.gz"
+              tar xzvf ./GeoLite2-Country.tar.gz
+              cp ./GeoLite2-Country_*/GeoLite2-Country.mmdb ./
       - name: Generate Geosite DB
         run: |
               cd tool_geosite
@@ -62,11 +69,18 @@ jobs:
                   "action": "add"
                 },
                 {
-                  "type": "text",
+                  "type": "maxmindMMDB",
                   "action": "add",
                   "args": {
-                    "name": "telegram",
-                    "uri": "https://core.telegram.org/resources/cidr.txt"
+                    "uri": "./GeoLite2-Country.mmdb"
+                  }
+                },
+                {
+                  "type": "cutter",
+                  "action": "remove",
+                  "args": {
+                    "wantedList": ["cn"],
+                    "onlyIPType": "ipv4"
                   }
                 },
                 {
@@ -85,6 +99,14 @@ jobs:
                     "name": "cn",
                     "uri": "./dists/text/domestic_ip6.txt",
                     "onlyIPType": "ipv6"
+                  }
+                },
+                {
+                  "type": "text",
+                  "action": "add",
+                  "args": {
+                    "name": "telegram",
+                    "uri": "https://core.telegram.org/resources/cidr.txt"
                   }
                 },
                 {
