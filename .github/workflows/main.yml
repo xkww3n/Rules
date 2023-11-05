@@ -132,7 +132,13 @@ jobs:
                   "action": "output",
                   "args": {
                     "outputName": "geoip.mmdb",
-                    "outputDir": "./dists"
+                    "outputDir": "./dists",
+                    "overwriteList": [
+                      "cn",
+                      "private",
+                      "telegram",
+                      "apns"
+                    ]
                   }
                 }
               ]
