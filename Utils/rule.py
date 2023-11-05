@@ -1,4 +1,4 @@
-import copy
+from copy import copy
 import logging
 from pathlib import Path
 
@@ -27,8 +27,12 @@ class Rule:
         return self.Type == other.Type and self.Payload == other.Payload
 
     def includes(self, other):
-        return ("." + other.Payload if other.Type == "DomainSuffix" else other.Payload).endswith(
-            "." + self.Payload if self.Type == "DomainSuffix" else self.Payload)
+        if self.Type == "DomainSuffix":
+            if self.Payload == other.Payload:
+                return True
+            return other.Payload.endswith("." + self.Payload)
+        elif self.Type == "DomainFull":
+            return self == other
 
 
 class RuleSet:
@@ -61,7 +65,7 @@ class RuleSet:
         return iter(self.Payload)
 
     def copy(self):
-        return copy.copy(self)
+        return copy(self)
 
     def add(self, rule):
         self.Payload.append(rule)
