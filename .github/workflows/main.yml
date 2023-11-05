@@ -58,6 +58,18 @@ jobs:
               {
               "input": [
                 {
+                  "type": "private",
+                  "action": "add"
+                },
+                {
+                  "type": "text",
+                  "action": "add",
+                  "args": {
+                    "name": "telegram",
+                    "uri": "https://core.telegram.org/resources/cidr.txt"
+                  }
+                },
+                {
                   "type": "text",
                   "action": "add",
                   "args": {
