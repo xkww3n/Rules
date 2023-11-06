@@ -32,9 +32,9 @@ ruleset_rejections = rule.RuleSet("DOMAIN", [])
 ruleset_exclusions_raw = rule.RuleSet("DOMAIN", [])
 
 for line in parse_filterlist(src_rejections):
-    if not line.type == "filter":
+    if not line.type == "filter" or line.options:
         continue
-    line_stripped = line.text.strip("|").strip("^").strip("@")
+    line_stripped = line.text.strip("@").strip("|").strip("^")
     if line.selector["type"] == "url-pattern" and rule.is_domain(line_stripped):
         if line.action == "block":
             if line.text.startswith("."):
@@ -42,7 +42,7 @@ for line in parse_filterlist(src_rejections):
                 ruleset_rejections.add(rule_reject)
                 logger.debug(f'Line "{line.text}" is added to reject set. {rule_reject}.')
             else:
-                rule_reject = rule.Rule("DomainSuffix", line.text.strip("||").strip("^"))
+                rule_reject = rule.Rule("DomainSuffix", line.text.strip("|").strip("^"))
                 ruleset_rejections.add(rule_reject)
                 logger.debug(
                     f'Line "{line.text}" is added to reject set. "{rule_reject}".'
@@ -52,9 +52,9 @@ for line in parse_filterlist(src_rejections):
             logger.debug(f'Line "{line.text}" is added to exclude set.')
 
 for line in parse_filterlist(src_exclusions):
-    if not line.type == "filter":
+    if not line.type == "filter" or line.options:
         continue
-    line_stripped = line.text.strip("|").strip("^").strip("@")
+    line_stripped = line.text.strip("@").strip("|").strip("^")
     if rule.is_domain(line_stripped):
         rule_exclude = rule.Rule("DomainFull", line_stripped)
         ruleset_exclusions_raw.add(rule_exclude)
