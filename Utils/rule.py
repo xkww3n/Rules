@@ -1,5 +1,5 @@
 import logging
-from copy import copy
+from copy import deepcopy
 from ipaddress import ip_network
 from pathlib import Path
 
@@ -68,7 +68,7 @@ class RuleSet:
         self.Payload = payload
 
     def __hash__(self):
-        return hash("type" + self.Type) + hash(self.Payload)
+        return hash(self.Type) + hash(self.Payload)
 
     def __eq__(self, other):
         return self.Type == other.Type and self.Payload == other.Payload
@@ -88,8 +88,8 @@ class RuleSet:
     def __iter__(self):
         return iter(self.Payload)
 
-    def copy(self):
-        return copy(self)
+    def deepcopy(self):
+        return deepcopy(self)
 
     def add(self, rule):
         self.Payload.append(rule)
@@ -98,7 +98,29 @@ class RuleSet:
         self.Payload.remove(rule)
 
     def sort(self):
-        self.Payload.sort(key=lambda item: str(item))
+        def sort_key(item):
+            match item.Type:
+                case "DomainSuffix":
+                    sortkey = (0, len(item.Payload), item.Payload)
+                case "DomainFull":
+                    sortkey = (1, len(item.Payload), item.Payload)
+                case _:
+                    sortkey = item.Payload
+            return sortkey
+        self.Payload.sort(key=sort_key)
+
+    def dedup(self):
+        self.sort()
+        list_unique = []
+        for item in self:
+            flag_unique = True
+            for added in list_unique:
+                if added.includes(item):
+                    flag_unique = False
+                    logging.debug(f"{item} is removed as duplicated with {added}.")
+            if flag_unique:
+                list_unique.append(item)
+        self.Payload = list_unique
 
 
 def custom_convert(src: Path) -> RuleSet:
@@ -124,7 +146,7 @@ def custom_convert(src: Path) -> RuleSet:
     return ruleset_converted
 
 
-def is_ipaddr(addr: str) -> bool:
+def is_ipv4addr(addr: str) -> bool:
     if addr.count(".") != 3:
         return False
     for part in addr.split("."):
@@ -141,7 +163,8 @@ def is_domain(addr: str) -> bool:
     if (any([bl_char in addr for bl_char in blacklist_include])
             or addr.startswith("-")
             or addr.endswith(".")
-            or is_ipaddr(addr)):
+            or addr.endswith("-")
+            or is_ipv4addr(addr)):
         return False
     return True
 
@@ -273,18 +296,3 @@ def apply_patch(src: RuleSet, name: str) -> RuleSet:
                 logging.warning(f"Not found: {rule}")
     logging.info(f'Patch "{name + ".txt"}" applied.')
     return src
-
-
-def dedup(src: RuleSet) -> RuleSet:
-    list_length_sorted = [item for item in src]
-    list_length_sorted.sort(key=lambda item: len(str(item)))
-    ruleset_unique = RuleSet(src.Type, [])
-    for item in list_length_sorted:
-        flag_unique = True
-        for added in ruleset_unique:
-            if added.includes(item):
-                flag_unique = False
-                logging.debug(f"{item} is removed as duplicated with {added}.")
-        if flag_unique:
-            ruleset_unique.add(item)
-    return ruleset_unique

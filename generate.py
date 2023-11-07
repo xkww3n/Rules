@@ -32,10 +32,13 @@ ruleset_rejections = rule.RuleSet("DOMAIN", [])
 ruleset_exclusions_raw = rule.RuleSet("DOMAIN", [])
 
 for line in parse_filterlist(src_rejections):
-    if not line.type == "filter" or line.options:
+    if (not line.type == "filter"
+            or line.options
+            or line.text.startswith("^")
+            or not line.selector["type"] == "url-pattern"):
         continue
     line_stripped = line.text.strip("@").strip("|").strip("^")
-    if line.selector["type"] == "url-pattern" and rule.is_domain(line_stripped):
+    if rule.is_domain(line_stripped):
         if line.action == "block":
             if line.text.startswith("."):
                 rule_reject = rule.Rule("DomainSuffix", line.text.strip(".").strip("^"))
@@ -52,7 +55,10 @@ for line in parse_filterlist(src_rejections):
             logger.debug(f'Line "{line.text}" is added to exclude set.')
 
 for line in parse_filterlist(src_exclusions):
-    if not line.type == "filter" or line.options:
+    if (not line.type == "filter"
+            or line.options
+            or line.text.startswith("^")
+            or not line.selector["type"] == "url-pattern"):
         continue
     line_stripped = line.text.strip("@").strip("|").strip("^")
     if rule.is_domain(line_stripped):
@@ -68,9 +74,9 @@ logger.info(f"Imported {(len(ruleset_rejections_v2fly))} reject rules from v2fly
 
 ruleset_exclusions = rule.RuleSet("DOMAIN", [])
 logger.debug("Start deduplicating reject and exclude set.")
-ruleset_rejections = rule.dedup(ruleset_rejections)
-for domain_exclude in ruleset_exclusions_raw.copy():
-    for domain_reject in ruleset_rejections.copy():
+ruleset_rejections.dedup()
+for domain_exclude in ruleset_exclusions_raw.deepcopy():
+    for domain_reject in ruleset_rejections.deepcopy():
         if (domain_reject.Payload == domain_exclude.Payload and domain_reject.Type == domain_exclude.Type) \
                 or (domain_reject.Payload == domain_exclude.Payload and
                     domain_reject.Type == "DomainFull" and domain_exclude.Type == "DomainSuffix"):
@@ -89,10 +95,6 @@ ruleset_exclusions = rule.apply_patch(ruleset_exclusions, "exclude")
 
 logger.info(f"Generated {len(ruleset_rejections)} reject rules.")
 logger.info(f"Generated {len(ruleset_exclusions)} exclude rules.")
-
-ruleset_rejections.sort()
-ruleset_exclusions.sort()
-
 rule.batch_dump(ruleset_rejections, const.TARGETS, const.PATH_DIST, "reject")
 rule.batch_dump(ruleset_exclusions, const.TARGETS, const.PATH_DIST, "exclude")
 
@@ -107,14 +109,14 @@ src_domestic = set(open(const.PATH_SOURCE_V2FLY/"geolocation-cn", mode="r", enco
 ruleset_domestic = geosite.parse(src_domestic, None, ["!cn"])
 logger.info(f"Imported {len(ruleset_domestic)} domestic rules from v2fly geolocation-cn list.")
 
-for item in ruleset_domestic.copy():
+for item in ruleset_domestic.deepcopy():
     tld_overseas = (".hk", ".kr", ".my", ".sg", ".au", ".tw", ".in", ".ru", ".us", ".fr", ".th", ".id", ".jp")
     if any([item.Payload.endswith(os_tld) for os_tld in tld_overseas]):
         ruleset_domestic.remove(item)
         logger.debug(f"{item} removed for having a overseas TLD.")
 ruleset_domestic = rule.apply_patch(ruleset_domestic, "domestic")
-ruleset_domestic = rule.dedup(ruleset_domestic)
-ruleset_domestic.sort()
+ruleset_domestic.dedup()
+
 # Surge ignores eTLDs in the domain set. So it needs a not-optimised version.
 rule.batch_dump(ruleset_domestic, ["text"], const.PATH_DIST, "domestic_withcntld")
 
@@ -123,7 +125,7 @@ src_domestic_tlds = set(open(const.PATH_SOURCE_V2FLY/"tld-cn", mode="r", encodin
 ruleset_domestic_tlds = geosite.parse(src_domestic_tlds)
 logger.info(f"Imported {len(ruleset_domestic_tlds)} domestic TLDs.")
 ruleset_domestic |= ruleset_domestic_tlds
-ruleset_domestic = rule.dedup(ruleset_domestic)
+ruleset_domestic.dedup()
 logger.info(f"Generated {len(ruleset_domestic)} domestic rules.")
 rule.batch_dump(ruleset_domestic, const.TARGETS, const.PATH_DIST, "domestic")
 
