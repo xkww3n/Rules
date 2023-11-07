@@ -1,0 +1,4 @@
+#@@TYPE:DOMAIN
+.example.com
+example.com
+# comment

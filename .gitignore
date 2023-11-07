@@ -3,3 +3,5 @@ domain-list-community/
 .vscode/
 **/__pycache__/
 .idea/
+**/.pytest_cache
+venv/

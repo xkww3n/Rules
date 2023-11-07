@@ -1,0 +1,3 @@
+#@@TYPE:CLASSIC
+DOMAIN,example.com
+# comment

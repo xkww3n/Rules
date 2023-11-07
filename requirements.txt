@@ -2,6 +2,7 @@ aggregate6==1.0.12
 charset-normalizer==3.2.0
 idna==3.4
 py-radix==0.10.0
+pytest==7.4.3
 python-abp==0.2.0
 requests==2.31.0
 urllib3==2.0.4
