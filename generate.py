@@ -28,8 +28,8 @@ for url in const.LIST_EXCL_URL:
 
 logger.info(f"Imported {len(src_exclusions)} lines of exclude rules from defined sources.")
 
-ruleset_rejections = rule.RuleSet("DOMAIN", [])
-ruleset_exclusions_raw = rule.RuleSet("DOMAIN", [])
+ruleset_rejections = rule.RuleSet("Domain", [])
+ruleset_exclusions_raw = rule.RuleSet("Domain", [])
 
 for line in parse_filterlist(src_rejections):
     if (not line.type == "filter"
@@ -72,7 +72,7 @@ ruleset_rejections_v2fly = geosite.parse(src_rejections_v2fly)
 ruleset_rejections |= ruleset_rejections_v2fly
 logger.info(f"Imported {(len(ruleset_rejections_v2fly))} reject rules from v2fly category-ads-all list.")
 
-ruleset_exclusions = rule.RuleSet("DOMAIN", [])
+ruleset_exclusions = rule.RuleSet("Domain", [])
 logger.debug("Start deduplicating reject and exclude set.")
 ruleset_rejections.dedup()
 for domain_exclude in ruleset_exclusions_raw.deepcopy():
@@ -136,7 +136,7 @@ logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f'
 logger.info("Start converting domestic CIDR rules.")
 START_TIME = time_ns()
 src_cidr = connection.get(const.URL_CHNROUTES2).text.splitlines()
-ruleset_cidr = rule.RuleSet("IP", [])
+ruleset_cidr = rule.RuleSet("IPCIDR", [])
 for line in src_cidr:
     if not line.startswith("#"):
         ruleset_cidr.add(rule.Rule("IPCIDR", line))
@@ -152,7 +152,7 @@ for line in src_cidr6:
         parts = line.split("|")
         list_cidr6_raw.append(f"{parts[3]}/{parts[4]}")
 list_cidr6_raw = aggregate(list_cidr6_raw)
-ruleset_cidr6 = rule.RuleSet("IP", [])
+ruleset_cidr6 = rule.RuleSet("IPCIDR", [])
 for cidr in list_cidr6_raw:
     ruleset_cidr6.add(rule.Rule("IPCIDR6", cidr))
 logger.info(f"Generated {len(ruleset_cidr6)} domestic IPv6 rules.")

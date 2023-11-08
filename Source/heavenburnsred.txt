@@ -1,2 +1,2 @@
-#@@TYPE:DOMAIN
+#@Domain
 api.heaven-burns-red.wfs.games

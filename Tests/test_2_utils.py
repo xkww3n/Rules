@@ -26,14 +26,14 @@ class Tests:
     def test_custom_convert(self):
         test_src_path = Path("./src/")
         test_conv_ruleset = rule.custom_convert(test_src_path/"custom_domain.txt")
-        assert test_conv_ruleset == rule.RuleSet("DOMAIN",
+        assert test_conv_ruleset == rule.RuleSet("Domain",
                                                  [rule.Rule("DomainSuffix", "example.com"),
                                                   rule.Rule("DomainFull", "example.com")])
 
         test_conv_ruleset = rule.custom_convert(test_src_path/"custom_ip.txt")
-        assert test_conv_ruleset == rule.RuleSet("IP",
+        assert test_conv_ruleset == rule.RuleSet("IPCIDR",
                                                  [rule.Rule("IPCIDR", "11.4.5.14"),])
 
         test_conv_ruleset = rule.custom_convert(test_src_path/"custom_classic.txt")
-        assert test_conv_ruleset == rule.RuleSet("CLASSIC",
-                                                 [rule.Rule("Classic", "DOMAIN,example.com")])
+        assert test_conv_ruleset == rule.RuleSet("Classical",
+                                                 [rule.Rule("Classical", "DOMAIN,example.com")])

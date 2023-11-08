@@ -1,2 +1,2 @@
-#@@TYPE:DOMAIN
+#@Domain
 api.star.craftegg.jp

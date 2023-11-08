@@ -6,7 +6,7 @@ from . import const, rule
 def parse(src: set, excluded_imports=None, excluded_tags=None) -> rule.RuleSet:
     excluded_imports = [] if not excluded_imports else excluded_imports
     excluded_tags = [] if not excluded_tags else excluded_tags
-    ruleset_parsed = rule.RuleSet("DOMAIN", [])
+    ruleset_parsed = rule.RuleSet("Domain", [])
     for raw_line in src:
         line = raw_line.split("#")[0].strip()
         if not line:

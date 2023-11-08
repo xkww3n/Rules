@@ -1,4 +1,4 @@
-#@@TYPE:DOMAIN
+#@Domain
 .example.com
 example.com
 # comment

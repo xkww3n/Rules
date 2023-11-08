@@ -7,7 +7,7 @@ from . import const
 
 
 class Rule:
-    Type: str  # DomainSuffix / DomainFull / IPCIDR / IPCIDR6 / Classic
+    Type: str  # DomainSuffix / DomainFull / IPCIDR / IPCIDR6 / Classical
     Payload: str
     Tag: str
 
@@ -31,7 +31,7 @@ class Rule:
         return self.Type == other.Type and self.Payload == other.Payload
 
     def set_type(self, rule_type: str):
-        allowed_type = ("DomainSuffix", "DomainFull", "IPCIDR", "IPCIDR6", "Classic")
+        allowed_type = ("DomainSuffix", "DomainFull", "IPCIDR", "IPCIDR6", "Classical")
         if rule_type not in allowed_type:
             raise TypeError(f"Unsupported type: {rule_type}")
         self.Type = rule_type
@@ -60,12 +60,16 @@ class Rule:
 
 
 class RuleSet:
-    Type: str  # DOMAIN / IP / CLASSIC
+    Type: str  # Domain / IP CIDR/ Classical
     Payload: list[Rule]
 
     def __init__(self, ruleset_type: str, payload: list):
-        self.Type = ruleset_type
-        self.Payload = payload
+        if ruleset_type or payload:
+            self.set_type(ruleset_type)
+            self.set_payload(payload)
+        else:
+            self.Type = ""
+            self.Payload = []
 
     def __hash__(self):
         return hash(self.Type) + hash(self.Payload)
@@ -87,6 +91,28 @@ class RuleSet:
 
     def __iter__(self):
         return iter(self.Payload)
+
+    def set_type(self, ruleset_type):
+        allowed_type = ("Domain", "IPCIDR", "Classical")
+        if ruleset_type not in allowed_type:
+            raise TypeError(f"Unsupported type: {ruleset_type}")
+        self.Type = ruleset_type
+
+    def set_payload(self, payload):
+        match self.Type:
+            case "Domain":
+                for item in payload:
+                    if "Domain" not in item.Type:
+                        raise ValueError(f"{item.Type}-type rule found in a domain-type ruleset.")
+            case "IPCIDR":
+                for item in payload:
+                    if "IPCIDR" not in item.Type:
+                        raise ValueError(f"{item.Type}-type rule found in a IPCIDR-type ruleset.")
+            case "Classical":
+                for item in payload:
+                    if item.Type != "Classical":
+                        raise ValueError(f"{item.Type}-type rule found in a classical-type ruleset.")
+        self.Payload = payload
 
     def deepcopy(self):
         return deepcopy(self)
@@ -126,23 +152,23 @@ class RuleSet:
 def custom_convert(src: Path) -> RuleSet:
     src_custom = open(src, mode="r", encoding="utf-8").read().splitlines()
     try:
-        rule_type = src_custom[0].split("#@@TYPE:")[1]
+        rule_type = src_custom[0].split("@")[1]
     except IndexError:
         logging.warning(f"File {src} doesn't have a valid type header, treat as domain type.")
-        rule_type = "DOMAIN"
+        rule_type = "Domain"
     ruleset_converted = RuleSet(rule_type, [])
     for line in src_custom:
-        if rule_type == "DOMAIN":
+        if rule_type == "Domain":
             if line.startswith("."):
                 ruleset_converted.add(Rule("DomainSuffix", line.strip(".")))
             elif line and not line.startswith("#"):
                 ruleset_converted.add(Rule("DomainFull", line))
-        elif rule_type == "IP":
+        elif rule_type == "IPCIDR":
             if line and not line.startswith("#"):
                 ruleset_converted.add(Rule("IPCIDR", line))
-        elif rule_type == "CLASSIC":
+        elif rule_type == "Classical":
             if line and not line.startswith("#"):
-                ruleset_converted.add(Rule("Classic", line))
+                ruleset_converted.add(Rule("Classical", line))
     return ruleset_converted
 
 
@@ -174,13 +200,13 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
         if target == "yaml":
             filename = filename + ".yaml"
         elif target == "geosite":
-            if src.Type == "IP" or src.Type == "CLASSIC":
-                logging.debug(f"{src.Type}-type ruleset can't be exported to GeoSite source, ignored.")
+            if src.Type == "IPCIDR" or src.Type == "Classical":
+                logging.info(f"{src.Type}-type ruleset can't be exported to GeoSite source, ignored.")
                 return
             filename = filename
         else:
-            if "text" in target and src.Type == "CLASSIC":
-                logging.debug("CLASSIC-type ruleset doesn't need to exported as plain text, skipped.")
+            if "text" in target and src.Type == "Classical":
+                logging.info("Classical-type ruleset doesn't need to exported as plain text, skipped.")
                 return
             filename = filename + ".txt"
         dist = open(dst/filename, mode="w", encoding="utf-8")
@@ -192,7 +218,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
             for rule in src:
                 if rule.Type == "DomainSuffix":
                     dist.writelines(f".{rule.Payload}\n")
-                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6" or "Classic":
+                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6" or "Classical":
                     dist.writelines(f"{rule.Payload}\n")
                 else:
                     raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
@@ -200,7 +226,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
             for rule in src:
                 if rule.Type == "DomainSuffix":
                     dist.writelines(f"+.{rule.Payload}\n")
-                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6" or "Classic":
+                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6" or "Classical":
                     dist.writelines(f"{rule.Payload}\n")
                 else:
                     raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
@@ -209,7 +235,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
             for rule in src:
                 if rule.Type == "DomainSuffix":
                     dist.writelines(f"  - '+.{rule.Payload}'\n")
-                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6" or "Classic":
+                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6" or "Classical":
                     dist.writelines(f"  - '{rule.Payload}'\n")
                 else:
                     raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
@@ -224,7 +250,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                         dist.writelines(f"IP-CIDR,{rule.Payload}\n")
                     case "IPCIDR6":
                         dist.writelines(f"IP-CIDR6,{rule.Payload}\n")
-                    case "Classic":
+                    case "Classical":
                         dist.writelines(f"{rule.Payload}\n")
                     case _:
                         raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
@@ -239,7 +265,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                         dist.writelines(f"IP-CIDR,{rule.Payload},Policy\n")
                     case "IPCIDR6":
                         dist.writelines(f"IP-CIDR6,{rule.Payload},Policy\n")
-                    case "Classic":
+                    case "Classical":
                         dist.writelines(f"{rule.Payload},Policy\n")
                     case _:
                         raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')

@@ -1,4 +1,4 @@
-#@@TYPE:DOMAIN
+#@Domain
 .applemusic.com
 .blobstore.apple.com
 .music.apple.com
