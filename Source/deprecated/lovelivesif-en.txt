@@ -1,3 +1,0 @@
-cf-static-prod.lovelive.ge.klabgames.net
-dnw5grz2619mn.cloudfront.net
-prod-jp.lovelive.ge.klabgames.net
