@@ -17,6 +17,7 @@ ADD:support.appsflyer.com
 
 ADD:www.googleadservices.com
 ADD:wwads.cn
+ADD:ad.doubleclick.net
 
 ADD:ssl.p.jwpcdn.com
 ADD:click.mz.simba.taobao.com
