@@ -15,7 +15,6 @@ ADD:www.appsflyer.com
 ADD:hq1.appsflyer.com
 ADD:support.appsflyer.com
 
-ADD:www.googleadservices.com
 ADD:wwads.cn
 ADD:ad.doubleclick.net
 
