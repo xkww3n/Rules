@@ -289,9 +289,12 @@ def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> No
         dump(src, target, dst_path/target, filename)
 
 
-def apply_patch(src: RuleSet, name: str) -> RuleSet:
+def apply_patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleSet:
     try:
-        patch = open(const.PATH_SOURCE_PATCH/(name + ".txt"), mode="r").read().splitlines()
+        if override_patch_loc != Path(""):
+            patch = open(override_patch_loc/(name + ".txt"), mode="r").read().splitlines()
+        else:
+            patch = open(const.PATH_SOURCE_PATCH/(name + ".txt"), mode="r").read().splitlines()
     except FileNotFoundError:
         logging.warning(f'Patch "{name + ".txt"}" not found.')
         return src
