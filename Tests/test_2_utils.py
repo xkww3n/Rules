@@ -24,16 +24,22 @@ class Tests:
         assert not rule.is_domain(ipv4addr)
 
     def test_custom_convert(self):
-        test_src_path = Path("./src/")
-        test_conv_ruleset = rule.custom_convert(test_src_path/"custom_domain.txt")
+        test_src_path = Path("./src/custom_ruleset/")
+        test_conv_ruleset = rule.custom_convert(test_src_path/"domain.txt")
         assert test_conv_ruleset == rule.RuleSet("Domain",
                                                  [rule.Rule("DomainSuffix", "example.com"),
                                                   rule.Rule("DomainFull", "example.com")])
 
-        test_conv_ruleset = rule.custom_convert(test_src_path/"custom_ip.txt")
+        test_conv_ruleset = rule.custom_convert(test_src_path/"ipcidr.txt")
         assert test_conv_ruleset == rule.RuleSet("IPCIDR",
                                                  [rule.Rule("IPCIDR", "11.4.5.14"),])
 
-        test_conv_ruleset = rule.custom_convert(test_src_path/"custom_classic.txt")
+        test_conv_ruleset = rule.custom_convert(test_src_path/"classic.txt")
         assert test_conv_ruleset == rule.RuleSet("Classical",
                                                  [rule.Rule("Classical", "DOMAIN,example.com")])
+
+    def test_patch(self):
+        test_src_patch = Path("./src/patch/")
+        test_ruleset = rule.RuleSet("Domain", [rule.Rule("DomainFull", "example.com")])
+        rule.apply_patch(test_ruleset, "patch", test_src_patch)
+        assert test_ruleset == rule.RuleSet("Domain", [rule.Rule("DomainSuffix", "example.com")])
