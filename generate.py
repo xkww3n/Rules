@@ -142,7 +142,6 @@ for line in src_cidr:
         ruleset_cidr.add(rule.Rule("IPCIDR", line))
 logger.info(f"Generated {len(ruleset_cidr)} domestic IPv4 rules.")
 
-ruleset_cidr.sort()
 rule.batch_dump(ruleset_cidr, const.TARGETS, const.PATH_DIST, "domestic_ip")
 
 src_cidr6 = connection.get(const.URL_CHNROUTES_V6).text.splitlines()
@@ -157,7 +156,6 @@ for cidr in list_cidr6_raw:
     ruleset_cidr6.add(rule.Rule("IPCIDR6", cidr))
 logger.info(f"Generated {len(ruleset_cidr6)} domestic IPv6 rules.")
 
-ruleset_cidr6.sort()
 rule.batch_dump(ruleset_cidr6, const.TARGETS, const.PATH_DIST, "domestic_ip6")
 
 END_TIME = time_ns()
@@ -195,7 +193,6 @@ for filename in list_file_custom:
     if filename.is_file():
         logger.debug(f'Start converting "{filename.name}".')
         ruleset_custom = rule.custom_convert(filename)
-        ruleset_custom.sort()
         rule.batch_dump(ruleset_custom, const.TARGETS, const.PATH_DIST, filename.stem)
         logger.debug(f"Converted {len(ruleset_custom)} rules.")
 
@@ -204,7 +201,6 @@ list_file_personal = Path.iterdir(const.PATH_SOURCE_CUSTOM/"personal")
 for filename in list_file_personal:
     logger.debug(f'Start converting "{filename.name}".')
     ruleset_personal = rule.custom_convert(filename)
-    ruleset_personal.sort()
     rule.batch_dump(ruleset_personal, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
                     const.PATH_DIST/"personal", filename.stem)
     rule.dump(ruleset_personal, "geosite", const.PATH_DIST/"geosite", ("personal-" + filename.stem))

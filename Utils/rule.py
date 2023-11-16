@@ -124,8 +124,15 @@ class RuleSet:
         self.Payload.remove(rule)
 
     def sort(self):
+        if self.Type == "Classical":
+            logging.warning("Classical ruleset shouldn't be sorted as maybe ordered, skipped.")
+            return
+
         def sort_key(item):
             match item.Type:
+                # Domain suffixes should always in front of full domains
+                # Shorter domains should in front of longer domains
+                # For IPCIDR ruleset, default sort method is ok.
                 case "DomainSuffix":
                     sortkey = (0, len(item.Payload), item.Payload)
                 case "DomainFull":
@@ -201,12 +208,12 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
             filename = filename + ".yaml"
         elif target == "geosite":
             if src.Type == "IPCIDR" or src.Type == "Classical":
-                logging.info(f"{src.Type}-type ruleset can't be exported to GeoSite source, ignored.")
+                logging.warning(f"{filename}: {src.Type}-type ruleset can't be exported to GeoSite source, ignored.")
                 return
             filename = filename
         else:
             if "text" in target and src.Type == "Classical":
-                logging.info("Classical-type ruleset doesn't need to exported as plain text, skipped.")
+                logging.info(f"{filename}: Classical-type ruleset doesn't need to exported as plain text, skipped.")
                 return
             filename = filename + ".txt"
         dist = open(dst/filename, mode="w", encoding="utf-8")
