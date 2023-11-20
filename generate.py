@@ -115,10 +115,6 @@ for item in ruleset_domestic.deepcopy():
         ruleset_domestic.remove(item)
         logger.debug(f"{item} removed for having a overseas TLD.")
 ruleset_domestic = rule.apply_patch(ruleset_domestic, "domestic")
-ruleset_domestic.dedup()
-
-# Surge ignores eTLDs in the domain set. So it needs a not-optimised version.
-rule.batch_dump(ruleset_domestic, ["text"], const.PATH_DIST, "domestic_withcntld")
 
 # Add all domestic TLDs to domestic rules, then perform deduplication.
 src_domestic_tlds = set(open(const.PATH_SOURCE_V2FLY/"tld-cn", mode="r", encoding="utf-8").read().splitlines())
