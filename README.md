@@ -38,6 +38,8 @@
 - [もちフィルタ](https://eeii0a5l.github.io/mochifilter_homepage/mochi.html)
 - [ADgk](https://github.com/banbendalao/ADgk)
 - [-AWAvenue 秋风广告规则（AWAvenue-Adblock-Rule）-](https://github.com/TG-Twilight/AWAvenue-Adblock-Rule)
+- [乘风广告过滤规则](https://github.com/xinggsf/Adblock-Plus-Rule/)
+- [d3Host List by d3ward](https://github.com/d3ward/toolz/blob/master/src/d3host.adblock)
 - [Domain list community](https://github.com/v2fly/domain-list-community)
 - [chnroutes2 (better-aggregated chnroutes)](https://github.com/misakaio/chnroutes2/)
 - [aggregate6](https://github.com/job/aggregate6)

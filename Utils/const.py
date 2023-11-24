@@ -19,12 +19,16 @@ LIST_REJECT_URL = [
     "https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt",
     # AWAvenue 秋风广告规则
     "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Adblock-Rule/main/AWAvenue-Adblock-Rule.txt",
+    # 乘风 视频过滤规则
+    "https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/mv.txt",
+    # d3Host List by d3ward
+    "https://raw.githubusercontent.com/d3ward/toolz/master/src/d3host.adblock"
 ]
 
 # AdGuard DNS Filter Whitelist
 LIST_EXCL_URL = [
     "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt",
-    "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt",
+    "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt"
 ]
 
 URL_CHNROUTES2 = "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"
