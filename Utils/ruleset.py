@@ -56,10 +56,6 @@ class RuleSet:
                 for item in payload:
                     if "IPCIDR" not in item.Type:
                         raise ValueError(f"{item.Type}-type rule found in a IPCIDR-type ruleset.")
-            case "Combined":
-                for item in payload:
-                    if item.Type not in ("DomainSuffix", "DomainFull", "IPCIDR", "IPCIDR6", "Classical"):
-                        raise ValueError(f"{item.Type}-type rule found in a classical-type ruleset.")
         self.Payload = payload
 
     def deepcopy(self):
@@ -150,16 +146,10 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
         if target == "yaml":
             filename = filename + ".yaml"
         elif target == "geosite":
-            if src.Type == "IPCIDR" or src.Type == "Combined":
-                logging.warning(f"{filename}: {src.Type}-type ruleset can't be exported to GeoSite source, ignored.")
-                return
             filename = filename
         elif target == "sing-ruleset":
             filename = filename + ".json"
         else:
-            if "text" in target and src.Type == "Combined":
-                logging.info(f"{filename}: Combined-type ruleset doesn't need to exported as plain text, skipped.")
-                return
             filename = filename + ".txt"
         dist = open(dst/filename, mode="w", encoding="utf-8")
     except FileNotFoundError:
@@ -172,16 +162,12 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                     dist.writelines(f".{rule.Payload}\n")
                 elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6":
                     dist.writelines(f"{rule.Payload}\n")
-                else:
-                    raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
         case "text-plus":
             for rule in src:
                 if rule.Type == "DomainSuffix":
                     dist.writelines(f"+.{rule.Payload}\n")
                 elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6":
                     dist.writelines(f"{rule.Payload}\n")
-                else:
-                    raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
         case "yaml":
             dist.writelines("payload:\n")
             for rule in src:
@@ -189,8 +175,6 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                     dist.writelines(f"  - '+.{rule.Payload}'\n")
                 elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6":
                     dist.writelines(f"  - '{rule.Payload}'\n")
-                else:
-                    raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
         case "surge-compatible":
             for rule in src:
                 match rule.Type:
@@ -202,8 +186,6 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                         dist.writelines(f"IP-CIDR,{rule.Payload}\n")
                     case "IPCIDR6":
                         dist.writelines(f"IP-CIDR6,{rule.Payload}\n")
-                    case _:
-                        raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
         case "clash-compatible":
             for rule in src:
                 match rule.Type:
@@ -215,8 +197,6 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                         dist.writelines(f"IP-CIDR,{rule.Payload},Policy\n")
                     case "IPCIDR6":
                         dist.writelines(f"IP-CIDR6,{rule.Payload},Policy\n")
-                    case _:
-                        raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
         case "geosite":
             for rule in src:
                 match rule.Type:
@@ -250,8 +230,6 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                     dist.write(dumps(ruleset, indent=2))
                 case "IPCIDR":
                     for rule in src:
-                        if rule.Type not in ["IPCIDR", "IPCIDR6"]:
-                            raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
                         if "ip_cidr" not in ruleset["rules"][0]:
                             ruleset["rules"][0]["ip_cidr"] = []
                         ruleset["rules"][0]["ip_cidr"].append(rule.Payload)
@@ -272,15 +250,24 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                                     ruleset["rules"][0]["ip_cidr"] = []
                                 ruleset["rules"][0]["ip_cidr"].append(rule.Payload)
                     dist.write(dumps(ruleset, indent=2))
-                case _:
-                    raise TypeError(f'Unsupported rule type "{src.Type}". File: {dst}.')
         case _:
-            raise TypeError("Target type unsupported, "
-                            "only accept 'text', 'text-plus', 'yaml', 'surge-compatible' or 'clash-compatible'."
-                            )
+            raise TypeError("Target type unsupported.")
 
 
 def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> None:
+    if src.Type in ("IPCIDR", "Combined"):
+        if all(t in targets for t in ["text", "text-plus"]):
+            logging.info(f"{filename}: text-plus ignored as the same as text-type.")
+            targets.remove("text-plus")
+        if "geosite" in targets:
+            logging.warning(f"{filename}: {src.Type}-type ruleset can't be exported to GeoSite source, ignored.")
+            targets.remove("geosite")
+    if src.Type == "Combined" and any(t in targets for t in ["text", "text-plus"]):
+        logging.info(f"{filename}: Combined-type ruleset doesn't need to exported as plain text, skipped.")
+        if "text" in targets:
+            targets.remove("text")
+        if "text-plus" in targets:
+            targets.remove("text-plus")
     for target in targets:
         dump(src, target, dst_path/target, filename)
 
