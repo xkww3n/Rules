@@ -1,12 +1,12 @@
 import logging
 
-from . import const, rule
+from . import const, rule, ruleset
 
 
-def parse(src: set, excluded_imports=None, excluded_tags=None) -> rule.RuleSet:
+def parse(src: set, excluded_imports=None, excluded_tags=None) -> ruleset.RuleSet:
     excluded_imports = [] if not excluded_imports else excluded_imports
     excluded_tags = [] if not excluded_tags else excluded_tags
-    ruleset_parsed = rule.RuleSet("Domain", [])
+    ruleset_parsed = ruleset.RuleSet("Domain", [])
     for raw_line in src:
         line = raw_line.split("#")[0].strip()
         if not line:
@@ -51,4 +51,4 @@ def batch_convert(categories: list, tools: list, exclusions=None) -> None:
             src_geosite = set(open(const.PATH_SOURCE_V2FLY/category, mode="r", encoding="utf-8").read().splitlines())
             ruleset_geosite = parse(src_geosite, exclusions)
             ruleset_geosite.sort()
-            rule.dump(ruleset_geosite, tool, const.PATH_DIST/tool, category)
+            ruleset.dump(ruleset_geosite, tool, const.PATH_DIST/tool, category)

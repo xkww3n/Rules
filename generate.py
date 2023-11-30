@@ -6,7 +6,7 @@ from abp.filters.parser import parse_filterlist
 from aggregate6 import aggregate
 from requests import Session
 
-from Utils import const, geosite, rule
+from Utils import const, geosite, rule, ruleset
 
 logging.config.fileConfig("logging.ini")
 logger = logging.getLogger("root")
@@ -28,8 +28,8 @@ for url in const.LIST_EXCL_URL:
 
 logger.info(f"Imported {len(src_exclusions)} lines of exclude rules from defined sources.")
 
-ruleset_rejections = rule.RuleSet("Domain", [])
-ruleset_exclusions_raw = rule.RuleSet("Domain", [])
+ruleset_rejections = ruleset.RuleSet("Domain", [])
+ruleset_exclusions_raw = ruleset.RuleSet("Domain", [])
 
 for line in parse_filterlist(src_rejections):
     if (not line.type == "filter"
@@ -72,7 +72,7 @@ ruleset_rejections_v2fly = geosite.parse(src_rejections_v2fly)
 ruleset_rejections |= ruleset_rejections_v2fly
 logger.info(f"Imported {(len(ruleset_rejections_v2fly))} reject rules from v2fly category-ads-all list.")
 
-ruleset_exclusions = rule.RuleSet("Domain", [])
+ruleset_exclusions = ruleset.RuleSet("Domain", [])
 logger.debug("Start deduplicating reject and exclude set.")
 ruleset_rejections.dedup()
 for domain_exclude in ruleset_exclusions_raw.deepcopy():
@@ -90,13 +90,13 @@ for domain_exclude in ruleset_exclusions_raw:
             ruleset_exclusions.add(domain_exclude)
             logger.debug(f"{domain_exclude} is added to final exclude set.")
 
-ruleset_rejections = rule.apply_patch(ruleset_rejections, "reject")
-ruleset_exclusions = rule.apply_patch(ruleset_exclusions, "exclude")
+ruleset_rejections = ruleset.apply_patch(ruleset_rejections, "reject")
+ruleset_exclusions = ruleset.apply_patch(ruleset_exclusions, "exclude")
 
 logger.info(f"Generated {len(ruleset_rejections)} reject rules.")
 logger.info(f"Generated {len(ruleset_exclusions)} exclude rules.")
-rule.batch_dump(ruleset_rejections, const.TARGETS, const.PATH_DIST, "reject")
-rule.batch_dump(ruleset_exclusions, const.TARGETS, const.PATH_DIST, "exclude")
+ruleset.batch_dump(ruleset_rejections, const.TARGETS, const.PATH_DIST, "reject")
+ruleset.batch_dump(ruleset_exclusions, const.TARGETS, const.PATH_DIST, "exclude")
 
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
@@ -114,7 +114,7 @@ for item in ruleset_domestic.deepcopy():
     if any([item.Payload.endswith(os_tld) for os_tld in tld_overseas]):
         ruleset_domestic.remove(item)
         logger.debug(f"{item} removed for having a overseas TLD.")
-ruleset_domestic = rule.apply_patch(ruleset_domestic, "domestic")
+ruleset_domestic = ruleset.apply_patch(ruleset_domestic, "domestic")
 
 # Add all domestic TLDs to domestic rules, then perform deduplication.
 src_domestic_tlds = set(open(const.PATH_SOURCE_V2FLY/"tld-cn", mode="r", encoding="utf-8").read().splitlines())
@@ -123,7 +123,7 @@ logger.info(f"Imported {len(ruleset_domestic_tlds)} domestic TLDs.")
 ruleset_domestic |= ruleset_domestic_tlds
 ruleset_domestic.dedup()
 logger.info(f"Generated {len(ruleset_domestic)} domestic rules.")
-rule.batch_dump(ruleset_domestic, const.TARGETS, const.PATH_DIST, "domestic")
+ruleset.batch_dump(ruleset_domestic, const.TARGETS, const.PATH_DIST, "domestic")
 
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
@@ -132,13 +132,13 @@ logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f'
 logger.info("Start converting domestic CIDR rules.")
 START_TIME = time_ns()
 src_cidr = connection.get(const.URL_CHNROUTES2).text.splitlines()
-ruleset_cidr = rule.RuleSet("IPCIDR", [])
+ruleset_cidr = ruleset.RuleSet("IPCIDR", [])
 for line in src_cidr:
     if not line.startswith("#"):
         ruleset_cidr.add(rule.Rule("IPCIDR", line))
 logger.info(f"Generated {len(ruleset_cidr)} domestic IPv4 rules.")
 
-rule.batch_dump(ruleset_cidr, const.TARGETS, const.PATH_DIST, "domestic_ip")
+ruleset.batch_dump(ruleset_cidr, const.TARGETS, const.PATH_DIST, "domestic_ip")
 
 src_cidr6 = connection.get(const.URL_CHNROUTES_V6).text.splitlines()
 list_cidr6_raw = []
@@ -147,12 +147,12 @@ for line in src_cidr6:
         parts = line.split("|")
         list_cidr6_raw.append(f"{parts[3]}/{parts[4]}")
 list_cidr6_raw = aggregate(list_cidr6_raw)
-ruleset_cidr6 = rule.RuleSet("IPCIDR", [])
+ruleset_cidr6 = ruleset.RuleSet("IPCIDR", [])
 for cidr in list_cidr6_raw:
     ruleset_cidr6.add(rule.Rule("IPCIDR6", cidr))
 logger.info(f"Generated {len(ruleset_cidr6)} domestic IPv6 rules.")
 
-rule.batch_dump(ruleset_cidr6, const.TARGETS, const.PATH_DIST, "domestic_ip6")
+ruleset.batch_dump(ruleset_cidr6, const.TARGETS, const.PATH_DIST, "domestic_ip6")
 
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
@@ -188,18 +188,18 @@ list_file_custom = Path.iterdir(const.PATH_SOURCE_CUSTOM)
 for filename in list_file_custom:
     if filename.is_file():
         logger.debug(f'Start converting "{filename.name}".')
-        ruleset_custom = rule.custom_convert(filename)
-        rule.batch_dump(ruleset_custom, const.TARGETS, const.PATH_DIST, filename.stem)
+        ruleset_custom = ruleset.custom_convert(filename)
+        ruleset.batch_dump(ruleset_custom, const.TARGETS, const.PATH_DIST, filename.stem)
         logger.debug(f"Converted {len(ruleset_custom)} rules.")
 
 # There's no personal classical type ruleset. So no logic about that.
 list_file_personal = Path.iterdir(const.PATH_SOURCE_CUSTOM/"personal")
 for filename in list_file_personal:
     logger.debug(f'Start converting "{filename.name}".')
-    ruleset_personal = rule.custom_convert(filename)
-    rule.batch_dump(ruleset_personal, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
-                    const.PATH_DIST/"personal", filename.stem)
-    rule.dump(ruleset_personal, "geosite", const.PATH_DIST/"geosite", ("personal-" + filename.stem))
+    ruleset_personal = ruleset.custom_convert(filename)
+    ruleset.batch_dump(ruleset_personal, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
+                       const.PATH_DIST/"personal", filename.stem)
+    ruleset.dump(ruleset_personal, "geosite", const.PATH_DIST/"geosite", ("personal-" + filename.stem))
     logger.debug(f"Converted {len(ruleset_personal)} rules.")
 
 END_TIME = time_ns()
