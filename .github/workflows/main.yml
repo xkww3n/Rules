@@ -126,11 +126,11 @@ jobs:
                   }
                 },
                 {
-                  "type": "text",
+                  "type": "surgeRuleSet",
                   "action": "add",
                   "args": {
                     "name": "apns",
-                    "uri": "./dists/text/apns.txt"
+                    "uri": "./dists/surge-compatible/apns.txt"
                   }
                 }
               ],
