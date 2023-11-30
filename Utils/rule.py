@@ -8,7 +8,7 @@ from . import const
 
 
 class Rule:
-    Type: str  # DomainSuffix / DomainFull / IPCIDR / IPCIDR6 / Classical
+    Type: str  # DomainSuffix / DomainFull / IPCIDR / IPCIDR6
     Payload: str
     Tag: str
 
@@ -175,7 +175,10 @@ def custom_convert(src: Path) -> RuleSet:
         case "IPCIDR":
             for line in src_custom:
                 if line and not line.startswith("#"):
-                    ruleset_converted.add(Rule("IPCIDR", line))
+                    if ":" in line:
+                        ruleset_converted.add(Rule("IPCIDR6", line))
+                    else:
+                        ruleset_converted.add(Rule("IPCIDR", line))
         case "Combined":
             for line in src_custom:
                 if line and not line.startswith("#"):
@@ -188,7 +191,7 @@ def custom_convert(src: Path) -> RuleSet:
                         case "IP-CIDR":
                             ruleset_converted.add(Rule("IPCIDR", parsed[1]))
                         case "IP-CIDR6":
-                            ruleset_converted.add(Rule("IPCIDR", parsed[1]))
+                            ruleset_converted.add(Rule("IPCIDR6", parsed[1]))
                         case _:
                             raise ValueError()
     return ruleset_converted
