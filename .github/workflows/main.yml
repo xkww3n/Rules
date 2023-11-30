@@ -126,11 +126,11 @@ jobs:
                   }
                 },
                 {
-                  "type": "clashRuleSetClassical",
+                  "type": "text",
                   "action": "add",
                   "args": {
                     "name": "apns",
-                    "uri": "./dists/yaml/apns.yaml"
+                    "uri": "./dists/text/apns.txt"
                   }
                 }
               ],
