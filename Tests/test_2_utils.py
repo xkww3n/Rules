@@ -35,8 +35,8 @@ class Tests:
                                                  [rule.Rule("IPCIDR", "11.4.5.14"),])
 
         test_conv_ruleset = rule.custom_convert(test_src_path/"classic.txt")
-        assert test_conv_ruleset == rule.RuleSet("Classical",
-                                                 [rule.Rule("Classical", "DOMAIN,example.com")])
+        assert test_conv_ruleset == rule.RuleSet("Combined",
+                                                 [rule.Rule("DomainFull", "example.com")])
 
     def test_patch(self):
         test_src_patch = Path("./src/patch/")
