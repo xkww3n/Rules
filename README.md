@@ -22,6 +22,8 @@
   - 适用于 [sing-box](https://sing-box.sagernet.org/)。
     - GeoSite 数据库：<https://rules.xkww3n.cyou/geosite.db>
     - GeoIP 数据库：<https://rules.xkww3n.cyou/geoip.db>
+- sing-box 规则集
+  - 适用于 [sing-box](https://sing-box.sagernet.org/)。
 - MaxMind MMDB 数据库
   - GeoIP 数据库：<https://rules.xkww3n.cyou/geoip.mmdb>
 
