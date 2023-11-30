@@ -298,6 +298,54 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                         dist.writelines(f"full:{rule.Payload}\n")
                     case _:
                         raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
+        case "sing-ruleset":
+            ruleset = {
+                "version": 1,
+                "rules": [
+                    {}
+                ]
+            }
+            match src.Type:
+                case "Domain":
+                    for rule in src:
+                        match rule.Type:
+                            case "DomainSuffix":
+                                if "domain_suffix" not in ruleset["rules"][0]:
+                                    ruleset["rules"][0]["domain_suffix"] = []
+                                ruleset["rules"][0]["domain_suffix"].append(f".{rule.Payload}")
+                            case "DomainFull":
+                                if "domain" not in ruleset["rules"][0]:
+                                    ruleset["rules"][0]["domain"] = []
+                                ruleset["rules"][0]["domain"].append(rule.Payload)
+                            case _:
+                                raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
+                    dist.write(json.dumps(ruleset, indent=2))
+                case "IPCIDR":
+                    for rule in src:
+                        if rule.Type not in ["IPCIDR", "IPCIDR6"]:
+                            raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
+                        if "ip_cidr" not in ruleset["rules"][0]:
+                            ruleset["rules"][0]["ip_cidr"] = []
+                        ruleset["rules"][0]["ip_cidr"].append(rule.Payload)
+                    dist.write(json.dumps(ruleset, indent=2))
+                case "Combined":
+                    for rule in src:
+                        match rule.Type:
+                            case "DomainFull":
+                                if "domain" not in ruleset["rules"][0]:
+                                    ruleset["rules"][0]["domain"] = []
+                                ruleset["rules"][0]["domain"].append(rule.Payload)
+                            case "DomainSuffix":
+                                if "domain_suffix" not in ruleset["rules"][0]:
+                                    ruleset["rules"][0]["domain_suffix"] = []
+                                ruleset["rules"][0]["domain_suffix"].append(f".{rule.Payload}")
+                            case "IPCIDR":
+                                if "ip_cidr" not in ruleset["rules"][0]:
+                                    ruleset["rules"][0]["ip_cidr"] = []
+                                ruleset["rules"][0]["ip_cidr"].append(rule.Payload)
+                    dist.write(json.dumps(ruleset, indent=2))
+                case _:
+                    raise TypeError(f'Unsupported rule type "{src.Type}". File: {dst}.')
         case _:
             raise TypeError("Target type unsupported, "
                             "only accept 'text', 'text-plus', 'yaml', 'surge-compatible' or 'clash-compatible'."

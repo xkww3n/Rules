@@ -1,6 +1,6 @@
 from pathlib import Path
 
-TARGETS = ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible", "geosite"]
+TARGETS = ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible", "geosite", "sing-ruleset"]
 PATH_SOURCE_V2FLY = Path("./domain-list-community/data/")
 PATH_SOURCE_CUSTOM = Path("./Source/")
 PATH_SOURCE_PATCH = Path("./Patch/")
