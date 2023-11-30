@@ -1,4 +1,4 @@
-#@Classical
+#@Combined
 DOMAIN,dl.wechat.com
 DOMAIN,sgshort.wechat.com
 DOMAIN,sglong.wechat.com
