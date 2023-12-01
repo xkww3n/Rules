@@ -24,18 +24,22 @@ class Tests:
         assert not rule.is_domain(invalid_domain_b)
         assert not rule.is_domain(ipv4addr)
 
-    def test_custom_convert(self):
+    def test_custom_convert_domain(self):
         test_src_path = Path("./src/custom_ruleset/")
         test_conv_ruleset = ruleset.custom_convert(test_src_path/"domain.txt")
         assert test_conv_ruleset == ruleset.RuleSet("Domain",
                                                     [rule.Rule("DomainSuffix", "example.com"),
                                                      rule.Rule("DomainFull", "example.com")])
 
+    def test_custom_convert_ipcidr(self):
+        test_src_path = Path("./src/custom_ruleset/")
         test_conv_ruleset = ruleset.custom_convert(test_src_path/"ipcidr.txt")
         assert test_conv_ruleset == ruleset.RuleSet("IPCIDR",
                                                     [rule.Rule("IPCIDR", "11.4.5.14"),
                                                      rule.Rule("IPCIDR6", "fc00:114::514")])
 
+    def test_custom_convert_combined(self):
+        test_src_path = Path("./src/custom_ruleset/")
         test_conv_ruleset = ruleset.custom_convert(test_src_path/"combined.txt")
         assert test_conv_ruleset == ruleset.RuleSet("Combined",
                                                     [rule.Rule("DomainFull", "example.com"),
@@ -49,11 +53,11 @@ class Tests:
         ruleset.apply_patch(test_ruleset, "patch", test_src_patch)
         assert test_ruleset == ruleset.RuleSet("Domain", [rule.Rule("DomainSuffix", "example.com")])
 
-    def test_dump(self):
+    def test_dump_domain(self):
         test_dist = Path("./dists/")
+        ruleset_domain = ruleset.custom_convert(Path("./src/custom_ruleset/domain.txt"))
+        ruleset.batch_dump(ruleset_domain, const.TARGETS, test_dist, "domain")
 
-        ruleset_combined = ruleset.custom_convert(Path("./src/custom_ruleset/domain.txt"))
-        ruleset.batch_dump(ruleset_combined, const.TARGETS, test_dist, "domain")
         assert (test_dist/"text"/"domain.txt").exists()
         with open(test_dist/"text"/"domain.txt", mode="r") as f:
             assert f.read() == (".example.com\n"
@@ -85,8 +89,11 @@ class Tests:
             assert f.read() == ("example.com\n"
                                 "full:example.com\n")
 
-        ruleset_combined = ruleset.custom_convert(Path("./src/custom_ruleset/ipcidr.txt"))
-        ruleset.batch_dump(ruleset_combined, const.TARGETS, test_dist, "ipcidr")
+    def test_dump_ipcidr(self):
+        test_dist = Path("./dists/")
+        ruleset_ipcidr = ruleset.custom_convert(Path("./src/custom_ruleset/ipcidr.txt"))
+        ruleset.batch_dump(ruleset_ipcidr, const.TARGETS, test_dist, "ipcidr")
+
         assert not (test_dist/"text-plus"/"ipcidr.txt").exists()
         assert not (test_dist/"geosite"/"ipcidr").exists()
 
@@ -111,8 +118,11 @@ class Tests:
                                 "  - '11.4.5.14'\n"
                                 "  - 'fc00:114::514'\n")
 
+    def test_dump_combined(self):
+        test_dist = Path("./dists/")
         ruleset_combined = ruleset.custom_convert(Path("./src/custom_ruleset/combined.txt"))
         ruleset.batch_dump(ruleset_combined, const.TARGETS, test_dist, "combined")
+
         assert not (test_dist/"text"/"combined.txt").exists()
         assert not (test_dist/"text-plus"/"combined.txt").exists()
         assert not (test_dist/"yaml"/"combined.yaml").exists()
