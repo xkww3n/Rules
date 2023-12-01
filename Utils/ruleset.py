@@ -142,19 +142,20 @@ def custom_convert(src: Path) -> RuleSet:
 
 
 def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
-    try:
-        if target == "yaml":
+    match target:
+        case "yaml":
             filename = filename + ".yaml"
-        elif target == "geosite":
+        case "geosite":
             filename = filename
-        elif target == "sing-ruleset":
+        case "sing-ruleset":
             filename = filename + ".json"
-        else:
+        case _:
             filename = filename + ".txt"
+    try:
         dist = open(dst/filename, mode="w", encoding="utf-8")
     except FileNotFoundError:
         dst.mkdir(parents=True)
-        dist = open(dst/filename, mode="w")
+        dist = open(dst/filename, mode="w", encoding="utf-8")
     match target:
         case "text":
             for rule in src:
