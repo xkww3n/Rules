@@ -3,3 +3,4 @@ ADD:anime1.me
 
 REM:.wechat.com
 REM:.cncbinternational.com
+REM:.bochk.com
