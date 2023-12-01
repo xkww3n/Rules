@@ -1,0 +1,6 @@
+#@Combined
+DOMAIN,example.com
+DOMAIN-SUFFIX,example.com
+IP-CIDR,11.4.5.14
+IP-CIDR6,fc00:114::514
+# comment

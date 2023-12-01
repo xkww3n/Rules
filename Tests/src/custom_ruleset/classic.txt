@@ -1,3 +1,0 @@
-#@Combined
-DOMAIN,example.com
-# comment

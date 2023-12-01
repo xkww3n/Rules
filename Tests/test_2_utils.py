@@ -1,5 +1,6 @@
-from Utils import rule, ruleset
 from pathlib import Path
+
+from Utils import const, rule, ruleset
 
 
 class Tests:
@@ -32,14 +33,101 @@ class Tests:
 
         test_conv_ruleset = ruleset.custom_convert(test_src_path/"ipcidr.txt")
         assert test_conv_ruleset == ruleset.RuleSet("IPCIDR",
-                                                    [rule.Rule("IPCIDR", "11.4.5.14"), ])
+                                                    [rule.Rule("IPCIDR", "11.4.5.14"),
+                                                     rule.Rule("IPCIDR6", "fc00:114::514")])
 
-        test_conv_ruleset = ruleset.custom_convert(test_src_path/"classic.txt")
+        test_conv_ruleset = ruleset.custom_convert(test_src_path/"combined.txt")
         assert test_conv_ruleset == ruleset.RuleSet("Combined",
-                                                    [rule.Rule("DomainFull", "example.com")])
+                                                    [rule.Rule("DomainFull", "example.com"),
+                                                     rule.Rule("DomainSuffix", "example.com"),
+                                                     rule.Rule("IPCIDR", "11.4.5.14"),
+                                                     rule.Rule("IPCIDR6", "fc00:114::514")])
 
     def test_patch(self):
         test_src_patch = Path("./src/patch/")
         test_ruleset = ruleset.RuleSet("Domain", [rule.Rule("DomainFull", "example.com")])
         ruleset.apply_patch(test_ruleset, "patch", test_src_patch)
         assert test_ruleset == ruleset.RuleSet("Domain", [rule.Rule("DomainSuffix", "example.com")])
+
+    def test_dump(self):
+        test_dist = Path("./dists/")
+
+        ruleset_combined = ruleset.custom_convert(Path("./src/custom_ruleset/domain.txt"))
+        ruleset.batch_dump(ruleset_combined, const.TARGETS, test_dist, "domain")
+        assert (test_dist/"text"/"domain.txt").exists()
+        with open(test_dist/"text"/"domain.txt", mode="r") as f:
+            assert f.read() == (".example.com\n"
+                                "example.com\n")
+
+        assert (test_dist/"text-plus"/"domain.txt").exists()
+        with open(test_dist/"text-plus"/"domain.txt", mode="r") as f:
+            assert f.read() == ("+.example.com\n"
+                                "example.com\n")
+
+        assert (test_dist/"clash-compatible"/"domain.txt").exists()
+        with open(test_dist/"clash-compatible"/"domain.txt", mode="r") as f:
+            assert f.read() == ("DOMAIN-SUFFIX,example.com,Policy\n"
+                                "DOMAIN,example.com,Policy\n")
+
+        assert (test_dist/"surge-compatible"/"domain.txt").exists()
+        with open(test_dist/"surge-compatible"/"domain.txt", mode="r") as f:
+            assert f.read() == ("DOMAIN-SUFFIX,example.com\n"
+                                "DOMAIN,example.com\n")
+
+        assert (test_dist/"yaml"/"domain.yaml").exists()
+        with open(test_dist/"yaml"/"domain.yaml", mode="r") as f:
+            assert f.read() == ("payload:\n"
+                                "  - '+.example.com'\n"
+                                "  - 'example.com'\n")
+
+        assert (test_dist/"geosite"/"domain").exists()
+        with open(test_dist/"geosite"/"domain", mode="r") as f:
+            assert f.read() == ("example.com\n"
+                                "full:example.com\n")
+
+        ruleset_combined = ruleset.custom_convert(Path("./src/custom_ruleset/ipcidr.txt"))
+        ruleset.batch_dump(ruleset_combined, const.TARGETS, test_dist, "ipcidr")
+        assert not (test_dist/"text-plus"/"ipcidr.txt").exists()
+        assert not (test_dist/"geosite"/"ipcidr").exists()
+
+        assert (test_dist/"text"/"ipcidr.txt").exists()
+        with open(test_dist/"text"/"ipcidr.txt", mode="r") as f:
+            assert f.read() == ("11.4.5.14\n"
+                                "fc00:114::514\n")
+
+        assert (test_dist/"clash-compatible"/"ipcidr.txt").exists()
+        with open(test_dist/"clash-compatible"/"ipcidr.txt", mode="r") as f:
+            assert f.read() == ("IP-CIDR,11.4.5.14,Policy\n"
+                                "IP-CIDR6,fc00:114::514,Policy\n")
+
+        assert (test_dist/"surge-compatible"/"ipcidr.txt").exists()
+        with open(test_dist/"surge-compatible"/"ipcidr.txt", mode="r") as f:
+            assert f.read() == ("IP-CIDR,11.4.5.14\n"
+                                "IP-CIDR6,fc00:114::514\n")
+
+        assert (test_dist/"yaml"/"ipcidr.yaml").exists()
+        with open(test_dist/"yaml"/"ipcidr.yaml", mode="r") as f:
+            assert f.read() == ("payload:\n"
+                                "  - '11.4.5.14'\n"
+                                "  - 'fc00:114::514'\n")
+
+        ruleset_combined = ruleset.custom_convert(Path("./src/custom_ruleset/combined.txt"))
+        ruleset.batch_dump(ruleset_combined, const.TARGETS, test_dist, "combined")
+        assert not (test_dist/"text"/"combined.txt").exists()
+        assert not (test_dist/"text-plus"/"combined.txt").exists()
+        assert not (test_dist/"yaml"/"combined.yaml").exists()
+        assert not (test_dist/"geosite"/"combined").exists()
+
+        assert (test_dist/"clash-compatible"/"combined.txt").exists()
+        with open(test_dist/"clash-compatible"/"combined.txt", mode="r") as f:
+            assert f.read() == ("DOMAIN,example.com,Policy\n"
+                                "DOMAIN-SUFFIX,example.com,Policy\n"
+                                "IP-CIDR,11.4.5.14,Policy\n"
+                                "IP-CIDR6,fc00:114::514,Policy\n")
+
+        assert (test_dist/"surge-compatible"/"combined.txt").exists()
+        with open(test_dist/"surge-compatible"/"combined.txt", mode="r") as f:
+            assert f.read() == ("DOMAIN,example.com\n"
+                                "DOMAIN-SUFFIX,example.com\n"
+                                "IP-CIDR,11.4.5.14\n"
+                                "IP-CIDR6,fc00:114::514\n")
