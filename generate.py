@@ -90,8 +90,8 @@ for domain_exclude in ruleset_exclusions_raw:
             ruleset_exclusions.add(domain_exclude)
             logger.debug(f"{domain_exclude} is added to final exclude set.")
 
-ruleset_rejections = ruleset.apply_patch(ruleset_rejections, "reject")
-ruleset_exclusions = ruleset.apply_patch(ruleset_exclusions, "exclude")
+ruleset_rejections = ruleset.patch(ruleset_rejections, "reject")
+ruleset_exclusions = ruleset.patch(ruleset_exclusions, "exclude")
 
 logger.info(f"Generated {len(ruleset_rejections)} reject rules.")
 logger.info(f"Generated {len(ruleset_exclusions)} exclude rules.")
@@ -114,7 +114,7 @@ for item in ruleset_domestic.deepcopy():
     if any([item.Payload.endswith(os_tld) for os_tld in tld_overseas]):
         ruleset_domestic.remove(item)
         logger.debug(f"{item} removed for having a overseas TLD.")
-ruleset_domestic = ruleset.apply_patch(ruleset_domestic, "domestic")
+ruleset_domestic = ruleset.patch(ruleset_domestic, "domestic")
 
 # Add all domestic TLDs to domestic rules, then perform deduplication.
 src_domestic_tlds = set(open(const.PATH_SOURCE_V2FLY/"tld-cn", mode="r", encoding="utf-8").read().splitlines())
@@ -176,7 +176,7 @@ EXCLUSIONS = [
     "github",  # GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as Microsoft.
     "bing",  # Bing has a more restricted ver for Mainland China.
 ]
-geosite.batch_convert(CATEGORIES, const.TARGETS, EXCLUSIONS)
+geosite.batch_gen(CATEGORIES, const.TARGETS, EXCLUSIONS)
 
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
@@ -188,7 +188,7 @@ list_file_custom = Path.iterdir(const.PATH_SOURCE_CUSTOM)
 for filename in list_file_custom:
     if filename.is_file():
         logger.debug(f'Start converting "{filename.name}".')
-        ruleset_custom = ruleset.custom_convert(filename)
+        ruleset_custom = ruleset.load(filename)
         ruleset.batch_dump(ruleset_custom, const.TARGETS, const.PATH_DIST, filename.stem)
         logger.debug(f"Converted {len(ruleset_custom)} rules.")
 
@@ -196,7 +196,7 @@ for filename in list_file_custom:
 list_file_personal = Path.iterdir(const.PATH_SOURCE_CUSTOM/"personal")
 for filename in list_file_personal:
     logger.debug(f'Start converting "{filename.name}".')
-    ruleset_personal = ruleset.custom_convert(filename)
+    ruleset_personal = ruleset.load(filename)
     ruleset.batch_dump(ruleset_personal, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
                        const.PATH_DIST/"personal", filename.stem)
     ruleset.dump(ruleset_personal, "geosite", const.PATH_DIST/"geosite", ("personal-" + filename.stem))

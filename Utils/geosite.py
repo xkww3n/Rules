@@ -44,7 +44,7 @@ def parse(src: set, excluded_imports=None, excluded_tags=None) -> ruleset.RuleSe
     return ruleset_parsed
 
 
-def batch_convert(categories: list, tools: list, exclusions=None) -> None:
+def batch_gen(categories: list, tools: list, exclusions=None) -> None:
     exclusions = [] if not exclusions else exclusions
     for tool in tools:
         for category in categories:

@@ -101,44 +101,44 @@ class RuleSet:
         self.Payload = list_unique
 
 
-def custom_convert(src: Path) -> RuleSet:
-    src_custom = open(src, mode="r", encoding="utf-8").read().splitlines()
+def load(src: Path) -> RuleSet:
+    src_toload = open(src, mode="r", encoding="utf-8").read().splitlines()
     try:
-        ruleset_type = src_custom[0].split("@")[1]
+        ruleset_type = src_toload[0].split("@")[1]
     except IndexError:
         logging.warning(f"File {src} doesn't have a valid type header, treat as domain type.")
         ruleset_type = "Domain"
-    ruleset_converted = RuleSet(ruleset_type, [])
+    ruleset_loaded = RuleSet(ruleset_type, [])
     match ruleset_type:
         case "Domain":
-            for line in src_custom:
+            for line in src_toload:
                 if line.startswith("."):
-                    ruleset_converted.add(Rule("DomainSuffix", line.strip(".")))
+                    ruleset_loaded.add(Rule("DomainSuffix", line.strip(".")))
                 elif line and not line.startswith("#"):
-                    ruleset_converted.add(Rule("DomainFull", line))
+                    ruleset_loaded.add(Rule("DomainFull", line))
         case "IPCIDR":
-            for line in src_custom:
+            for line in src_toload:
                 if line and not line.startswith("#"):
                     if ":" in line:
-                        ruleset_converted.add(Rule("IPCIDR6", line))
+                        ruleset_loaded.add(Rule("IPCIDR6", line))
                     else:
-                        ruleset_converted.add(Rule("IPCIDR", line))
+                        ruleset_loaded.add(Rule("IPCIDR", line))
         case "Combined":
-            for line in src_custom:
+            for line in src_toload:
                 if line and not line.startswith("#"):
                     parsed = line.split(",")
                     match parsed[0]:
                         case "DOMAIN":
-                            ruleset_converted.add(Rule("DomainFull", parsed[1]))
+                            ruleset_loaded.add(Rule("DomainFull", parsed[1]))
                         case "DOMAIN-SUFFIX":
-                            ruleset_converted.add(Rule("DomainSuffix", parsed[1]))
+                            ruleset_loaded.add(Rule("DomainSuffix", parsed[1]))
                         case "IP-CIDR":
-                            ruleset_converted.add(Rule("IPCIDR", parsed[1]))
+                            ruleset_loaded.add(Rule("IPCIDR", parsed[1]))
                         case "IP-CIDR6":
-                            ruleset_converted.add(Rule("IPCIDR6", parsed[1]))
+                            ruleset_loaded.add(Rule("IPCIDR6", parsed[1]))
                         case _:
                             raise ValueError()
-    return ruleset_converted
+    return ruleset_loaded
 
 
 def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
@@ -276,17 +276,17 @@ def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> No
         dump(src, target, dst_path/target, filename)
 
 
-def apply_patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleSet:
+def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleSet:
     try:
         if override_patch_loc != Path(""):
-            patch = open(override_patch_loc/(name + ".txt"), mode="r").read().splitlines()
+            loaded_patch = open(override_patch_loc/(name + ".txt"), mode="r").read().splitlines()
         else:
-            patch = open(const.PATH_SOURCE_PATCH/(name + ".txt"), mode="r").read().splitlines()
+            loaded_patch = open(const.PATH_SOURCE_PATCH/(name + ".txt"), mode="r").read().splitlines()
     except FileNotFoundError:
         logging.warning(f'Patch "{name + ".txt"}" not found.')
         return src
     logging.info(f'Start applying patch "{name + ".txt"}"')
-    for line in patch:
+    for line in loaded_patch:
         if line.startswith("#"):
             continue
         parsed_line = line.split(":")
