@@ -255,6 +255,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
 
 
 def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> None:
+    targets = deepcopy(targets)
     if src.Type in ("IPCIDR", "Combined"):
         if all(t in targets for t in ["text", "text-plus"]):
             logging.info(f"{filename}: text-plus ignored as the same as text-type.")
