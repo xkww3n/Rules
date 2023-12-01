@@ -255,19 +255,23 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
 
 def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> None:
     targets = deepcopy(targets)
-    if src.Type in ("IPCIDR", "Combined"):
+    if src.Type == "IPCIDR":
         if all(t in targets for t in ["text", "text-plus"]):
-            logging.info(f"{filename}: text-plus ignored as the same as text-type.")
+            logging.info(f"{filename}: Ignored unsupported type for combined ruleset.")
             targets.remove("text-plus")
         if "geosite" in targets:
             logging.warning(f"{filename}: {src.Type}-type ruleset can't be exported to GeoSite source, ignored.")
             targets.remove("geosite")
-    if src.Type == "Combined" and any(t in targets for t in ["text", "text-plus"]):
-        logging.info(f"{filename}: Combined-type ruleset doesn't need to exported as plain text, skipped.")
+    if src.Type == "Combined" and any(t in targets for t in ["text", "text-plus", "yaml", "geosite"]):
+        logging.info(f"{filename}: Ignored unsupported type for combined ruleset.")
         if "text" in targets:
             targets.remove("text")
         if "text-plus" in targets:
             targets.remove("text-plus")
+        if "yaml" in targets:
+            targets.remove("yaml")
+        if "geosite" in targets:
+            targets.remove("geosite")
     for target in targets:
         dump(src, target, dst_path/target, filename)
 
