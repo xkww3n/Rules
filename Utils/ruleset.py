@@ -226,8 +226,6 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                                 if "domain" not in ruleset["rules"][0]:
                                     ruleset["rules"][0]["domain"] = []
                                 ruleset["rules"][0]["domain"].append(rule.Payload)
-                            case _:
-                                raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
                     dist.write(dumps(ruleset, indent=2))
                 case "IPCIDR":
                     for rule in src:
