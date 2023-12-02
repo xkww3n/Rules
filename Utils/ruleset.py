@@ -151,105 +151,62 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
             filename = filename + ".json"
         case _:
             filename = filename + ".txt"
-    try:
-        dist = open(dst/filename, mode="w", encoding="utf-8")
-    except FileNotFoundError:
-        dst.mkdir(parents=True)
-        dist = open(dst/filename, mode="w", encoding="utf-8")
-    match target:
-        case "text":
+    dst.mkdir(parents=True, exist_ok=True)
+    with open(dst/filename, mode="w", encoding="utf-8") as dist:
+        if target in ("text", "text-plus"):
             for rule in src:
-                if rule.Type == "DomainSuffix":
-                    dist.writelines(f".{rule.Payload}\n")
-                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6":
-                    dist.writelines(f"{rule.Payload}\n")
-        case "text-plus":
+                to_write = rule.Payload if rule.Type in ("DomainFull", "IPCIDR", "IPCIDR6") else f".{rule.Payload}"
+                to_write = f"+{to_write}\n" if (target == "text-plus"
+                                                and rule.Type == "DomainSuffix"
+                                                ) else f"{to_write}\n"
+                dist.writelines(to_write)
+        elif target in ("surge-compatible", "clash-compatible"):
             for rule in src:
-                if rule.Type == "DomainSuffix":
-                    dist.writelines(f"+.{rule.Payload}\n")
-                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6":
-                    dist.writelines(f"{rule.Payload}\n")
-        case "yaml":
+                match rule.Type:
+                    case "DomainSuffix":
+                        to_write = f"DOMAIN-SUFFIX,{rule.Payload}"
+                    case "DomainFull":
+                        to_write = f"DOMAIN,{rule.Payload}"
+                    case "IPCIDR":
+                        to_write = f"IP-CIDR,{rule.Payload}"
+                    case "IPCIDR6":
+                        to_write = f"IP-CIDR6,{rule.Payload}"
+                to_write = f"{to_write},Policy\n" if target == "clash-compatible" else f"{to_write}\n"
+                dist.writelines(to_write)
+        elif target == "yaml":
             dist.writelines("payload:\n")
             for rule in src:
                 if rule.Type == "DomainSuffix":
                     dist.writelines(f"  - '+.{rule.Payload}'\n")
                 elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6":
                     dist.writelines(f"  - '{rule.Payload}'\n")
-        case "surge-compatible":
-            for rule in src:
-                match rule.Type:
-                    case "DomainSuffix":
-                        dist.writelines(f"DOMAIN-SUFFIX,{rule.Payload}\n")
-                    case "DomainFull":
-                        dist.writelines(f"DOMAIN,{rule.Payload}\n")
-                    case "IPCIDR":
-                        dist.writelines(f"IP-CIDR,{rule.Payload}\n")
-                    case "IPCIDR6":
-                        dist.writelines(f"IP-CIDR6,{rule.Payload}\n")
-        case "clash-compatible":
-            for rule in src:
-                match rule.Type:
-                    case "DomainSuffix":
-                        dist.writelines(f"DOMAIN-SUFFIX,{rule.Payload},Policy\n")
-                    case "DomainFull":
-                        dist.writelines(f"DOMAIN,{rule.Payload},Policy\n")
-                    case "IPCIDR":
-                        dist.writelines(f"IP-CIDR,{rule.Payload},Policy\n")
-                    case "IPCIDR6":
-                        dist.writelines(f"IP-CIDR6,{rule.Payload},Policy\n")
-        case "geosite":
+        elif target == "geosite":
             for rule in src:
                 match rule.Type:
                     case "DomainSuffix":
                         dist.writelines(f"{rule.Payload}\n")
                     case "DomainFull":
                         dist.writelines(f"full:{rule.Payload}\n")
-                    case _:
-                        raise TypeError(f'Unsupported rule type "{rule.Type}". File: {dst}.')
-        case "sing-ruleset":
+        elif target == "sing-ruleset":
             ruleset = {
                 "version": 1,
-                "rules": [
-                    {}
-                ]
+                "rules": [{}]
             }
-            match src.Type:
-                case "Domain":
-                    for rule in src:
-                        match rule.Type:
-                            case "DomainSuffix":
-                                if "domain_suffix" not in ruleset["rules"][0]:
-                                    ruleset["rules"][0]["domain_suffix"] = []
-                                ruleset["rules"][0]["domain_suffix"].append(f".{rule.Payload}")
-                            case "DomainFull":
-                                if "domain" not in ruleset["rules"][0]:
-                                    ruleset["rules"][0]["domain"] = []
-                                ruleset["rules"][0]["domain"].append(rule.Payload)
-                    dist.write(dumps(ruleset, indent=2))
-                case "IPCIDR":
-                    for rule in src:
-                        if "ip_cidr" not in ruleset["rules"][0]:
-                            ruleset["rules"][0]["ip_cidr"] = []
-                        ruleset["rules"][0]["ip_cidr"].append(rule.Payload)
-                    dist.write(dumps(ruleset, indent=2))
-                case "Combined":
-                    for rule in src:
-                        match rule.Type:
-                            case "DomainFull":
-                                if "domain" not in ruleset["rules"][0]:
-                                    ruleset["rules"][0]["domain"] = []
-                                ruleset["rules"][0]["domain"].append(rule.Payload)
-                            case "DomainSuffix":
-                                if "domain_suffix" not in ruleset["rules"][0]:
-                                    ruleset["rules"][0]["domain_suffix"] = []
-                                ruleset["rules"][0]["domain_suffix"].append(f".{rule.Payload}")
-                            case "IPCIDR":
-                                if "ip_cidr" not in ruleset["rules"][0]:
-                                    ruleset["rules"][0]["ip_cidr"] = []
-                                ruleset["rules"][0]["ip_cidr"].append(rule.Payload)
-                    dist.write(dumps(ruleset, indent=2))
-        case _:
+            for rule in src:
+                if rule.Type == "DomainFull":
+                    if "domain" not in ruleset["rules"][0]:
+                        ruleset["rules"][0]["domain"] = []
+                    ruleset["rules"][0]["domain"].append(rule.Payload)
+                elif rule.Type == "DomainSuffix":
+                    if "domain_suffix" not in ruleset["rules"][0]:
+                        ruleset["rules"][0]["domain_suffix"] = []
+                    ruleset["rules"][0]["domain_suffix"].append(f".{rule.Payload}")
+                elif rule.Type in ("IPCIDR", "IPCIDR6"):
+                    if "ip_cidr" not in ruleset["rules"][0]:
+                        ruleset["rules"][0]["ip_cidr"] = []
+                    ruleset["rules"][0]["ip_cidr"].append(rule.Payload)
+            dist.write(dumps(ruleset, indent=2))
+        else:
             raise TypeError("Target type unsupported.")
 
 
@@ -277,11 +234,9 @@ def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> No
 
 
 def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleSet:
+    path_base = override_patch_loc if override_patch_loc != Path("") else const.PATH_SOURCE_PATCH
     try:
-        if override_patch_loc != Path(""):
-            loaded_patch = open(override_patch_loc/(name + ".txt"), mode="r").read().splitlines()
-        else:
-            loaded_patch = open(const.PATH_SOURCE_PATCH/(name + ".txt"), mode="r").read().splitlines()
+        loaded_patch = open(path_base/f"{name}.txt", mode="r", encoding="utf-8").read().splitlines()
     except FileNotFoundError:
         logging.warning(f'Patch "{name + ".txt"}" not found.')
         return src
