@@ -28,24 +28,24 @@ class Tests:
         test_src_path = Path("./src/custom_ruleset/")
         loaded_ruleset = ruleset.load(test_src_path / "domain.txt")
         assert loaded_ruleset == ruleset.RuleSet("Domain",
-                                                    [rule.Rule("DomainSuffix", "example.com"),
-                                                     rule.Rule("DomainFull", "example.com")])
+                                                 [rule.Rule("DomainSuffix", "example.com"),
+                                                  rule.Rule("DomainFull", "example.com")])
 
     def test_load_ipcidr(self):
         test_src_path = Path("./src/custom_ruleset/")
         loaded_ruleset = ruleset.load(test_src_path / "ipcidr.txt")
         assert loaded_ruleset == ruleset.RuleSet("IPCIDR",
-                                                    [rule.Rule("IPCIDR", "11.4.5.14"),
-                                                     rule.Rule("IPCIDR6", "fc00:114::514")])
+                                                 [rule.Rule("IPCIDR", "11.4.5.14"),
+                                                  rule.Rule("IPCIDR6", "fc00:114::514")])
 
     def test_load_combined(self):
         test_src_path = Path("./src/custom_ruleset/")
         loaded_ruleset = ruleset.load(test_src_path / "combined.txt")
         assert loaded_ruleset == ruleset.RuleSet("Combined",
-                                                    [rule.Rule("DomainFull", "example.com"),
-                                                     rule.Rule("DomainSuffix", "example.com"),
-                                                     rule.Rule("IPCIDR", "11.4.5.14"),
-                                                     rule.Rule("IPCIDR6", "fc00:114::514")])
+                                                 [rule.Rule("DomainFull", "example.com"),
+                                                  rule.Rule("DomainSuffix", "example.com"),
+                                                  rule.Rule("IPCIDR", "11.4.5.14"),
+                                                  rule.Rule("IPCIDR6", "fc00:114::514")])
 
     def test_patch(self):
         test_src_patch = Path("./src/patch/")
@@ -89,6 +89,22 @@ class Tests:
             assert f.read() == ("example.com\n"
                                 "full:example.com\n")
 
+        assert (test_dist/"sing-ruleset"/"domain.json").exists()
+        with open(test_dist/"sing-ruleset"/"domain.json", mode="r") as f:
+            assert f.read() == ('{\n'
+                                '  "version": 1,\n'
+                                '  "rules": [\n'
+                                '    {\n'
+                                '      "domain_suffix": [\n'
+                                '        ".example.com"\n'
+                                '      ],\n'
+                                '      "domain": [\n'
+                                '        "example.com"\n'
+                                '      ]\n'
+                                '    }\n'
+                                '  ]\n'
+                                '}')
+
     def test_dump_ipcidr(self):
         test_dist = Path("./dists/")
         ruleset_ipcidr = ruleset.load(Path("./src/custom_ruleset/ipcidr.txt"))
@@ -118,6 +134,20 @@ class Tests:
                                 "  - '11.4.5.14'\n"
                                 "  - 'fc00:114::514'\n")
 
+        assert (test_dist/"sing-ruleset"/"ipcidr.json").exists()
+        with open(test_dist/"sing-ruleset"/"ipcidr.json", mode="r") as f:
+            assert f.read() == ('{\n'
+                                '  "version": 1,\n'
+                                '  "rules": [\n'
+                                '    {\n'
+                                '      "ip_cidr": [\n'
+                                '        "11.4.5.14",\n'
+                                '        "fc00:114::514"\n'
+                                '      ]\n'
+                                '    }\n'
+                                '  ]\n'
+                                '}')
+
     def test_dump_combined(self):
         test_dist = Path("./dists/")
         ruleset_combined = ruleset.load(Path("./src/custom_ruleset/combined.txt"))
@@ -141,3 +171,22 @@ class Tests:
                                 "DOMAIN-SUFFIX,example.com\n"
                                 "IP-CIDR,11.4.5.14\n"
                                 "IP-CIDR6,fc00:114::514\n")
+
+        assert (test_dist/"sing-ruleset"/"combined.json").exists()
+        with open(test_dist/"sing-ruleset"/"combined.json", mode="r") as f:
+            assert f.read() == ('{\n'
+                                '  "version": 1,\n'
+                                '  "rules": [\n'
+                                '    {\n'
+                                '      "domain": [\n'
+                                '        "example.com"\n'
+                                '      ],\n'
+                                '      "domain_suffix": [\n'
+                                '        ".example.com"\n'
+                                '      ],\n'
+                                '      "ip_cidr": [\n'
+                                '        "11.4.5.14"\n'
+                                '      ]\n'
+                                '    }\n'
+                                '  ]\n'
+                                '}')
