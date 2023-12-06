@@ -155,7 +155,6 @@ class Tests:
 
         assert not (test_dist/"text"/"combined.txt").exists()
         assert not (test_dist/"text-plus"/"combined.txt").exists()
-        assert not (test_dist/"yaml"/"combined.yaml").exists()
         assert not (test_dist/"geosite"/"combined").exists()
 
         assert (test_dist/"clash-compatible"/"combined.txt").exists()
@@ -171,6 +170,14 @@ class Tests:
                                 "DOMAIN-SUFFIX,example.com\n"
                                 "IP-CIDR,11.4.5.14\n"
                                 "IP-CIDR6,fc00:114::514\n")
+
+        assert (test_dist/"yaml"/"combined.yaml").exists()
+        with open(test_dist/"yaml"/"combined.yaml", mode="r") as f:
+            assert f.read() == ("payload:\n"
+                                "  - 'DOMAIN,example.com'\n"
+                                "  - 'DOMAIN-SUFFIX,example.com'\n"
+                                "  - 'IP-CIDR,11.4.5.14'\n"
+                                "  - 'IP-CIDR6,fc00:114::514'\n")
 
         assert (test_dist/"sing-ruleset"/"combined.json").exists()
         with open(test_dist/"sing-ruleset"/"combined.json", mode="r") as f:

@@ -162,26 +162,30 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                                                 and rule.Type == "DomainSuffix"
                                                 ) else f"{to_write}\n"
                 dist.writelines(to_write)
-        elif target in ("surge-compatible", "clash-compatible"):
+        elif target in ("surge-compatible", "clash-compatible", "yaml"):
+            if target == "yaml":
+                dist.writelines("payload:\n")
             for rule in src:
-                match rule.Type:
-                    case "DomainSuffix":
-                        to_write = f"DOMAIN-SUFFIX,{rule.Payload}"
-                    case "DomainFull":
-                        to_write = f"DOMAIN,{rule.Payload}"
-                    case "IPCIDR":
-                        to_write = f"IP-CIDR,{rule.Payload}"
-                    case "IPCIDR6":
-                        to_write = f"IP-CIDR6,{rule.Payload}"
-                to_write = f"{to_write},Policy\n" if target == "clash-compatible" else f"{to_write}\n"
-                dist.writelines(to_write)
-        elif target == "yaml":
-            dist.writelines("payload:\n")
-            for rule in src:
-                if rule.Type == "DomainSuffix":
-                    dist.writelines(f"  - '+.{rule.Payload}'\n")
-                elif rule.Type == "DomainFull" or "IPCIDR" or "IPCIDR6":
-                    dist.writelines(f"  - '{rule.Payload}'\n")
+                if target == "yaml" and src.Type != "Combined":
+                    if rule.Type == "DomainSuffix":
+                        to_write = f"+.{rule.Payload}"
+                    else:
+                        to_write = rule.Payload
+                else:
+                    match rule.Type:
+                        case "DomainSuffix":
+                            to_write = f"DOMAIN-SUFFIX,{rule.Payload}"
+                        case "DomainFull":
+                            to_write = f"DOMAIN,{rule.Payload}"
+                        case "IPCIDR":
+                            to_write = f"IP-CIDR,{rule.Payload}"
+                        case "IPCIDR6":
+                            to_write = f"IP-CIDR6,{rule.Payload}"
+                if target == "clash-compatible":
+                    to_write += ",Policy"
+                elif target == "yaml":
+                    to_write = f"  - '{to_write}'"
+                dist.writelines(f"{to_write}\n")
         elif target == "geosite":
             for rule in src:
                 match rule.Type:
