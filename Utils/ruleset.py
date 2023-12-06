@@ -142,6 +142,8 @@ def load(src: Path) -> RuleSet:
 
 
 def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
+    if target not in const.TARGETS:
+        raise TypeError("Invalid target.")
     match target:
         case "yaml":
             filename = filename + ".yaml"
@@ -206,8 +208,6 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                         ruleset["rules"][0]["ip_cidr"] = []
                     ruleset["rules"][0]["ip_cidr"].append(rule.Payload)
             dist.write(dumps(ruleset, indent=2))
-        else:
-            raise TypeError("Target type unsupported.")
 
 
 def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> None:
