@@ -6,6 +6,7 @@ REM:.google-analytics.com
 REM:.googleanalytics.com
 REM:.googletagmanager.com
 REM:.googletagservices.com
+REM:.jf.10010.com
 
 ADD:.zijieapi.com
 ADD:.mediav.com
