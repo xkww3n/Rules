@@ -1,4 +1,4 @@
-from ipaddress import ip_network
+from ipaddress import ip_network, IPv4Network, IPv6Network
 
 
 class Rule:
@@ -37,9 +37,13 @@ class Rule:
                 raise ValueError(f"Invalid domain: {payload}")
         elif "IP" in self.Type:
             try:
-                ip_network(payload)
+                ip_type = ip_network(payload)
             except ValueError:
                 raise ValueError(f"Invalid IP address: {payload}")
+            if self.Type == "IPCIDR6" and type(ip_type) is IPv4Network:
+                raise ValueError(f"IPv4 address stored in IPv6 type: {payload}")
+            elif self.Type == "IPCIDR" and type(ip_type) is IPv6Network:
+                raise ValueError(f"IPv6 address stored in IPv4 type: {payload}")
         self.Payload = payload
 
     def set_tag(self, tag: str = ""):

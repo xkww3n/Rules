@@ -15,6 +15,10 @@ class Tests:
             rule.Rule("IPCIDR", "114514")
         with raises(ValueError):
             rule.Rule("IPCIDR6", "1919810")
+        with raises(ValueError):
+            rule.Rule("IPCIDR", "fc00:114::514")
+        with raises(ValueError):
+            rule.Rule("IPCIDR6", "1.14.5.14")
 
     def test_type_checking_runtime(self):
         test_rule = rule.Rule()
@@ -36,6 +40,14 @@ class Tests:
         test_rule.set_type("IPCIDR6")
         with raises(ValueError):
             test_rule.set_payload("1919810")
+
+        test_rule.set_type("IPCIDR")
+        with raises(ValueError):
+            test_rule.set_payload("fc00:114::514")
+
+        test_rule.set_type("IPCIDR6")
+        with raises(ValueError):
+            test_rule.set_payload("1.14.5.14")
 
     def test_to_str(self):
         test_rule = rule.Rule("DomainSuffix", "example.com", "TEST")
