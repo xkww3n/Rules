@@ -13,9 +13,9 @@ def parse(src: set, excluded_imports=None, excluded_tags=None) -> ruleset.RuleSe
             continue
         parsed_rule = rule.Rule()
         if "@" in line:
-            parsed_rule.set_tag(line.split("@")[1])
-            if parsed_rule.Tag in excluded_tags:
-                logging.debug(f'Line "{raw_line}" has a excluded tag "{parsed_rule.Tag}", skipped.')
+            parsed_rule_tag = line.split("@")[1]
+            if parsed_rule_tag in excluded_tags:
+                logging.debug(f'Line "{raw_line}" has a excluded tag "{parsed_rule_tag}", skipped.')
                 continue
             line = line.split(" @")[0]
         if ":" not in line:

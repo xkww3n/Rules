@@ -45,7 +45,9 @@ class Tests:
                                                  [rule.Rule("DomainFull", "example.com"),
                                                   rule.Rule("DomainSuffix", "example.com"),
                                                   rule.Rule("IPCIDR", "11.4.5.14"),
-                                                  rule.Rule("IPCIDR6", "fc00:114::514")])
+                                                  rule.Rule("IPCIDR6", "fc00:114::514"),
+                                                  rule.Rule("IPCIDR", "11.4.5.14", "no-resolve"),
+                                                  rule.Rule("IPCIDR6", "fc00:114::514", "no-resolve")])
 
     def test_patch(self):
         test_src_patch = Path("./src/patch/")
@@ -162,14 +164,18 @@ class Tests:
             assert f.read() == ("DOMAIN,example.com,Policy\n"
                                 "DOMAIN-SUFFIX,example.com,Policy\n"
                                 "IP-CIDR,11.4.5.14,Policy\n"
-                                "IP-CIDR6,fc00:114::514,Policy\n")
+                                "IP-CIDR6,fc00:114::514,Policy\n"
+                                "IP-CIDR,11.4.5.14,Policy,no-resolve\n"
+                                "IP-CIDR6,fc00:114::514,Policy,no-resolve\n")
 
         assert (test_dist/"surge-compatible"/"combined.txt").exists()
         with open(test_dist/"surge-compatible"/"combined.txt", mode="r") as f:
             assert f.read() == ("DOMAIN,example.com\n"
                                 "DOMAIN-SUFFIX,example.com\n"
                                 "IP-CIDR,11.4.5.14\n"
-                                "IP-CIDR6,fc00:114::514\n")
+                                "IP-CIDR6,fc00:114::514\n"
+                                "IP-CIDR,11.4.5.14,no-resolve\n"
+                                "IP-CIDR6,fc00:114::514,no-resolve\n")
 
         assert (test_dist/"yaml"/"combined.yaml").exists()
         with open(test_dist/"yaml"/"combined.yaml", mode="r") as f:
@@ -177,7 +183,9 @@ class Tests:
                                 "  - 'DOMAIN,example.com'\n"
                                 "  - 'DOMAIN-SUFFIX,example.com'\n"
                                 "  - 'IP-CIDR,11.4.5.14'\n"
-                                "  - 'IP-CIDR6,fc00:114::514'\n")
+                                "  - 'IP-CIDR6,fc00:114::514'\n"
+                                "  - 'IP-CIDR,11.4.5.14,no-resolve'\n"
+                                "  - 'IP-CIDR6,fc00:114::514,no-resolve'\n")
 
         assert (test_dist/"sing-ruleset"/"combined.json").exists()
         with open(test_dist/"sing-ruleset"/"combined.json", mode="r") as f:
@@ -192,6 +200,8 @@ class Tests:
                                 '        ".example.com"\n'
                                 '      ],\n'
                                 '      "ip_cidr": [\n'
+                                '        "11.4.5.14",\n'
+                                '        "fc00:114::514",\n'
                                 '        "11.4.5.14",\n'
                                 '        "fc00:114::514"\n'
                                 '      ]\n'

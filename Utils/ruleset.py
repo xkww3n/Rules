@@ -133,9 +133,17 @@ def load(src: Path) -> RuleSet:
                         case "DOMAIN-SUFFIX":
                             ruleset_loaded.add(Rule("DomainSuffix", parsed[1]))
                         case "IP-CIDR":
-                            ruleset_loaded.add(Rule("IPCIDR", parsed[1]))
+                            if len(parsed) == 3:
+                                parsed_rule = Rule("IPCIDR", parsed[1], parsed[2])
+                            else:
+                                parsed_rule = Rule("IPCIDR", parsed[1])
+                            ruleset_loaded.add(parsed_rule)
                         case "IP-CIDR6":
-                            ruleset_loaded.add(Rule("IPCIDR6", parsed[1]))
+                            if len(parsed) == 3:
+                                parsed_rule = Rule("IPCIDR6", parsed[1], parsed[2])
+                            else:
+                                parsed_rule = Rule("IPCIDR6", parsed[1])
+                            ruleset_loaded.add(parsed_rule)
                         case _:
                             raise ValueError()
     return ruleset_loaded
@@ -183,7 +191,13 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                             to_write = f"IP-CIDR6,{rule.Payload}"
                 if target == "clash-compatible":
                     to_write += ",Policy"
+                    if rule.Tag:
+                        to_write += f",{rule.Tag}"
+                elif target == "surge-compatible" and rule.Tag:
+                    to_write += f",{rule.Tag}"
                 elif target == "yaml":
+                    if rule.Tag:
+                        to_write += f",{rule.Tag}"
                     to_write = f"  - '{to_write}'"
                 dist.writelines(f"{to_write}\n")
         elif target == "geosite":

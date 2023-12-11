@@ -3,4 +3,6 @@ DOMAIN,example.com
 DOMAIN-SUFFIX,example.com
 IP-CIDR,11.4.5.14
 IP-CIDR6,fc00:114::514
+IP-CIDR,11.4.5.14,no-resolve
+IP-CIDR6,fc00:114::514,no-resolve
 # comment
