@@ -7,6 +7,7 @@ REM:.googleanalytics.com
 REM:.googletagmanager.com
 REM:.googletagservices.com
 REM:.jf.10010.com
+REM:.m.intl.taobao.com
 
 ADD:.mediav.com
 ADD:optimus-ads.amap.com
