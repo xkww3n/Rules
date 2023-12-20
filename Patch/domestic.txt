@@ -5,3 +5,4 @@ ADD:.push.apple.com
 REM:.wechat.com
 REM:.cncbinternational.com
 REM:.bochk.com
+REM:.icbcasia.com
