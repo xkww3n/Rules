@@ -59,7 +59,16 @@ class RuleSet:
         self.Payload = payload
 
     def deepcopy(self):
-        return deepcopy(self)
+        ruleset_copied = RuleSet(self.Type, [])
+        payload_copied = []
+        for rule in self.Payload:
+            rule_copied = Rule()
+            rule_copied.Type = rule.Type
+            rule_copied.Payload = rule.Payload
+            rule_copied.Tag = rule.Tag
+            payload_copied.append(rule_copied)
+        ruleset_copied.Payload = payload_copied
+        return ruleset_copied
 
     def add(self, rule):
         self.Payload.append(rule)
