@@ -1,9 +1,12 @@
 import logging
+from pathlib import Path
 
 from . import const, rule, ruleset
 
 
-def parse(src: set, excluded_imports=None, excluded_tags=None) -> ruleset.RuleSet:
+def parse(src_path: Path, excluded_imports=None, excluded_tags=None) -> ruleset.RuleSet:
+    with open(src_path, mode="r", encoding="utf-8") as raw:
+        src = raw.read().splitlines()
     excluded_imports = [] if not excluded_imports else excluded_imports
     excluded_tags = [] if not excluded_tags else excluded_tags
     ruleset_parsed = ruleset.RuleSet("Domain", [])
@@ -28,9 +31,7 @@ def parse(src: set, excluded_imports=None, excluded_tags=None) -> ruleset.RuleSe
             name_import = line.split("include:")[1]
             if name_import not in excluded_imports:
                 logging.debug(f'Line "{raw_line}" is a import rule. Start importing "{name_import}".')
-                src_import = set(
-                    open(const.PATH_SOURCE_V2FLY/name_import, mode="r", encoding="utf-8").read().splitlines())
-                ruleset_parsed |= parse(src_import, excluded_imports, excluded_tags)
+                ruleset_parsed |= parse(src_path.parent/name_import, excluded_imports, excluded_tags)
                 logging.debug(f'Imported "{name_import}".')
                 continue
             else:
@@ -48,7 +49,6 @@ def batch_gen(categories: list, tools: list, exclusions=None) -> None:
     exclusions = [] if not exclusions else exclusions
     for tool in tools:
         for category in categories:
-            src_geosite = set(open(const.PATH_SOURCE_V2FLY/category, mode="r", encoding="utf-8").read().splitlines())
-            ruleset_geosite = parse(src_geosite, exclusions)
+            ruleset_geosite = parse(const.PATH_SOURCE_V2FLY/category, exclusions)
             ruleset_geosite.sort()
             ruleset.dump(ruleset_geosite, tool, const.PATH_DIST/tool, category)
