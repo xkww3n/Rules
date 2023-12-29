@@ -111,7 +111,8 @@ class RuleSet:
 
 
 def load(src: Path) -> RuleSet:
-    src_toload = open(src, mode="r", encoding="utf-8").read().splitlines()
+    with open(src, mode="r", encoding="utf-8") as raw:
+        src_toload = raw.read().splitlines()
     try:
         ruleset_type = src_toload[0].split("@")[1]
     except IndexError:
@@ -184,10 +185,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                 dist.writelines("payload:\n")
             for rule in src:
                 if target == "yaml" and src.Type != "Combined":
-                    if rule.Type == "DomainSuffix":
-                        to_write = f"+.{rule.Payload}"
-                    else:
-                        to_write = rule.Payload
+                    to_write = f"+.{rule.Payload}" if rule.Type == "DomainSuffix" else rule.Payload
                 else:
                     match rule.Type:
                         case "DomainSuffix":
@@ -200,13 +198,9 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                             to_write = f"IP-CIDR6,{rule.Payload}"
                 if target == "clash-compatible":
                     to_write += ",Policy"
-                    if rule.Tag:
-                        to_write += f",{rule.Tag}"
-                elif target == "surge-compatible" and rule.Tag:
+                if rule.Tag:
                     to_write += f",{rule.Tag}"
-                elif target == "yaml":
-                    if rule.Tag:
-                        to_write += f",{rule.Tag}"
+                if target == "yaml":
                     to_write = f"  - '{to_write}'"
                 dist.writelines(f"{to_write}\n")
         elif target == "geosite":
