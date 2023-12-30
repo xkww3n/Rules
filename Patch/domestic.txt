@@ -6,3 +6,4 @@ REM:.wechat.com
 REM:.cncbinternational.com
 REM:.bochk.com
 REM:.icbcasia.com
+REM:.chinamobile.com
