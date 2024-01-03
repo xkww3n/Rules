@@ -43,6 +43,7 @@
 - [乘风广告过滤规则](https://github.com/xinggsf/Adblock-Plus-Rule/)
 - [d3Host List by d3ward](https://github.com/d3ward/toolz/blob/master/src/d3host.adblock)
 - [Domain list community](https://github.com/v2fly/domain-list-community)
+- [dnsmasq-china-list](https://github.com/felixonmars/dnsmasq-china-list)
 - [chnroutes2 (better-aggregated chnroutes)](https://github.com/misakaio/chnroutes2/)
 - [aggregate6](https://github.com/job/aggregate6)
 - [python-abp](https://hg.adblockplus.org/python-abp/)

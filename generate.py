@@ -111,6 +111,12 @@ for item in ruleset_domestic.deepcopy():
     if any([item.Payload.endswith(os_tld) for os_tld in tld_overseas]):
         ruleset_domestic.remove(item)
         logger.debug(f"{item} removed for having a overseas TLD.")
+
+# Import dnsmasq-china-list
+raw = connection.get("https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/apple.china.conf").text
+for line in raw.replace("server=/", "").replace("/114.114.114.114", "").splitlines():
+    ruleset_domestic.add(rule.Rule("DomainFull", line))
+
 ruleset_domestic = ruleset.patch(ruleset_domestic, "domestic")
 
 # Add all domestic TLDs to domestic rules, then perform deduplication.
