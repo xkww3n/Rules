@@ -1,4 +1,3 @@
-aggregate6==1.0.12
 pytest==7.4.3
 python-abp==0.2.0
 requests==2.31.0

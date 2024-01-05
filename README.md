@@ -45,6 +45,7 @@
 - [Domain list community](https://github.com/v2fly/domain-list-community)
 - [dnsmasq-china-list](https://github.com/felixonmars/dnsmasq-china-list)
 - [chnroutes2 (better-aggregated chnroutes)](https://github.com/misakaio/chnroutes2/)
+- [中国运营商IP地址库](https://github.com/gaoyifan/china-operator-ip)
 - [aggregate6](https://github.com/job/aggregate6)
 - [python-abp](https://hg.adblockplus.org/python-abp/)
 - [Loyalsoldier / domain-list-custom](https://github.com/Loyalsoldier/domain-list-custom/)

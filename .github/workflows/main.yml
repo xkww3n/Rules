@@ -95,8 +95,7 @@ jobs:
                   "type": "cutter",
                   "action": "remove",
                   "args": {
-                    "wantedList": ["cn"],
-                    "onlyIPType": "ipv4"
+                    "wantedList": ["cn"]
                   }
                 },
                 {

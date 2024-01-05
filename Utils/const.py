@@ -32,4 +32,4 @@ LIST_EXCL_URL = [
 ]
 
 URL_CHNROUTES2 = "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"
-URL_CHNROUTES_V6 = "https://ftp.apnic.net/stats/apnic/delegated-apnic-latest"
+URL_CHNROUTES_V6 = "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt"
