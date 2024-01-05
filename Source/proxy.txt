@@ -3162,3 +3162,7 @@
 .zyxel.com
 .zztt15.com
 .zzztube.com
+
+# The following are domains that are not polluted but still recommended to proxy for various reasons.
+.ncbtech.cn
+.bignox.com
