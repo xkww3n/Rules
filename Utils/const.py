@@ -1,7 +1,7 @@
 from pathlib import Path
 
 TARGETS = ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible", "geosite", "sing-ruleset"]
-PATH_SOURCE_V2FLY = Path("./domain-list-community/data/")
+PATH_SOURCE_GEOSITE = Path("./domain-list-community/data/")
 PATH_SOURCE_CUSTOM = Path("./Source/")
 PATH_SOURCE_PATCH = Path("./Patch/")
 PATH_DIST = Path("./dists/")
@@ -31,5 +31,5 @@ LIST_EXCL_URL = [
     "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt"
 ]
 
-URL_CHNROUTES2 = "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"
-URL_CHNROUTES_V6 = "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt"
+URL_DOMESTIC_IP_V4 = "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt"
+URL_DOMESTIC_IP_V6 = "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt"

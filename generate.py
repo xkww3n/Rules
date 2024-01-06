@@ -65,7 +65,7 @@ for line in parse_filterlist(src_exclusions):
         ruleset_exclusions_raw.add(rule_exclude)
         logger.debug(f'Line "{line.text}" is added to raw exclude set. "{rule_exclude}".')
 
-ruleset_rejections_v2fly = geosite.parse(const.PATH_SOURCE_V2FLY/"category-ads-all")
+ruleset_rejections_v2fly = geosite.parse(const.PATH_SOURCE_GEOSITE/"category-ads-all")
 ruleset_rejections |= ruleset_rejections_v2fly
 logger.info(f"Imported {(len(ruleset_rejections_v2fly))} reject rules from v2fly category-ads-all list.")
 
@@ -102,7 +102,7 @@ logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f'
 logger.info("Start generating domestic rules.")
 START_TIME = time_ns()
 
-ruleset_domestic = geosite.parse(const.PATH_SOURCE_V2FLY/"geolocation-cn", None, ["!cn"])
+ruleset_domestic = geosite.parse(const.PATH_SOURCE_GEOSITE/"geolocation-cn", None, ["!cn"])
 logger.info(f"Imported {len(ruleset_domestic)} domestic rules from v2fly geolocation-cn list.")
 
 for item in ruleset_domestic.deepcopy():
@@ -119,7 +119,7 @@ for line in raw.replace("server=/", "").replace("/114.114.114.114", "").splitlin
 ruleset_domestic = ruleset.patch(ruleset_domestic, "domestic")
 
 # Add all domestic TLDs to domestic rules, then perform deduplication.
-ruleset_domestic_tlds = geosite.parse(const.PATH_SOURCE_V2FLY/"tld-cn")
+ruleset_domestic_tlds = geosite.parse(const.PATH_SOURCE_GEOSITE/"tld-cn")
 logger.info(f"Imported {len(ruleset_domestic_tlds)} domestic TLDs.")
 ruleset_domestic |= ruleset_domestic_tlds
 ruleset_domestic.dedup()
@@ -132,7 +132,7 @@ logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f'
 # Convert domestic CIDR rules.
 logger.info("Start converting domestic CIDR rules.")
 START_TIME = time_ns()
-src_cidr = connection.get(const.URL_CHNROUTES2).text.splitlines()
+src_cidr = connection.get(const.URL_DOMESTIC_IP_V4).text.splitlines()
 ruleset_cidr = ruleset.RuleSet("IPCIDR", [])
 for line in src_cidr:
     if not line.startswith("#"):
@@ -141,7 +141,7 @@ logger.info(f"Generated {len(ruleset_cidr)} domestic IPv4 rules.")
 
 ruleset.batch_dump(ruleset_cidr, const.TARGETS, const.PATH_DIST, "domestic_ip")
 
-src_cidr6 = connection.get(const.URL_CHNROUTES_V6).text.splitlines()
+src_cidr6 = connection.get(const.URL_DOMESTIC_IP_V6).text.splitlines()
 ruleset_cidr6 = ruleset.RuleSet("IPCIDR", [])
 for line in src_cidr6:
     ruleset_cidr6.add(rule.Rule("IPCIDR6", line))

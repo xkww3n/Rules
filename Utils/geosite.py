@@ -49,6 +49,6 @@ def batch_gen(categories: list, tools: list, exclusions=None) -> None:
     exclusions = [] if not exclusions else exclusions
     for tool in tools:
         for category in categories:
-            ruleset_geosite = parse(const.PATH_SOURCE_V2FLY/category, exclusions)
+            ruleset_geosite = parse(const.PATH_SOURCE_GEOSITE/category, exclusions)
             ruleset_geosite.sort()
             ruleset.dump(ruleset_geosite, tool, const.PATH_DIST/tool, category)
