@@ -18,10 +18,10 @@
   - 适用于 [V2Ray](https://www.v2fly.org/)。
     - GeoSite 数据库：<https://rules.xkww3n.cyou/geosite.dat>
     - GeoIP 数据库：<https://rules.xkww3n.cyou/geoip.dat>
-- sing-box GeoSite/GeoIP 数据库
-  - 适用于 [sing-box](https://sing-box.sagernet.org/)。
-    - GeoSite 数据库：<https://rules.xkww3n.cyou/geosite.db>
-    - GeoIP 数据库：<https://rules.xkww3n.cyou/geoip.db>
+- ~~sing-box GeoSite/GeoIP 数据库~~ 该类型已在 sing-box v1.8.0 中被弃用，请改用规则集。参阅：<https://sing-box.sagernet.org/migration/>
+  - ~~适用于 [sing-box](https://sing-box.sagernet.org/)。~~
+    - ~~GeoSite 数据库：<https://rules.xkww3n.cyou/geosite.db>~~
+    - ~~GeoIP 数据库：<https://rules.xkww3n.cyou/geoip.db>~~
 - sing-box 规则集
   - 适用于 [sing-box](https://sing-box.sagernet.org/)。
 - MaxMind MMDB 数据库
