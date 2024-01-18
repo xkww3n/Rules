@@ -20,3 +20,13 @@ ADD:ad.doubleclick.net
 
 ADD:ssl.p.jwpcdn.com
 ADD:click.mz.simba.taobao.com
+
+# JPush web portal
+ADD:www.jiguang.cn
+ADD:m.jiguang.cn
+ADD:docs.jiguang.cn
+ADD:img.jiguang.cn
+ADD:portal-test.jiguang.cn
+ADD:community.jiguang.cn
+ADD:ssp.jiguang.cn
+ADD:s.jiguang.cn
