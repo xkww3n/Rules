@@ -5,7 +5,7 @@
 
 本仓库提供以下格式的规则集：
 - 纯文本规则集（Surge 标准，点号通配符）
-  - 适用于 [Surge](https://nssurge.com/)（v3 及更新的版本）、[Stash](https://stash.ws/) 和 [Surfboard](https://getsurfboard.com)。
+  - 适用于 [Surge](https://nssurge.com/)（v3 及更新的版本）、[Stash](https://stash.ws/)、[Surfboard](https://getsurfboard.com) 和 [Egern](https://apps.apple.com/us/app/egern/id1616105820)。
 - 纯文本规则集（Clash 标准，加号通配符）
   - 适用于 Clash Premium（2023.04.13 及更新的版本）和 Clash Meta（v1.14.4 及更新的版本）。
 - YAML 规则集
