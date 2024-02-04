@@ -1,32 +1,4 @@
-# Adjust web portal
-ADD:www.adjust.com
-ADD:help.adjust.com
-ADD:suite.adjust.com
-ADD:try.adjust.com
-ADD:mobilespreeconf.adjust.com
-ADD:craft.adjust.com
-ADD:atom.adjust.com
-ADD:insights.adjust.com
-ADD:events.adjust.com
-ADD:dash.adjust.com
-
-# AppsFlyer web portal
-ADD:www.appsflyer.com
-ADD:hq1.appsflyer.com
-ADD:support.appsflyer.com
-
 ADD:wwads.cn
 ADD:ad.doubleclick.net
-
 ADD:ssl.p.jwpcdn.com
 ADD:click.mz.simba.taobao.com
-
-# JPush web portal
-ADD:www.jiguang.cn
-ADD:m.jiguang.cn
-ADD:docs.jiguang.cn
-ADD:img.jiguang.cn
-ADD:portal-test.jiguang.cn
-ADD:community.jiguang.cn
-ADD:ssp.jiguang.cn
-ADD:s.jiguang.cn

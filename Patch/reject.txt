@@ -11,6 +11,9 @@ REM:.m.intl.taobao.com
 REM:.da.mmarket.com
 REM:.sqdd.myapp.com
 REM:.is1-ssl.mzstatic.com
+REM:.jiguang.cn
+REM:.umeng.com
+REM:.appsflyer.com
 
 ADD:.mediav.com
 ADD:optimus-ads.amap.com
