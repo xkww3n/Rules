@@ -69,6 +69,7 @@ ruleset_rejections_v2fly = geosite.parse(const.PATH_SOURCE_GEOSITE/"category-ads
 ruleset_rejections |= ruleset_rejections_v2fly
 logger.info(f"Imported {(len(ruleset_rejections_v2fly))} reject rules from v2fly category-ads-all list.")
 
+ruleset_rejections = ruleset.patch(ruleset_rejections, "reject")
 ruleset_exclusions = ruleset.RuleSet("Domain", [])
 logger.debug("Start deduplicating reject and exclude set.")
 ruleset_rejections.dedup()
@@ -80,19 +81,16 @@ for domain_exclude in ruleset_exclusions_raw.deepcopy():
             ruleset_rejections.remove(domain_reject)
             ruleset_exclusions_raw.remove(domain_exclude)
             logger.debug(f"{domain_reject} is removed as excluded by {domain_exclude}.")
+ruleset.batch_dump(ruleset_rejections, const.TARGETS, const.PATH_DIST, "reject")
+logger.info(f"Generated {len(ruleset_rejections)} reject rules.")
 
 for domain_exclude in ruleset_exclusions_raw:
     for domain_reject in ruleset_rejections:
         if domain_exclude.Payload.endswith(domain_reject.Payload):
             ruleset_exclusions.add(domain_exclude)
             logger.debug(f"{domain_exclude} is added to final exclude set.")
-
-ruleset_rejections = ruleset.patch(ruleset_rejections, "reject")
 ruleset_exclusions = ruleset.patch(ruleset_exclusions, "exclude")
-
-logger.info(f"Generated {len(ruleset_rejections)} reject rules.")
 logger.info(f"Generated {len(ruleset_exclusions)} exclude rules.")
-ruleset.batch_dump(ruleset_rejections, const.TARGETS, const.PATH_DIST, "reject")
 ruleset.batch_dump(ruleset_exclusions, const.TARGETS, const.PATH_DIST, "exclude")
 
 END_TIME = time_ns()
