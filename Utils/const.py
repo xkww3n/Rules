@@ -15,10 +15,8 @@ LIST_REJECT_URL = [
     "https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi_filter.txt",
     # AdGuard Mobile Filter
     "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt",
-    # ADgk
-    "https://raw.githubusercontent.com/banbendalao/ADgk/master/ADgk.txt",
     # AWAvenue 秋风广告规则
-    "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Adblock-Rule/main/AWAvenue-Adblock-Rule.txt",
+    "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/AWAvenue-Ads-Rule.txt",
     # 乘风 视频过滤规则
     "https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/mv.txt",
     # d3Host List by d3ward

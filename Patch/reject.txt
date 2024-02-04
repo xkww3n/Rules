@@ -1,19 +1,11 @@
-REM:.gsp0.baidu.com
-REM:.qhres2.com
-REM:.onelink.me
 REM:.app-measurement.com
 REM:.google-analytics.com
 REM:.googleanalytics.com
 REM:.googletagmanager.com
 REM:.googletagservices.com
-REM:.jf.10010.com
 REM:.m.intl.taobao.com
-REM:.da.mmarket.com
-REM:.sqdd.myapp.com
-REM:.is1-ssl.mzstatic.com
 REM:.jiguang.cn
 REM:.umeng.com
-REM:.appsflyer.com
 
 ADD:.mediav.com
 ADD:optimus-ads.amap.com
