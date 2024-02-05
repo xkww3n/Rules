@@ -50,5 +50,5 @@ def batch_gen(categories: list, tools: list, exclusions=None) -> None:
     for tool in tools:
         for category in categories:
             ruleset_geosite = parse(const.PATH_SOURCE_GEOSITE/category, exclusions)
-            ruleset_geosite.sort()
+            ruleset_geosite.dedup()
             ruleset.dump(ruleset_geosite, tool, const.PATH_DIST/tool, category)
