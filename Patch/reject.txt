@@ -6,6 +6,7 @@ REM:.googletagservices.com
 REM:.m.intl.taobao.com
 REM:.jiguang.cn
 REM:.umeng.com
+REM:.cnzz.com
 
 ADD:.mediav.com
 ADD:optimus-ads.amap.com
