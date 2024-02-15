@@ -71,7 +71,8 @@ class RuleSet:
         return ruleset_copied
 
     def add(self, rule):
-        self.Payload.append(rule)
+        if rule not in self.Payload:
+            self.Payload.append(rule)
 
     def remove(self, rule):
         self.Payload.remove(rule)
