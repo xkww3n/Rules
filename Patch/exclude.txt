@@ -1,4 +1,3 @@
-ADD:wwads.cn
 ADD:ad.doubleclick.net
 ADD:ssl.p.jwpcdn.com
 ADD:click.mz.simba.taobao.com
