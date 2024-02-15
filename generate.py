@@ -40,15 +40,15 @@ for line in parse_filterlist(src_rejections):
     if rule.is_domain(line_stripped):
         if line.action == "block":
             if line.text.startswith("."):
-                rule_reject = rule.Rule("DomainSuffix", line.text.strip(".").strip("^"))
-                ruleset_rejections.add(rule_reject)
-                logger.debug(f'Line "{line.text}" is added to reject set. {rule_reject}.')
+                line_stripped = line.text.strip(".").strip("^")
             else:
-                rule_reject = rule.Rule("DomainSuffix", line.text.strip("|").strip("^"))
-                ruleset_rejections.add(rule_reject)
-                logger.debug(
-                    f'Line "{line.text}" is added to reject set. "{rule_reject}".'
-                )
+                line_stripped = line.text.strip("|").strip("^")
+            if line_stripped.count(".") == 1:
+                rule_reject = rule.Rule("DomainSuffix", line_stripped)
+            else:
+                rule_reject = rule.Rule("DomainFull", line_stripped)
+            ruleset_rejections.add(rule_reject)
+            logger.debug(f'Line "{line.text}" is added to reject set. "{rule_reject}".')
         elif line.action == "allow":
             src_exclusions.append(line.text)
             logger.debug(f'Line "{line.text}" is added to exclude set.')
