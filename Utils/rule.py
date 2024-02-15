@@ -20,10 +20,10 @@ class Rule:
         return f'Type: "{self.Type}", Payload: "{self.Payload}", Tag: {self.Tag if self.Tag else "NONE"}'
 
     def __hash__(self):
-        return hash(("type" + self.Type, "payload" + self.Payload))
+        return hash(self.Type) + hash(self.Payload) + hash(self.Tag)
 
     def __eq__(self, other):
-        return self.Type == other.Type and self.Payload == other.Payload
+        return self.Type == other.Type and self.Payload == other.Payload and self.Tag == other.Tag
 
     def set_type(self, rule_type: str):
         allowed_type = ("DomainSuffix", "DomainFull", "IPCIDR", "IPCIDR6")
