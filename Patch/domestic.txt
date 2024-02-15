@@ -7,3 +7,4 @@ REM:.cncbinternational.com
 REM:.bochk.com
 REM:.icbcasia.com
 REM:.chinamobile.com
+REM:.rfchost.com
