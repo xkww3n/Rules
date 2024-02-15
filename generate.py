@@ -65,10 +65,6 @@ for line in parse_filterlist(src_exclusions):
         ruleset_exclusions_raw.add(rule_exclude)
         logger.debug(f'Line "{line.text}" is added to raw exclude set. "{rule_exclude}".')
 
-ruleset_rejections_v2fly = geosite.parse(const.PATH_SOURCE_GEOSITE/"category-ads-all")
-ruleset_rejections |= ruleset_rejections_v2fly
-logger.info(f"Imported {(len(ruleset_rejections_v2fly))} reject rules from v2fly category-ads-all list.")
-
 ruleset_rejections = ruleset.patch(ruleset_rejections, "reject")
 ruleset_exclusions = ruleset.RuleSet("Domain", [])
 logger.debug("Start deduplicating reject and exclude set.")
