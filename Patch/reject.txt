@@ -1,16 +1,8 @@
 REM:.app-measurement.com
-REM:.google-analytics.com
-REM:.googleanalytics.com
-REM:.googletagmanager.com
-REM:.googletagservices.com
-REM:.m.intl.taobao.com
 REM:.jiguang.cn
-REM:.umeng.com
 REM:.cnzz.com
-REM:.wwads.cn
 
 ADD:.mediav.com
-ADD:optimus-ads.amap.com
 ADD:.partwithner.com
 ADD:.rxeosevsso.com
 ADD:.mc7clurd09pla4nrtat7ion.com
