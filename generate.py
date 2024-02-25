@@ -2,10 +2,20 @@ import logging.config
 from pathlib import Path
 from time import time_ns
 
-from abp.filters.parser import parse_filterlist
+from abp.filters.parser import Filter, parse_filterlist
 from requests import Session
 
 from Utils import const, geosite, rule, ruleset
+
+
+def strip_adblock(filter_to_strip: Filter):
+    if (not filter_to_strip.type == "filter"
+            or filter_to_strip.options
+            or filter_to_strip.text.startswith("^")
+            or not filter_to_strip.selector["type"] == "url-pattern"):
+        return
+    return filter_to_strip.text.strip("@").strip("|").strip("^")
+
 
 logging.config.fileConfig("logging.ini")
 logger = logging.getLogger("root")
@@ -31,13 +41,8 @@ ruleset_rejections = ruleset.RuleSet("Domain", [])
 ruleset_exclusions_raw = ruleset.RuleSet("Domain", [])
 
 for line in parse_filterlist(src_rejections):
-    if (not line.type == "filter"
-            or line.options
-            or line.text.startswith("^")
-            or not line.selector["type"] == "url-pattern"):
-        continue
-    line_stripped = line.text.strip("@").strip("|").strip("^")
-    if rule.is_domain(line_stripped):
+    line_stripped = strip_adblock(line)
+    if line_stripped and rule.is_domain(line_stripped):
         if line.action == "block":
             if line.text.startswith("."):
                 line_stripped = line.text.strip(".").strip("^")
@@ -54,13 +59,8 @@ for line in parse_filterlist(src_rejections):
             logger.debug(f'Line "{line.text}" is added to exclude set.')
 
 for line in parse_filterlist(src_exclusions):
-    if (not line.type == "filter"
-            or line.options
-            or line.text.startswith("^")
-            or not line.selector["type"] == "url-pattern"):
-        continue
-    line_stripped = line.text.strip("@").strip("|").strip("^")
-    if rule.is_domain(line_stripped):
+    line_stripped = strip_adblock(line)
+    if line_stripped and rule.is_domain(line_stripped):
         rule_exclude = rule.Rule("DomainFull", line_stripped)
         ruleset_exclusions_raw.add(rule_exclude)
         logger.debug(f'Line "{line.text}" is added to raw exclude set. "{rule_exclude}".')
