@@ -224,7 +224,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                 elif rule.Type == "DomainSuffix":
                     if "domain_suffix" not in ruleset["rules"][0]:
                         ruleset["rules"][0]["domain_suffix"] = []
-                    ruleset["rules"][0]["domain_suffix"].append(f".{rule.Payload}")
+                    ruleset["rules"][0]["domain_suffix"].append(rule.Payload)
                 elif rule.Type in ("IPCIDR", "IPCIDR6"):
                     if "ip_cidr" not in ruleset["rules"][0]:
                         ruleset["rules"][0]["ip_cidr"] = []
