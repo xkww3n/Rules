@@ -123,8 +123,8 @@ ruleset.batch_dump(ruleset_domestic, const.TARGETS, const.PATH_DIST, "domestic")
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
-# Convert domestic CIDR rules.
-logger.info("Start converting domestic CIDR rules.")
+# Generate domestic CIDR rules.
+logger.info("Start generating domestic CIDR rules.")
 START_TIME = time_ns()
 src_cidr = connection.get(const.URL_DOMESTIC_IP_V4).text.splitlines()
 ruleset_cidr = ruleset.RuleSet("IPCIDR", [])
@@ -146,8 +146,6 @@ ruleset.batch_dump(ruleset_cidr6, const.TARGETS, const.PATH_DIST, "domestic_ip6"
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
-# Convert v2fly community rules.
-logger.info("Start converting v2fly community rules.")
 # Generate Telegram CIDR rules.
 logger.info("Start generating Telegram CIDR rules.")
 START_TIME = time_ns()
@@ -164,6 +162,8 @@ ruleset.batch_dump(ruleset_cidr, const.TARGETS, const.PATH_DIST, "telegram")
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
+# Generate v2fly community rules.
+logger.info("Start generating v2fly community rules.")
 START_TIME = time_ns()
 
 CATEGORIES = [
@@ -192,7 +192,7 @@ START_TIME = time_ns()
 list_file_custom = Path.iterdir(const.PATH_SOURCE_CUSTOM)
 for filename in list_file_custom:
     if filename.is_file():
-        logger.debug(f'Start converting "{filename.name}".')
+        logger.debug(f'Start generating "{filename.name}".')
         ruleset_custom = ruleset.load(filename)
         ruleset.batch_dump(ruleset_custom, const.TARGETS, const.PATH_DIST, filename.stem)
         logger.debug(f"Converted {len(ruleset_custom)} rules.")
@@ -200,7 +200,7 @@ for filename in list_file_custom:
 # There's no personal classical type ruleset. So no logic about that.
 list_file_personal = Path.iterdir(const.PATH_SOURCE_CUSTOM/"personal")
 for filename in list_file_personal:
-    logger.debug(f'Start converting "{filename.name}".')
+    logger.debug(f'Start generating "{filename.name}".')
     ruleset_personal = ruleset.load(filename)
     ruleset.batch_dump(ruleset_personal, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
                        const.PATH_DIST/"personal", filename.stem)
