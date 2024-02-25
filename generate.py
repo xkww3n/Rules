@@ -148,6 +148,22 @@ logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f'
 
 # Convert v2fly community rules.
 logger.info("Start converting v2fly community rules.")
+# Generate Telegram CIDR rules.
+logger.info("Start generating Telegram CIDR rules.")
+START_TIME = time_ns()
+src_cidr = connection.get("https://core.telegram.org/resources/cidr.txt").text.splitlines()
+ruleset_cidr = ruleset.RuleSet("IPCIDR", [])
+for line in src_cidr:
+    if ":" not in line:
+        ruleset_cidr.add(rule.Rule("IPCIDR", line))
+    else:
+        ruleset_cidr.add(rule.Rule("IPCIDR6", line))
+
+ruleset.batch_dump(ruleset_cidr, const.TARGETS, const.PATH_DIST, "telegram")
+
+END_TIME = time_ns()
+logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
+
 START_TIME = time_ns()
 
 CATEGORIES = [
