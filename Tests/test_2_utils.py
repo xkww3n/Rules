@@ -1,6 +1,9 @@
 from pathlib import Path
 
-from Utils import const, rule, ruleset
+import config
+from Models.rule import Rule
+from Models.ruleset import RuleSet
+from Utils import rule, ruleset
 
 
 class Tests:
@@ -26,39 +29,39 @@ class Tests:
 
     def test_load_domain(self):
         test_src_path = Path("./src/custom_ruleset/")
-        loaded_ruleset = ruleset.load(test_src_path / "domain.txt")
-        assert loaded_ruleset == ruleset.RuleSet("Domain",
-                                                 [rule.Rule("DomainSuffix", "example.com"),
-                                                  rule.Rule("DomainFull", "example.com")])
+        loaded_ruleset = ruleset.load(test_src_path/"domain.txt")
+        assert loaded_ruleset == RuleSet("Domain",
+                                         [Rule("DomainSuffix", "example.com"),
+                                          Rule("DomainFull", "example.com")])
 
     def test_load_ipcidr(self):
         test_src_path = Path("./src/custom_ruleset/")
-        loaded_ruleset = ruleset.load(test_src_path / "ipcidr.txt")
-        assert loaded_ruleset == ruleset.RuleSet("IPCIDR",
-                                                 [rule.Rule("IPCIDR", "11.4.5.14"),
-                                                  rule.Rule("IPCIDR6", "fc00:114::514")])
+        loaded_ruleset = ruleset.load(test_src_path/"ipcidr.txt")
+        assert loaded_ruleset == RuleSet("IPCIDR",
+                                         [Rule("IPCIDR", "11.4.5.14"),
+                                          Rule("IPCIDR6", "fc00:114::514")])
 
     def test_load_combined(self):
         test_src_path = Path("./src/custom_ruleset/")
-        loaded_ruleset = ruleset.load(test_src_path / "combined.txt")
-        assert loaded_ruleset == ruleset.RuleSet("Combined",
-                                                 [rule.Rule("DomainFull", "example.com"),
-                                                  rule.Rule("DomainSuffix", "example.com"),
-                                                  rule.Rule("IPCIDR", "11.4.5.14"),
-                                                  rule.Rule("IPCIDR6", "fc00:114::514"),
-                                                  rule.Rule("IPCIDR", "11.4.5.14", "no-resolve"),
-                                                  rule.Rule("IPCIDR6", "fc00:114::514", "no-resolve")])
+        loaded_ruleset = ruleset.load(test_src_path/"combined.txt")
+        assert loaded_ruleset == RuleSet("Combined",
+                                         [Rule("DomainFull", "example.com"),
+                                          Rule("DomainSuffix", "example.com"),
+                                          Rule("IPCIDR", "11.4.5.14"),
+                                          Rule("IPCIDR6", "fc00:114::514"),
+                                          Rule("IPCIDR", "11.4.5.14", "no-resolve"),
+                                          Rule("IPCIDR6", "fc00:114::514", "no-resolve")])
 
     def test_patch(self):
         test_src_patch = Path("./src/patch/")
-        test_ruleset = ruleset.RuleSet("Domain", [rule.Rule("DomainFull", "example.com")])
+        test_ruleset = RuleSet("Domain", [Rule("DomainFull", "example.com")])
         ruleset.patch(test_ruleset, "patch", test_src_patch)
-        assert test_ruleset == ruleset.RuleSet("Domain", [rule.Rule("DomainSuffix", "example.com")])
+        assert test_ruleset == RuleSet("Domain", [Rule("DomainSuffix", "example.com")])
 
     def test_dump_domain(self):
         test_dist = Path("./dists/")
         ruleset_domain = ruleset.load(Path("./src/custom_ruleset/domain.txt"))
-        ruleset.batch_dump(ruleset_domain, const.TARGETS, test_dist, "domain")
+        ruleset.batch_dump(ruleset_domain, config.TARGETS, test_dist, "domain")
 
         assert (test_dist/"text"/"domain.txt").exists()
         with open(test_dist/"text"/"domain.txt", mode="r") as f:
@@ -110,7 +113,7 @@ class Tests:
     def test_dump_ipcidr(self):
         test_dist = Path("./dists/")
         ruleset_ipcidr = ruleset.load(Path("./src/custom_ruleset/ipcidr.txt"))
-        ruleset.batch_dump(ruleset_ipcidr, const.TARGETS, test_dist, "ipcidr")
+        ruleset.batch_dump(ruleset_ipcidr, config.TARGETS, test_dist, "ipcidr")
 
         assert not (test_dist/"text-plus"/"ipcidr.txt").exists()
         assert not (test_dist/"geosite"/"ipcidr").exists()
@@ -153,7 +156,7 @@ class Tests:
     def test_dump_combined(self):
         test_dist = Path("./dists/")
         ruleset_combined = ruleset.load(Path("./src/custom_ruleset/combined.txt"))
-        ruleset.batch_dump(ruleset_combined, const.TARGETS, test_dist, "combined")
+        ruleset.batch_dump(ruleset_combined, config.TARGETS, test_dist, "combined")
 
         assert not (test_dist/"text"/"combined.txt").exists()
         assert not (test_dist/"text-plus"/"combined.txt").exists()

@@ -1,20 +1,23 @@
 import logging
 from pathlib import Path
 
-from . import const, rule, ruleset
+import config
+from Models.rule import Rule
+from Models.ruleset import RuleSet
+from Utils import ruleset
 
 
-def parse(src_path: Path, excluded_imports=None, excluded_tags=None) -> ruleset.RuleSet:
+def parse(src_path: Path, excluded_imports=None, excluded_tags=None) -> RuleSet:
     with open(src_path, mode="r", encoding="utf-8") as raw:
         src = raw.read().splitlines()
     excluded_imports = [] if not excluded_imports else excluded_imports
     excluded_tags = [] if not excluded_tags else excluded_tags
-    ruleset_parsed = ruleset.RuleSet("Domain", [])
+    ruleset_parsed = RuleSet("Domain", [])
     for raw_line in src:
         line = raw_line.split("#")[0].strip()
         if not line:
             continue
-        parsed_rule = rule.Rule()
+        parsed_rule = Rule()
         if "@" in line:
             parsed_rule_tag = line.split("@")[1]
             if parsed_rule_tag in excluded_tags:
@@ -49,6 +52,6 @@ def batch_gen(categories: list, tools: list, exclusions=None) -> None:
     exclusions = [] if not exclusions else exclusions
     for tool in tools:
         for category in categories:
-            ruleset_geosite = parse(const.PATH_SOURCE_GEOSITE/category, exclusions)
-            ruleset_geosite.dedup()
-            ruleset.dump(ruleset_geosite, tool, const.PATH_DIST/tool, category)
+            ruleset_geosite = parse(config.PATH_SOURCE_GEOSITE/category, exclusions)
+            ruleset.dedup(ruleset_geosite)
+            ruleset.dump(ruleset_geosite, tool, config.PATH_DIST/tool, category)

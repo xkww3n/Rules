@@ -1,11 +1,11 @@
 from datetime import datetime
 
-from Utils import const
+import config
 
 
 def template(urls: list) -> str:
     url_list = "".join(
-        [f'<li><a href="{"https://rules.xkww3n.cyou/"+url}" target="_blank">{url}</a></li>\n' for url in urls]
+        [f'<li><a href="{"https://rules.xkww3n.cyou/" + url}" target="_blank">{url}</a></li>\n' for url in urls]
     )
     build_date = str(datetime.utcnow()) + " UTC"
     return f"""
@@ -37,7 +37,7 @@ def template(urls: list) -> str:
 
 blacklist = ["personal"]
 dists_list = []
-for filename in sorted(const.PATH_DIST.rglob("*")):
+for filename in sorted(config.PATH_DIST.rglob("*")):
     if filename.is_file() and filename.parent.name not in blacklist:
         if filename.parent.name == "dists":
             dists_list.append(f"{filename.name}")
@@ -45,4 +45,4 @@ for filename in sorted(const.PATH_DIST.rglob("*")):
             pass
         else:
             dists_list.append(f"{filename.parent.name}/{filename.name}")
-open(const.PATH_DIST/"index.html", mode='w').write(template(dists_list))
+open(config.PATH_DIST/"index.html", mode='w').write(template(dists_list))
