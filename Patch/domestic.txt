@@ -1,6 +1,7 @@
 ADD:masuit.com
 ADD:anime1.me
 ADD:.push.apple.com
+ADD:.net.anydesk.com
 
 REM:.wechat.com
 REM:.cncbinternational.com
