@@ -13,8 +13,8 @@ from Utils import geosite, rule, ruleset
 logging.config.fileConfig("logging.ini")
 logger = logging.getLogger("root")
 
-# Generate reject and exclude rules.
-logger.info("Start generating reject and exclude rules.")
+# Generate reject and exclude ruleset.
+logger.info("Start generating reject and exclude ruleset.")
 START_TIME = time_ns()
 connection = Session()
 
@@ -86,7 +86,7 @@ END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
 # Generate domestic rules.
-logger.info("Start generating domestic rules.")
+logger.info("Start generating domestic ruleset.")
 START_TIME = time_ns()
 
 ruleset_domestic = geosite.parse(config.PATH_SOURCE_GEOSITE/"geolocation-cn", None, ["!cn"])
@@ -117,7 +117,7 @@ END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
 # Generate domestic CIDR rules.
-logger.info("Start generating domestic CIDR rules.")
+logger.info("Start generating domestic CIDR ruleset.")
 START_TIME = time_ns()
 src_cidr = connection.get(config.URL_DOMESTIC_IP_V4).text.splitlines()
 ruleset_cidr = RuleSet("IPCIDR", [])
@@ -140,7 +140,7 @@ END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
 # Generate Telegram CIDR rules.
-logger.info("Start generating Telegram CIDR rules.")
+logger.info("Start generating Telegram CIDR ruleset.")
 START_TIME = time_ns()
 src_cidr = connection.get("https://core.telegram.org/resources/cidr.txt").text.splitlines()
 ruleset_cidr = RuleSet("IPCIDR", [])
@@ -156,7 +156,7 @@ END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
 # Generate v2fly community rules.
-logger.info("Start generating v2fly community rules.")
+logger.info("Start generating v2fly community rulesets.")
 START_TIME = time_ns()
 
 CATEGORIES = [
@@ -180,7 +180,7 @@ END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
 
 # Generate custom rules.
-logger.info("Start generating custom rules.")
+logger.info("Start generating custom rulesets.")
 START_TIME = time_ns()
 list_file_custom = Path.iterdir(config.PATH_SOURCE_CUSTOM)
 for filename in list_file_custom:
@@ -188,7 +188,7 @@ for filename in list_file_custom:
         logger.debug(f'Start generating "{filename.name}".')
         ruleset_custom = ruleset.load(filename)
         ruleset.batch_dump(ruleset_custom, config.TARGETS, config.PATH_DIST, filename.stem)
-        logger.debug(f"Converted {len(ruleset_custom)} rules.")
+        logger.debug(f"Generated {len(ruleset_custom)} rules.")
 
 # There's no personal classical type ruleset. So no logic about that.
 list_file_personal = Path.iterdir(config.PATH_SOURCE_CUSTOM/"personal")
@@ -197,7 +197,7 @@ for filename in list_file_personal:
     ruleset_personal = ruleset.load(filename)
     ruleset.batch_dump(ruleset_personal, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
                        config.PATH_DIST/"personal", filename.stem)
-    logger.debug(f"Converted {len(ruleset_personal)} rules.")
+    logger.debug(f"Generated {len(ruleset_personal)} rules.")
 
 END_TIME = time_ns()
 logger.info(f"Finished. Total time: {format((END_TIME - START_TIME) / 1e9, '.3f')}s\n")
