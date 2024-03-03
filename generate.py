@@ -197,7 +197,6 @@ for filename in list_file_personal:
     ruleset_personal = ruleset.load(filename)
     ruleset.batch_dump(ruleset_personal, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
                        config.PATH_DIST/"personal", filename.stem)
-    ruleset.dump(ruleset_personal, "geosite", config.PATH_DIST/"geosite", ("personal-" + filename.stem))
     logger.debug(f"Converted {len(ruleset_personal)} rules.")
 
 END_TIME = time_ns()
