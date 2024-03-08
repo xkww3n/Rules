@@ -23,7 +23,8 @@ def generate():
             logging.debug(f"{item} removed for having a overseas TLD.")
 
     # Import dnsmasq-china-list
-    raw = connection.get("https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/apple.china.conf").text
+    raw = connection.get(
+        "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/apple.china.conf").text
     for line in raw.replace("server=/", "").replace("/114.114.114.114", "").splitlines():
         ruleset_domestic.add(Rule("DomainFull", line))
 

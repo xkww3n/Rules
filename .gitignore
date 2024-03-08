@@ -1,7 +1,7 @@
-dists/ 
-domain-list-community/
-.vscode/
+**/dists/
 **/__pycache__/
-.idea/
 **/.pytest_cache
 venv/
+domain-list-community/
+.vscode/
+.idea/

@@ -3,7 +3,7 @@ from pathlib import Path
 TARGETS = ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible", "geosite", "sing-ruleset"]
 PATH_SOURCE_GEOSITE = Path("./domain-list-community/data/")
 PATH_SOURCE_CUSTOM = Path("./Source/")
-PATH_SOURCE_PATCH = Path("./Patch/")
+PATH_SOURCE_PATCH = Path("./Source/Patch/")
 PATH_DIST = Path("./dists/")
 
 LIST_REJECT_URL = [
