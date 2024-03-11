@@ -1,6 +1,5 @@
 import logging
 from pathlib import Path
-from time import time_ns
 
 import config
 from Utils import ruleset
