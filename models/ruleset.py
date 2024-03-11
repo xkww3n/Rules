@@ -1,6 +1,6 @@
 import logging
 
-from Models.rule import Rule
+from models.rule import Rule
 
 
 class RuleSet:

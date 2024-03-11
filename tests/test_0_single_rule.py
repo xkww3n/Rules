@@ -1,6 +1,6 @@
 from pytest import raises
 
-from Models.rule import Rule
+from models.rule import Rule
 
 
 class Tests:

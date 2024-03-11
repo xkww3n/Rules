@@ -4,8 +4,8 @@ from time import time_ns
 from requests import Session
 
 import config
-from Models.rule import Rule
-from Utils import ruleset, geosite
+from models.rule import Rule
+from utils import ruleset, geosite
 
 
 def generate():

@@ -4,9 +4,9 @@ from time import time_ns
 from requests import Session
 
 import config
-from Models.rule import Rule
-from Models.ruleset import RuleSet
-from Utils import ruleset
+from models.rule import Rule
+from models.ruleset import RuleSet
+from utils import ruleset
 
 
 def generate():

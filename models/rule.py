@@ -1,6 +1,6 @@
 from ipaddress import ip_network, IPv4Network, IPv6Network
 
-from Utils.rule import is_domain
+from utils.rule import is_domain
 
 
 class Rule:

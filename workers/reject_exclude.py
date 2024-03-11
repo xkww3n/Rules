@@ -5,9 +5,9 @@ from abp.filters.parser import parse_filterlist
 from requests import Session
 
 import config
-from Models.rule import Rule
-from Models.ruleset import RuleSet
-from Utils import rule, ruleset
+from models.rule import Rule
+from models.ruleset import RuleSet
+from utils import rule, ruleset
 
 
 def generate():

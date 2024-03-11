@@ -4,8 +4,8 @@ from json import dumps
 from pathlib import Path
 
 import config
-from Models.rule import Rule
-from Models.ruleset import RuleSet
+from models.rule import Rule
+from models.ruleset import RuleSet
 
 
 def load(src: Path) -> RuleSet:

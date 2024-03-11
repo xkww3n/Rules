@@ -2,9 +2,9 @@ import logging
 from pathlib import Path
 
 import config
-from Models.rule import Rule
-from Models.ruleset import RuleSet
-from Utils import ruleset
+from models.rule import Rule
+from models.ruleset import RuleSet
+from utils import ruleset
 
 
 def parse(src_path: Path, excluded_imports=None, excluded_tags=None) -> RuleSet:

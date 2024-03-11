@@ -1,9 +1,9 @@
 from pathlib import Path
 
 import config
-from Models.rule import Rule
-from Models.ruleset import RuleSet
-from Utils import rule, ruleset
+from models.rule import Rule
+from models.ruleset import RuleSet
+from utils import rule, ruleset
 
 
 class Tests:

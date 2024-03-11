@@ -1,6 +1,6 @@
 import logging.config
 
-from Workers import *
+from workers import *
 
 logging.config.fileConfig("logging.ini")
 logger = logging.getLogger("root")

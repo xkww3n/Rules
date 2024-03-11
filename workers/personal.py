@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 
 import config
-from Utils import ruleset
+from utils import ruleset
 
 
 def generate():
