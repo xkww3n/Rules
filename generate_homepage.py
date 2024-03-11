@@ -10,7 +10,7 @@ def template(urls: list) -> str:
     build_date = str(datetime.utcnow()) + " UTC"
     return f"""
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="zh">
     <head>
     <meta charset="utf-8">
     <title>xkww3n's Rules</title>
@@ -45,4 +45,4 @@ for filename in sorted(config.PATH_DIST.rglob("*")):
             pass
         else:
             dists_list.append(f"{filename.parent.name}/{filename.name}")
-open(config.PATH_DIST/"index.html", mode='w').write(template(dists_list))
+open(config.PATH_DIST/"index.html", mode='w', encoding="utf-8").write(template(dists_list))

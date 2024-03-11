@@ -23,7 +23,7 @@ jobs:
         run: pip install -r requirements.txt
       - name: Run pytest
         run: |
-              cd Tests
+              cd tests
               pytest
   build:
     runs-on: ubuntu-latest
