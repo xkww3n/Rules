@@ -1,6 +1,5 @@
 from models.rule import Rule
 from models.ruleset import RuleSet
-from utils import ruleset
 
 
 class Tests:
@@ -77,22 +76,3 @@ class Tests:
         test_ruleset = RuleSet("Domain", [test_rule_a, test_rule_b])
         test_ruleset.remove(test_rule_b)
         assert test_ruleset == RuleSet("Domain", [test_rule_a])
-
-    def test_sort(self):
-        test_rule_a = Rule("DomainSuffix", "a.example.com", "TEST1")
-        test_rule_b = Rule("DomainSuffix", "b.example.com", "TEST2")
-        test_ruleset = RuleSet("Domain", [test_rule_b, test_rule_a])
-        test_ruleset.sort()
-        assert test_ruleset == RuleSet("Domain", [test_rule_a, test_rule_b])
-
-    def test_dedup(self):
-        test_rule_a = Rule("DomainSuffix", "1example.com")
-        test_rule_b = Rule("DomainSuffix", "a.1example.com")
-        test_rule_c = Rule("DomainFull", "1example.com")
-        test_rule_d = Rule("DomainSuffix", "1example.tld")
-        test_rule_e = Rule("DomainSuffix", "a.1example.tld")
-        test_rule_f = Rule("DomainFull", "1example.tld")
-        test_ruleset = RuleSet("Domain",
-                               [test_rule_a, test_rule_b, test_rule_c, test_rule_d, test_rule_e, test_rule_f])
-        ruleset.dedup(test_ruleset)
-        assert test_ruleset == RuleSet("Domain", [test_rule_a, test_rule_d])

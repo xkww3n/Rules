@@ -186,8 +186,29 @@ def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleS
     return src
 
 
+def sort(ruleset: RuleSet):
+    if ruleset.Type == "Combined":
+        logging.warning("Combined-type ruleset shouldn't be sorted as maybe ordered, skipped.")
+        return
+
+    def sort_key(item):
+        match item.Type:
+            # Domain suffixes should always in front of full domains
+            # Shorter domains should in front of longer domains
+            # For IPCIDR ruleset, default sort method is ok.
+            case "DomainSuffix":
+                sortkey = (0, len(item.Payload), item.Payload)
+            case "DomainFull":
+                sortkey = (1, len(item.Payload), item.Payload)
+            case _:
+                sortkey = item.Payload
+        return sortkey
+
+    ruleset.Payload.sort(key=sort_key)
+
+
 def dedup(src: RuleSet) -> RuleSet:
-    src.sort()
+    sort(src)
     list_unique = []
     for item in src:
         flag_unique = True

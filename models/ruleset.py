@@ -1,5 +1,3 @@
-import logging
-
 from models.rule import Rule
 
 
@@ -72,23 +70,3 @@ class RuleSet:
 
     def remove(self, rule):
         self.Payload.remove(rule)
-
-    def sort(self):
-        if self.Type == "Combined":
-            logging.warning("Combined-type ruleset shouldn't be sorted as maybe ordered, skipped.")
-            return
-
-        def sort_key(item):
-            match item.Type:
-                # Domain suffixes should always in front of full domains
-                # Shorter domains should in front of longer domains
-                # For IPCIDR ruleset, default sort method is ok.
-                case "DomainSuffix":
-                    sortkey = (0, len(item.Payload), item.Payload)
-                case "DomainFull":
-                    sortkey = (1, len(item.Payload), item.Payload)
-                case _:
-                    sortkey = item.Payload
-            return sortkey
-
-        self.Payload.sort(key=sort_key)
