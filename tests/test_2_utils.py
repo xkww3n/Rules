@@ -6,43 +6,23 @@ from models.ruleset import RuleSet
 from utils import rule, ruleset
 
 
-class Tests:
-    def test_is_ipv4addr(self):
-        valid_ipaddr = "11.4.5.14"
-        invalid_ipaddr_a = "114.514"
-        invalid_ipaddr_b = "19.1.9.810"
-        invalid_ipaddr_c = "test.www.example.com"
-        assert rule.is_ipv4addr(valid_ipaddr)
-        assert not rule.is_ipv4addr(invalid_ipaddr_a)
-        assert not rule.is_ipv4addr(invalid_ipaddr_b)
-        assert not rule.is_ipv4addr(invalid_ipaddr_c)
-
-    def test_is_domain(self):
-        valid_domain = "www.example.com"
-        invalid_domain_a = "[invalid]"
-        invalid_domain_b = "-invalid.tld"
-        ipv4addr = "11.4.5.14"
-        assert rule.is_domain(valid_domain)
-        assert not rule.is_domain(invalid_domain_a)
-        assert not rule.is_domain(invalid_domain_b)
-        assert not rule.is_domain(ipv4addr)
-
+class Test_Load:
     def test_load_domain(self):
-        test_src_path = Path("./src/custom_ruleset/")
+        test_src_path = Path("tests/src/custom_ruleset/")
         loaded_ruleset = ruleset.load(test_src_path/"domain.txt")
         assert loaded_ruleset == RuleSet("Domain",
                                          [Rule("DomainSuffix", "example.com"),
                                           Rule("DomainFull", "example.com")])
 
     def test_load_ipcidr(self):
-        test_src_path = Path("./src/custom_ruleset/")
+        test_src_path = Path("tests/src/custom_ruleset/")
         loaded_ruleset = ruleset.load(test_src_path/"ipcidr.txt")
         assert loaded_ruleset == RuleSet("IPCIDR",
                                          [Rule("IPCIDR", "11.4.5.14"),
                                           Rule("IPCIDR6", "fc00:114::514")])
 
     def test_load_combined(self):
-        test_src_path = Path("./src/custom_ruleset/")
+        test_src_path = Path("tests/src/custom_ruleset/")
         loaded_ruleset = ruleset.load(test_src_path/"combined.txt")
         assert loaded_ruleset == RuleSet("Combined",
                                          [Rule("DomainFull", "example.com"),
@@ -52,15 +32,10 @@ class Tests:
                                           Rule("IPCIDR", "11.4.5.14", "no-resolve"),
                                           Rule("IPCIDR6", "fc00:114::514", "no-resolve")])
 
-    def test_patch(self):
-        test_src_patch = Path("./src/patch/")
-        test_ruleset = RuleSet("Domain", [Rule("DomainFull", "example.com")])
-        ruleset.patch(test_ruleset, "patch", test_src_patch)
-        assert test_ruleset == RuleSet("Domain", [Rule("DomainSuffix", "example.com")])
-
+class Test_Dump:
     def test_dump_domain(self):
-        test_dist = Path("./dists/")
-        ruleset_domain = ruleset.load(Path("./src/custom_ruleset/domain.txt"))
+        test_dist = Path("tests/dists/")
+        ruleset_domain = ruleset.load(Path("tests/src/custom_ruleset/domain.txt"))
         ruleset.batch_dump(ruleset_domain, config.TARGETS, test_dist, "domain")
 
         assert (test_dist/"text"/"domain.txt").exists()
@@ -111,8 +86,8 @@ class Tests:
                                 '}')
 
     def test_dump_ipcidr(self):
-        test_dist = Path("./dists/")
-        ruleset_ipcidr = ruleset.load(Path("./src/custom_ruleset/ipcidr.txt"))
+        test_dist = Path("tests/dists/")
+        ruleset_ipcidr = ruleset.load(Path("tests/src/custom_ruleset/ipcidr.txt"))
         ruleset.batch_dump(ruleset_ipcidr, config.TARGETS, test_dist, "ipcidr")
 
         assert not (test_dist/"text-plus"/"ipcidr.txt").exists()
@@ -154,8 +129,8 @@ class Tests:
                                 '}')
 
     def test_dump_combined(self):
-        test_dist = Path("./dists/")
-        ruleset_combined = ruleset.load(Path("./src/custom_ruleset/combined.txt"))
+        test_dist = Path("tests/dists/")
+        ruleset_combined = ruleset.load(Path("tests/src/custom_ruleset/combined.txt"))
         ruleset.batch_dump(ruleset_combined, config.TARGETS, test_dist, "combined")
 
         assert not (test_dist/"text"/"combined.txt").exists()
@@ -211,6 +186,33 @@ class Tests:
                                 '    }\n'
                                 '  ]\n'
                                 '}')
+
+class Test_Misc:
+    def test_is_ipv4addr(self):
+        valid_ipaddr = "11.4.5.14"
+        invalid_ipaddr_a = "114.514"
+        invalid_ipaddr_b = "19.1.9.810"
+        invalid_ipaddr_c = "test.www.example.com"
+        assert rule.is_ipv4addr(valid_ipaddr)
+        assert not rule.is_ipv4addr(invalid_ipaddr_a)
+        assert not rule.is_ipv4addr(invalid_ipaddr_b)
+        assert not rule.is_ipv4addr(invalid_ipaddr_c)
+
+    def test_is_domain(self):
+        valid_domain = "www.example.com"
+        invalid_domain_a = "[invalid]"
+        invalid_domain_b = "-invalid.tld"
+        ipv4addr = "11.4.5.14"
+        assert rule.is_domain(valid_domain)
+        assert not rule.is_domain(invalid_domain_a)
+        assert not rule.is_domain(invalid_domain_b)
+        assert not rule.is_domain(ipv4addr)
+
+    def test_patch(self):
+        test_src_patch = Path("tests/src/patch/")
+        test_ruleset = RuleSet("Domain", [Rule("DomainFull", "example.com")])
+        ruleset.patch(test_ruleset, "patch", test_src_patch)
+        assert test_ruleset == RuleSet("Domain", [Rule("DomainSuffix", "example.com")])
 
     def test_sort(self):
         test_rule_a = Rule("DomainSuffix", "a.example.com", "TEST1")

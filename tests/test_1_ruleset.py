@@ -2,7 +2,7 @@ from models.rule import Rule
 from models.ruleset import RuleSet
 
 
-class Tests:
+class Test:
     def test_hash(self):
         test_ruleset_a = RuleSet("Domain",
                                  [Rule("DomainSuffix", "example.com", "TEST")])

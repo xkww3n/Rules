@@ -3,7 +3,7 @@ from pytest import raises
 from models.rule import Rule
 
 
-class Tests:
+class Test:
     def test_type_checking_init(self):
         with raises(TypeError):
             Rule("NotAllowedType", "test_payload")

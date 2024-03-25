@@ -22,9 +22,8 @@ jobs:
       - name: Setup environment
         run: pip install -r requirements.txt
       - name: Run pytest
-        run: |
-              cd tests
-              pytest
+        run: pytest
+
   build:
     runs-on: ubuntu-latest
     needs: test
