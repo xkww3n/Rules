@@ -138,11 +138,8 @@ jobs:
       - name: Generate home page
         run: python generate_homepage.py
       - name: Publish to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: 2e54d1245681bc04eaa33ed5d68bdfa7
-          projectName: xkww3n-rules
-          directory: ./dists
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          wranglerVersion: '3'
+          command: pages deploy dists --project-name=xkww3n-rules
