@@ -15,6 +15,14 @@ def generate():
     start_time = time_ns()
     connection = Session()
 
+    src_psl = connection.get("https://publicsuffix.org/list/public_suffix_list.dat").text.splitlines()
+    set_psl = set()
+    for line in src_psl:
+        if "//" not in line and "." in line:
+            if line.startswith("*"):
+                line = line.replace("*", "")
+            set_psl.add(line)
+
     src_rejections = []
     for url in config.LIST_REJECT_URL:
         src_rejections += (connection.get(url).text.splitlines())
@@ -38,7 +46,10 @@ def generate():
                     line_stripped = line.text.strip(".").strip("^")
                 else:
                     line_stripped = line.text.strip("|").strip("^")
-                if line_stripped.count(".") == 1:
+                domain_level = line_stripped.count(".")
+                if any(ps in line_stripped for ps in set_psl):
+                    domain_level -= 1
+                if domain_level == 1:
                     rule_reject = Rule("DomainSuffix", line_stripped)
                 else:
                     rule_reject = Rule("DomainFull", line_stripped)

@@ -18,7 +18,7 @@ def generate():
 
     for item in ruleset_domestic.deepcopy():
         tld_overseas = (".hk", ".kr", ".my", ".sg", ".au", ".tw", ".in", ".ru", ".us", ".fr", ".th", ".id", ".jp")
-        if any([item.Payload.endswith(os_tld) for os_tld in tld_overseas]):
+        if any(item.Payload.endswith(os_tld) for os_tld in tld_overseas):
             ruleset_domestic.remove(item)
             logging.debug(f"{item} removed for having a overseas TLD.")
 
