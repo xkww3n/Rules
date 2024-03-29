@@ -2,6 +2,7 @@ REM:.app-measurement.com
 REM:.jiguang.cn
 REM:.cnzz.com
 REM:storage.moegirl.org.cn
+REM:bugly.qq.com
 
 ADD:.mediav.com
 ADD:.partwithner.com
@@ -11,3 +12,5 @@ ADD:.e67repidwnfu7gcha.com
 ADD:.wuzbhjpvsf.com
 ADD:iadmusicmat.music.126.net
 ADD:.iadsdk.apple.com
+ADD:ios.bugly.qq.com
+ADD:android.bugly.qq.com
