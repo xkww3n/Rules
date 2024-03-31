@@ -20,7 +20,7 @@ def generate():
     for line in src_psl:
         if "//" not in line and "." in line:
             if line.startswith("*"):
-                line = line.replace("*", "")
+                line = line.strip("*")
             set_psl.add(line)
 
     src_rejections = []
