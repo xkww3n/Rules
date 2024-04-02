@@ -1,7 +1,8 @@
-**/dists/
-**/__pycache__/
-**/.pytest_cache
-venv/
 domain-list-community/
+dists/
+__pycache__/
+.pytest_cache/
 .vscode/
 .idea/
+.venv/
+.pdm-python

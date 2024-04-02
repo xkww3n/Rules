@@ -14,15 +14,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Use Python 3.11
-        uses: actions/setup-python@v5
+      - name: Install PDM
+        uses: pdm-project/setup-pdm@v4
         with:
           python-version: '3.11'
-          cache: 'pip'
-      - name: Setup environment
-        run: pip install -r requirements.txt
-      - name: Run pytest
-        run: pytest
+          cache: 'true'
+      - name: Install dependencies
+        run: pdm install
+      - name: Run tests
+        run: pdm run test
 
   build:
     runs-on: ubuntu-latest
@@ -30,13 +30,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Use Python 3.11
-        uses: actions/setup-python@v5
+      - name: Install PDM
+        uses: pdm-project/setup-pdm@v4
         with:
           python-version: '3.11'
-          cache: 'pip'
-      - name: Setup environment
-        run: pip install -r requirements.txt
+          cache: 'true'
+      - name: Install dependencies
+        run: pdm install
       - name: Set up Go
         uses: actions/setup-go@v5
       - name: Pull v2fly community domain list
@@ -52,7 +52,7 @@ jobs:
       - name: Install Loyalsoldier's geoip tool
         run: go install -v github.com/Loyalsoldier/geoip@latest
       - name: Generate rules
-        run: python generate.py
+        run: pdm run build
       - name: Download MaxMind GeoLite2 Country DB
         env:
           MAXMIND_KEY: ${{ secrets.MAXMIND_KEY }}

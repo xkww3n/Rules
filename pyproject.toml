@@ -1,0 +1,25 @@
+[project]
+name = "Rules"
+version = "0.0.0"
+description = ""
+authors = [
+    {name = "xkww3n", email = "xkww3n@outlook.com"},
+]
+dependencies = [
+    "pytest==7.4.3",
+    "requests>=2.31.0",
+    "python-abp>=0.2.0",
+]
+requires-python = "==3.11.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.scripts]
+build = "python main.py"
+test = "pytest"
+debug.cmd = "python main.py"
+debug.env = {DEBUG = "1"}
