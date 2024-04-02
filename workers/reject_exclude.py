@@ -10,8 +10,8 @@ from models.ruleset import RuleSet
 from utils import rule, ruleset
 
 
-def generate():
-    logging.info("Start generating reject and exclude ruleset.")
+def build():
+    logging.info("Build reject and exclude ruleset.")
     start_time = time_ns()
     connection = Session()
 
@@ -68,7 +68,7 @@ def generate():
 
     ruleset_rejections = ruleset.patch(ruleset_rejections, "reject")
     ruleset_exclusions = RuleSet("Domain", [])
-    logging.debug("Start deduplicating reject and exclude set.")
+    logging.debug("Deduplicate reject and exclude set.")
     ruleset.dedup(ruleset_rejections)
     for domain_exclude in ruleset_exclusions_raw.deepcopy():
         for domain_reject in ruleset_rejections.deepcopy():
@@ -79,7 +79,7 @@ def generate():
                 ruleset_exclusions_raw.remove(domain_exclude)
                 logging.debug(f"{domain_reject} is removed as excluded by {domain_exclude}.")
     ruleset.batch_dump(ruleset_rejections, config.TARGETS, config.PATH_DIST, "reject")
-    logging.info(f"Generated {len(ruleset_rejections)} reject rules.")
+    logging.info(f"Processed {len(ruleset_rejections)} reject rules.")
 
     for domain_exclude in ruleset_exclusions_raw:
         for domain_reject in ruleset_rejections:
@@ -87,8 +87,8 @@ def generate():
                 ruleset_exclusions.add(domain_exclude)
                 logging.debug(f"{domain_exclude} is added to final exclude set.")
     ruleset_exclusions = ruleset.patch(ruleset_exclusions, "exclude")
-    logging.info(f"Generated {len(ruleset_exclusions)} exclude rules.")
+    logging.info(f"Processed {len(ruleset_exclusions)} exclude rules.")
     ruleset.batch_dump(ruleset_exclusions, config.TARGETS, config.PATH_DIST, "exclude")
 
     end_time = time_ns()
-    logging.info(f"Finished. Total time: {format((end_time - start_time) / 1e9, '.3f')}s\n")
+    logging.info(f"Done ({format((end_time - start_time) / 1e9, '.3f')}s)\n")

@@ -8,8 +8,8 @@ from models.rule import Rule
 from utils import ruleset, geosite
 
 
-def generate():
-    logging.info("Start generating domestic ruleset.")
+def build():
+    logging.info("Build domestic ruleset.")
     start_time = time_ns()
     connection = Session()
 
@@ -35,8 +35,8 @@ def generate():
     logging.info(f"Imported {len(ruleset_domestic_tlds)} domestic TLDs.")
     ruleset_domestic |= ruleset_domestic_tlds
     ruleset.dedup(ruleset_domestic)
-    logging.info(f"Generated {len(ruleset_domestic)} domestic rules.")
+    logging.info(f"Processed {len(ruleset_domestic)} domestic rules.")
     ruleset.batch_dump(ruleset_domestic, config.TARGETS, config.PATH_DIST, "domestic")
 
     end_time = time_ns()
-    logging.info(f"Finished. Total time: {format((end_time - start_time) / 1e9, '.3f')}s\n")
+    logging.info(f"Done ({format((end_time - start_time) / 1e9, '.3f')}s)\n")

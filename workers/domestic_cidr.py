@@ -9,8 +9,8 @@ from models.ruleset import RuleSet
 from utils import ruleset
 
 
-def generate():
-    logging.info("Start generating domestic CIDR ruleset.")
+def build():
+    logging.info("Build domestic CIDR ruleset.")
     start_time = time_ns()
     connection = Session()
 
@@ -19,7 +19,7 @@ def generate():
     for line in src_cidr:
         if not line.startswith("#"):
             ruleset_cidr.add(Rule("IPCIDR", line))
-    logging.info(f"Generated {len(ruleset_cidr)} domestic IPv4 rules.")
+    logging.info(f"Processed {len(ruleset_cidr)} domestic IPv4 rules.")
 
     ruleset.batch_dump(ruleset_cidr, config.TARGETS, config.PATH_DIST, "domestic_ip")
 
@@ -27,9 +27,9 @@ def generate():
     ruleset_cidr6 = RuleSet("IPCIDR", [])
     for line in src_cidr6:
         ruleset_cidr6.add(Rule("IPCIDR6", line))
-    logging.info(f"Generated {len(ruleset_cidr6)} domestic IPv6 rules.")
+    logging.info(f"Processed {len(ruleset_cidr6)} domestic IPv6 rules.")
 
     ruleset.batch_dump(ruleset_cidr6, config.TARGETS, config.PATH_DIST, "domestic_ip6")
 
     end_time = time_ns()
-    logging.info(f"Finished. Total time: {format((end_time - start_time) / 1e9, '.3f')}s\n")
+    logging.info(f"Done ({format((end_time - start_time) / 1e9, '.3f')}s)\n")

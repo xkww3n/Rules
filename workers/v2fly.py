@@ -5,8 +5,8 @@ import config
 from utils import geosite
 
 
-def generate():
-    logging.info("Start generating v2fly community rulesets.")
+def build():
+    logging.info("Build v2fly community rulesets.")
     start_time = time_ns()
 
     categories = [
@@ -28,4 +28,4 @@ def generate():
     geosite.batch_gen(categories, config.TARGETS, exclusions)
 
     end_time = time_ns()
-    logging.info(f"Finished. Total time: {format((end_time - start_time) / 1e9, '.3f')}s\n")
+    logging.info(f"Done ({format((end_time - start_time) / 1e9, '.3f')}s)\n")

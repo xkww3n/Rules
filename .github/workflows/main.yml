@@ -1,4 +1,4 @@
-name: Generate
+name: Build
 on:
   push:
     branches:
@@ -51,7 +51,7 @@ jobs:
           path: 'tool_geosite'
       - name: Install Loyalsoldier's geoip tool
         run: go install -v github.com/Loyalsoldier/geoip@latest
-      - name: Generate rules
+      - name: Build rules
         run: pdm run build
       - name: Download MaxMind GeoLite2 Country DB
         env:
@@ -60,11 +60,11 @@ jobs:
               wget -O ./GeoLite2-Country.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=${MAXMIND_KEY}&suffix=tar.gz"
               tar xzvf ./GeoLite2-Country.tar.gz
               cp ./GeoLite2-Country_*/GeoLite2-Country.mmdb ./
-      - name: Generate Geosite DB
+      - name: Build Geosite DB
         run: |
               cd tool_geosite
               go run ./ --datapath=../dists/geosite --outputpath=../dists --exportlists="" --togfwlist=""
-      - name: Generate GeoIP DB
+      - name: Build GeoIP DB
         run: |
               cat <<EOF > config.json
               {
@@ -135,8 +135,8 @@ jobs:
         run: |
               rm -rf dists/geosite
               rm dists/gfwlist.txt
-      - name: Generate home page
-        run: python generate_homepage.py
+      - name: Build homepage
+        run: python build_homepage.py
       - name: Publish to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:

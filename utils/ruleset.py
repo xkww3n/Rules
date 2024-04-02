@@ -157,7 +157,7 @@ def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleS
     except FileNotFoundError:
         logging.warning(f'Patch "{name + ".txt"}" not found.')
         return src
-    logging.info(f'Start applying patch "{name + ".txt"}"')
+    logging.info(f'Apply patch "{name + ".txt"}"')
     for line in loaded_patch:
         if line.startswith("#"):
             continue
