@@ -1,14 +1,10 @@
-import logging
-from time import time_ns
-
 import config
 from utils import geosite
+from workers.log_decoration import log
 
 
+@log
 def build():
-    logging.info("Build v2fly community rulesets.")
-    start_time = time_ns()
-
     categories = [
         "bahamut",
         "bing",
@@ -26,6 +22,3 @@ def build():
         "bing",  # Bing has a more restricted ver for Mainland China.
     ]
     geosite.batch_gen(categories, config.TARGETS, exclusions)
-
-    end_time = time_ns()
-    logging.info(f"Done ({format((end_time - start_time) / 1e9, '.3f')}s)\n")

@@ -1,5 +1,4 @@
 import logging
-from time import time_ns
 
 from abp.filters.parser import parse_filterlist
 from requests import Session
@@ -8,11 +7,11 @@ import config
 from models.rule import Rule
 from models.ruleset import RuleSet
 from utils import rule, ruleset
+from workers.log_decoration import log
 
 
+@log
 def build():
-    logging.info("Build reject and exclude ruleset.")
-    start_time = time_ns()
     connection = Session()
 
     src_psl = connection.get("https://publicsuffix.org/list/public_suffix_list.dat").text.splitlines()
@@ -89,6 +88,3 @@ def build():
     ruleset_exclusions = ruleset.patch(ruleset_exclusions, "exclude")
     logging.info(f"Processed {len(ruleset_exclusions)} exclude rules.")
     ruleset.batch_dump(ruleset_exclusions, config.TARGETS, config.PATH_DIST, "exclude")
-
-    end_time = time_ns()
-    logging.info(f"Done ({format((end_time - start_time) / 1e9, '.3f')}s)\n")

@@ -1,16 +1,15 @@
 import logging
-from time import time_ns
 
 from requests import Session
 
 import config
 from models.rule import Rule
 from utils import ruleset, geosite
+from workers.log_decoration import log
 
 
+@log
 def build():
-    logging.info("Build domestic ruleset.")
-    start_time = time_ns()
     connection = Session()
 
     ruleset_domestic = geosite.parse(config.PATH_SOURCE_GEOSITE/"geolocation-cn", None, ["!cn"])
@@ -37,6 +36,3 @@ def build():
     ruleset.dedup(ruleset_domestic)
     logging.info(f"Processed {len(ruleset_domestic)} domestic rules.")
     ruleset.batch_dump(ruleset_domestic, config.TARGETS, config.PATH_DIST, "domestic")
-
-    end_time = time_ns()
-    logging.info(f"Done ({format((end_time - start_time) / 1e9, '.3f')}s)\n")
