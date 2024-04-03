@@ -2,12 +2,16 @@ import logging
 from pathlib import Path
 
 import config
+from models.log_decoration import log
 from utils import ruleset
-from workers.log_decoration import log
 
 
 @log
 def build():
+    """
+    custom rulesets
+    """
+
     list_file_custom = Path.iterdir(config.PATH_SOURCE_CUSTOM)
     for filename in list_file_custom:
         if filename.is_file():

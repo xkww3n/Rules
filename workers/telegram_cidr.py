@@ -1,14 +1,18 @@
 from requests import Session
 
 import config
+from models.log_decoration import log
 from models.rule import Rule
 from models.ruleset import RuleSet
 from utils import ruleset
-from workers.log_decoration import log
 
 
 @log
 def build():
+    """
+    Telegram CIDR ruleset
+    """
+
     connection = Session()
 
     src_cidr = connection.get("https://core.telegram.org/resources/cidr.txt").text.splitlines()

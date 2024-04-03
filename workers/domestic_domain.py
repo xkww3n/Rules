@@ -3,13 +3,17 @@ import logging
 from requests import Session
 
 import config
+from models.log_decoration import log
 from models.rule import Rule
 from utils import ruleset, geosite
-from workers.log_decoration import log
 
 
 @log
 def build():
+    """
+    domestic ruleset
+    """
+
     connection = Session()
 
     ruleset_domestic = geosite.parse(config.PATH_SOURCE_GEOSITE/"geolocation-cn", None, ["!cn"])

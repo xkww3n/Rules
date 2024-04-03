@@ -3,8 +3,8 @@ from time import time_ns
 
 
 def log(func):
-    def wrapper(desc, *args, **kwargs):
-        logging.info(f"Build {desc}")
+    def wrapper(*args, **kwargs):
+        logging.info(f"Build {func.__doc__.strip()}")
         start_time = time_ns()
         result = func(*args, **kwargs)
         end_time = time_ns()

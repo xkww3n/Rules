@@ -3,14 +3,18 @@ import logging
 from requests import Session
 
 import config
+from models.log_decoration import log
 from models.rule import Rule
 from models.ruleset import RuleSet
 from utils import ruleset
-from workers.log_decoration import log
 
 
 @log
 def build():
+    """
+    domestic CIDR ruleset
+    """
+
     connection = Session()
 
     src_cidr = connection.get(config.URL_DOMESTIC_IP_V4).text.splitlines()

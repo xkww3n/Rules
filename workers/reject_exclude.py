@@ -4,14 +4,18 @@ from abp.filters.parser import parse_filterlist
 from requests import Session
 
 import config
+from models.log_decoration import log
 from models.rule import Rule
 from models.ruleset import RuleSet
 from utils import rule, ruleset
-from workers.log_decoration import log
 
 
 @log
 def build():
+    """
+    reject and exclude ruleset
+    """
+
     connection = Session()
 
     src_psl = connection.get("https://publicsuffix.org/list/public_suffix_list.dat").text.splitlines()

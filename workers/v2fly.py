@@ -1,10 +1,14 @@
 import config
+from models.log_decoration import log
 from utils import geosite
-from workers.log_decoration import log
 
 
 @log
 def build():
+    """
+    v2fly community rulesets
+    """
+
     categories = [
         "bahamut",
         "bing",

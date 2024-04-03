@@ -1,7 +1,7 @@
+import importlib.util as iu
 import logging.config
 from os import environ
-
-from workers import *
+from pathlib import Path
 
 logging.config.fileConfig("logging.ini")
 logger = logging.getLogger("root")
@@ -9,10 +9,10 @@ logger = logging.getLogger("root")
 if environ.get("DEBUG"):
     logger.setLevel("DEBUG")
 
-reject_exclude.build("reject and exclude ruleset")
-domestic_domain.build("domestic ruleset")
-domestic_cidr.build("domestic CIDR ruleset")
-telegram_cidr.build("Telegram CIDR ruleset")
-v2fly.build("v2fly community rulesets")
-custom.build("custom rulesets")
-personal.build()
+workers = Path("workers").rglob("*.py")
+for worker in workers:
+    worker_name = worker.stem
+    spec = iu.spec_from_file_location(worker_name, Path("workers")/worker.name)
+    module = iu.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.build()
