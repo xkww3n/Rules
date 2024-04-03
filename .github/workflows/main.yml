@@ -35,8 +35,6 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'true'
-      - name: Install dependencies
-        run: pdm install
       - name: Set up Go
         uses: actions/setup-go@v5
       - name: Pull v2fly community domain list
@@ -50,8 +48,8 @@ jobs:
           repository: 'Loyalsoldier/domain-list-custom'
           path: 'tool_geosite'
       - name: Install Loyalsoldier's geoip tool
-        run: go install -v github.com/Loyalsoldier/geoip@latest
-      - name: Build rules
+        run: go install github.com/Loyalsoldier/geoip@latest
+      - name: Build rulesets
         run: pdm run build
       - name: Download MaxMind GeoLite2 Country DB
         env:
