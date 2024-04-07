@@ -1,6 +1,6 @@
 import config
-from models.log_decoration import log
 from utils import geosite
+from utils.log_decorator import log
 
 
 @log

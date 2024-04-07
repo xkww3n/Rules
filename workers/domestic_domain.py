@@ -3,9 +3,9 @@ import logging
 from requests import Session
 
 import config
-from models.log_decoration import log
 from models.rule import Rule
 from utils import ruleset, geosite
+from utils.log_decorator import log
 
 
 @log

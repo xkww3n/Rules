@@ -1,10 +1,10 @@
 from requests import Session
 
 import config
-from models.log_decoration import log
 from models.rule import Rule
 from models.ruleset import RuleSet
 from utils import ruleset
+from utils.log_decorator import log
 
 
 @log

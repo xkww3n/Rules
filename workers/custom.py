@@ -2,8 +2,8 @@ import logging
 from pathlib import Path
 
 import config
-from models.log_decoration import log
 from utils import ruleset
+from utils.log_decorator import log
 
 
 @log
