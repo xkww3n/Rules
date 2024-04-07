@@ -18,6 +18,7 @@ def build():
 
     connection = Session()
 
+    # ps for public suffix, such as ".org.cn". Useful when guessing domains' levels.
     src_psl = connection.get("https://publicsuffix.org/list/public_suffix_list.dat").text.splitlines()
     set_psl = set()
     for line in src_psl:
@@ -55,6 +56,7 @@ def build():
                 if domain_level == 1:
                     rule_reject = Rule("DomainSuffix", line_stripped)
                 else:
+                    # If a domain isn't a level-1 domain, this domain mostly doesn't have any other subdomain.
                     rule_reject = Rule("DomainFull", line_stripped)
                 ruleset_rejections.add(rule_reject)
                 logging.debug(f'Line "{line.text}" is added to reject set. "{rule_reject}".')
@@ -75,9 +77,7 @@ def build():
     ruleset.dedup(ruleset_rejections)
     for domain_exclude in ruleset_exclusions_raw.deepcopy():
         for domain_reject in ruleset_rejections.deepcopy():
-            if (domain_reject.Payload == domain_exclude.Payload and domain_reject.Type == domain_exclude.Type) \
-                    or (domain_reject.Payload == domain_exclude.Payload and
-                        domain_reject.Type == "DomainFull" and domain_exclude.Type == "DomainSuffix"):
+            if domain_reject == domain_exclude or domain_exclude.includes(domain_reject):
                 ruleset_rejections.remove(domain_reject)
                 ruleset_exclusions_raw.remove(domain_exclude)
                 logging.debug(f"{domain_reject} is removed as excluded by {domain_exclude}.")
