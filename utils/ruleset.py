@@ -62,15 +62,15 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
         raise TypeError("Invalid target.")
     match target:
         case "yaml":
-            filename = filename + ".yaml"
+            file = filename + ".yaml"
         case "geosite":
-            filename = filename
+            file = filename
         case "sing-ruleset":
-            filename = filename + ".json"
+            file = filename + ".json"
         case _:
-            filename = filename + ".txt"
+            file = filename + ".txt"
     dst.mkdir(parents=True, exist_ok=True)
-    with open(dst/filename, mode="w", encoding="utf-8") as dist:
+    with open(dst/file, mode="w", encoding="utf-8") as dist:
         if target in ("text", "text-plus"):
             for rule in src:
                 to_write = rule.Payload if rule.Type in ("DomainFull", "IPCIDR", "IPCIDR6") else f".{rule.Payload}"

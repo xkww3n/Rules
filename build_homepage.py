@@ -35,14 +35,9 @@ def template(urls: list) -> str:
     """
 
 
-blacklist = ["personal"]
+blacklist = ["personal", "index"]
 dists_list = []
 for filename in sorted(config.PATH_DIST.rglob("*")):
-    if filename.is_file() and filename.parent.name not in blacklist:
-        if filename.parent.name == "dists":
-            dists_list.append(f"{filename.name}")
-        elif "personal" in str(filename):
-            pass
-        else:
-            dists_list.append(f"{filename.parent.name}/{filename.name}")
+    if filename.is_file() and not any(bl_name in str(filename) for bl_name in blacklist):
+        dists_list.append(f"{filename.parent.name}/{filename.name}")
 open(config.PATH_DIST/"index.html", mode='w', encoding="utf-8").write(template(dists_list))
