@@ -1,5 +1,4 @@
 import logging
-from copy import deepcopy
 from json import dumps
 from pathlib import Path
 
@@ -115,38 +114,25 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
             }
             for rule in src:
                 if rule.Type == "DomainFull":
-                    if "domain" not in ruleset["rules"][0]:
-                        ruleset["rules"][0]["domain"] = []
-                    ruleset["rules"][0]["domain"].append(rule.Payload)
+                    key = "domain"
                 elif rule.Type == "DomainSuffix":
-                    if "domain_suffix" not in ruleset["rules"][0]:
-                        ruleset["rules"][0]["domain_suffix"] = []
-                    ruleset["rules"][0]["domain_suffix"].append(rule.Payload)
+                    key = "domain_suffix"
                 elif rule.Type in ("IPCIDR", "IPCIDR6"):
-                    if "ip_cidr" not in ruleset["rules"][0]:
-                        ruleset["rules"][0]["ip_cidr"] = []
-                    ruleset["rules"][0]["ip_cidr"].append(rule.Payload)
+                    key = "ip_cidr"
+
+                if key not in ruleset["rules"][0]:
+                    ruleset["rules"][0][key] = []
+
+                ruleset["rules"][0][key].append(rule.Payload)
             dist.write(dumps(ruleset, indent=2))
 
 
 def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> None:
-    targets = deepcopy(targets)
-    if src.Type == "IPCIDR":
-        if all(t in targets for t in ["text", "text-plus"]):
-            logging.info(f"{filename}: Ignored unsupported type for combined ruleset.")
-            targets.remove("text-plus")
-        if "geosite" in targets:
-            logging.warning(f"{filename}: {src.Type}-type ruleset can't be exported to GeoSite source, ignored.")
-            targets.remove("geosite")
-    if src.Type == "Combined" and any(t in targets for t in ["text", "text-plus", "geosite"]):
-        logging.info(f"{filename}: Ignored unsupported type for combined ruleset.")
-        if "text" in targets:
-            targets.remove("text")
-        if "text-plus" in targets:
-            targets.remove("text-plus")
-        if "geosite" in targets:
-            targets.remove("geosite")
     for target in targets:
+        if src.Type in ["IPCIDR", "Combined"] and target in ["text-plus", "geosite"] \
+                or src.Type == "Combined" and target == "text":
+            logging.warning(f'{filename}: Ignored unsupported type "{target}" for {src.Type} ruleset.')
+            continue
         dump(src, target, dst_path/target, filename)
 
 

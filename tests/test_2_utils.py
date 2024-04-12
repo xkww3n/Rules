@@ -6,7 +6,7 @@ from models.ruleset import RuleSet
 from utils import rule, ruleset
 
 
-class Test_Load:
+class TestLoad:
     def test_load_domain(self):
         test_src_path = Path("tests/src/custom_ruleset/")
         loaded_ruleset = ruleset.load(test_src_path/"domain.txt")
@@ -32,7 +32,8 @@ class Test_Load:
                                           Rule("IPCIDR", "11.4.5.14", "no-resolve"),
                                           Rule("IPCIDR6", "fc00:114::514", "no-resolve")])
 
-class Test_Dump:
+
+class TestDump:
     def test_dump_domain(self):
         test_dist = Path("tests/dists/")
         ruleset_domain = ruleset.load(Path("tests/src/custom_ruleset/domain.txt"))
@@ -187,7 +188,8 @@ class Test_Dump:
                                 '  ]\n'
                                 '}')
 
-class Test_Misc:
+
+class TestMisc:
     def test_is_ipv4addr(self):
         valid_ipaddr = "11.4.5.14"
         invalid_ipaddr_a = "114.514"
