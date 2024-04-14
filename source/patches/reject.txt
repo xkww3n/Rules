@@ -2,7 +2,8 @@ REM:.app-measurement.com
 REM:.jiguang.cn
 REM:.cnzz.com
 REM:storage.moegirl.org.cn
-REM:bugly.qq.com
+REM:bugly.qq.com、
+REM:adsense.google.cn
 
 ADD:.mediav.com
 ADD:.partwithner.com
