@@ -34,25 +34,12 @@ def load(src: Path) -> RuleSet:
             for line in src_toload:
                 if line and not line.startswith("#"):
                     parsed = line.split(",")
-                    match parsed[0]:
-                        case "DOMAIN":
-                            ruleset_loaded.add(Rule("DomainFull", parsed[1]))
-                        case "DOMAIN-SUFFIX":
-                            ruleset_loaded.add(Rule("DomainSuffix", parsed[1]))
-                        case "IP-CIDR":
-                            if len(parsed) == 3:
-                                parsed_rule = Rule("IPCIDR", parsed[1], parsed[2])
-                            else:
-                                parsed_rule = Rule("IPCIDR", parsed[1])
-                            ruleset_loaded.add(parsed_rule)
-                        case "IP-CIDR6":
-                            if len(parsed) == 3:
-                                parsed_rule = Rule("IPCIDR6", parsed[1], parsed[2])
-                            else:
-                                parsed_rule = Rule("IPCIDR6", parsed[1])
-                            ruleset_loaded.add(parsed_rule)
-                        case _:
-                            raise ValueError()
+                    rule_type = config.RULE_TYPE_CONVERSION[parsed[0]]
+                    if len(parsed) == 3:
+                        parsed_rule = Rule(rule_type, parsed[1], parsed[2])
+                    else:
+                        parsed_rule = Rule(rule_type, parsed[1])
+                    ruleset_loaded.add(parsed_rule)
     return ruleset_loaded
 
 
@@ -84,15 +71,10 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                 if target == "yaml" and src.Type != "Combined":
                     to_write = f"+.{rule.Payload}" if rule.Type == "DomainSuffix" else rule.Payload
                 else:
-                    match rule.Type:
-                        case "DomainSuffix":
-                            to_write = f"DOMAIN-SUFFIX,{rule.Payload}"
-                        case "DomainFull":
-                            to_write = f"DOMAIN,{rule.Payload}"
-                        case "IPCIDR":
-                            to_write = f"IP-CIDR,{rule.Payload}"
-                        case "IPCIDR6":
-                            to_write = f"IP-CIDR6,{rule.Payload}"
+                    prefix = list(config.RULE_TYPE_CONVERSION.keys())[
+                        list(config.RULE_TYPE_CONVERSION.values()).index(rule.Type)
+                    ]  # Reverse lookup the conversion table
+                    to_write = f"{prefix},{rule.Payload}"
                 if target == "clash-compatible":
                     to_write += ",Policy"
                 if rule.Tag:
@@ -145,24 +127,20 @@ def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleS
         return src
     logging.info(f'Apply patch "{name + ".txt"}"')
     for line in loaded_patch:
-        if line.startswith("#"):
+        if not line or line.startswith("#"):
             continue
         parsed_line = line.split(":")
+        if parsed_line[1].startswith("."):
+            rule = Rule("DomainSuffix", parsed_line[1].strip("."))
+        else:
+            rule = Rule("DomainFull", parsed_line[1])
         if parsed_line[0] == "ADD":
-            if parsed_line[1].startswith("."):
-                rule = Rule("DomainSuffix", parsed_line[1].strip("."))
-            else:
-                rule = Rule("DomainFull", parsed_line[1])
             if rule not in src:
                 src.add(rule)
                 logging.debug(f'Rule "{rule}" added.')
             else:
                 logging.warning(f"Already exist: {rule}")
         elif parsed_line[0] == "REM":
-            if parsed_line[1].startswith("."):
-                rule = Rule("DomainSuffix", parsed_line[1].strip("."))
-            else:
-                rule = Rule("DomainFull", parsed_line[1])
             if rule in src:
                 src.remove(rule)
                 logging.debug(f'Rule "{rule}" Removed.')
