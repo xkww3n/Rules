@@ -54,26 +54,26 @@ class Test:
         assert str(test_rule) == 'Type: "DomainSuffix", Payload: "example.com", Tag: TEST'
 
     def test_hash(self):
-        test_rule_a = Rule("DomainSuffix", "example.com", "TEST")
-        test_rule_b = Rule("DomainFull", "example.com", "TEST2")
+        test_rule_1 = Rule("DomainSuffix", "example.com", "TEST")
+        test_rule_2 = Rule("DomainFull", "example.com", "TEST2")
         test_dict = [Rule("DomainSuffix", "example.com", "TEST")]
-        assert test_rule_a in test_dict
-        assert test_rule_b not in test_dict
+        assert test_rule_1 in test_dict
+        assert test_rule_2 not in test_dict
 
     def test_eq(self):
-        test_rule_a = Rule("DomainSuffix", "example.com", "TEST")
-        test_rule_b = Rule("DomainSuffix", "example.com", "TEST")
-        assert test_rule_a == test_rule_b
+        test_rule_1 = Rule("DomainSuffix", "example.com", "TEST")
+        test_rule_2 = Rule("DomainSuffix", "example.com", "TEST")
+        assert test_rule_1 == test_rule_2
 
     def test_include(self):
         test_self_rule = Rule("DomainSuffix", "example.com", "TEST")
-        test_rule_a = Rule("DomainSuffix", "a.example.com", "TEST")
-        test_rule_b = Rule("DomainFull", "b.example.com", "TEST")
-        test_rule_c = Rule("DomainFull", "example.com", "TEST")
-        test_rule_d = Rule("DomainSuffix", "example.com", "TEST")
-        test_rule_e = Rule("DomainFull", "1example.com", "TEST")
-        assert test_self_rule.includes(test_rule_a)
-        assert test_self_rule.includes(test_rule_b)
-        assert test_self_rule.includes(test_rule_c)
-        assert test_self_rule.includes(test_rule_d)
-        assert not test_self_rule.includes(test_rule_e)
+        test_rule_1 = Rule("DomainSuffix", "a.example.com", "TEST")
+        test_rule_2 = Rule("DomainFull", "b.example.com", "TEST")
+        test_rule_3 = Rule("DomainFull", "example.com", "TEST")
+        test_rule_4 = Rule("DomainSuffix", "example.com", "TEST")
+        test_rule_5 = Rule("DomainFull", "1example.com", "TEST")
+        assert test_self_rule.includes(test_rule_1)
+        assert test_self_rule.includes(test_rule_2)
+        assert test_self_rule.includes(test_rule_3)
+        assert test_self_rule.includes(test_rule_4)
+        assert not test_self_rule.includes(test_rule_5)

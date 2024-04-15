@@ -192,22 +192,26 @@ class TestDump:
 class TestMisc:
     def test_is_ipv4addr(self):
         valid_ipaddr = "11.4.5.14"
-        invalid_ipaddr_a = "114.514"
-        invalid_ipaddr_b = "19.1.9.810"
-        invalid_ipaddr_c = "test.www.example.com"
+        invalid_ipaddr_1 = "114.514"
+        invalid_ipaddr_2 = "19.1.9.810"
+        invalid_ipaddr_3 = "test.www.example.com"
         assert rule.is_ipv4addr(valid_ipaddr)
-        assert not rule.is_ipv4addr(invalid_ipaddr_a)
-        assert not rule.is_ipv4addr(invalid_ipaddr_b)
-        assert not rule.is_ipv4addr(invalid_ipaddr_c)
+        assert not rule.is_ipv4addr(invalid_ipaddr_1)
+        assert not rule.is_ipv4addr(invalid_ipaddr_2)
+        assert not rule.is_ipv4addr(invalid_ipaddr_3)
 
     def test_is_domain(self):
         valid_domain = "www.example.com"
-        invalid_domain_a = "[invalid]"
-        invalid_domain_b = "-invalid.tld"
+        invalid_domain_1 = "[invalid]"
+        invalid_domain_2 = "-invalid.com"
+        invalid_domain_3 = "*.example.com"
+        invalid_domain_4 = "www.example.com/error"
         ipv4addr = "11.4.5.14"
         assert rule.is_domain(valid_domain)
-        assert not rule.is_domain(invalid_domain_a)
-        assert not rule.is_domain(invalid_domain_b)
+        assert not rule.is_domain(invalid_domain_1)
+        assert not rule.is_domain(invalid_domain_2)
+        assert not rule.is_domain(invalid_domain_3)
+        assert not rule.is_domain(invalid_domain_4)
         assert not rule.is_domain(ipv4addr)
 
     def test_patch(self):
@@ -217,20 +221,20 @@ class TestMisc:
         assert test_ruleset == RuleSet("Domain", [Rule("DomainSuffix", "example.com")])
 
     def test_sort(self):
-        test_rule_a = Rule("DomainSuffix", "a.example.com", "TEST1")
-        test_rule_b = Rule("DomainSuffix", "b.example.com", "TEST2")
-        test_ruleset = RuleSet("Domain", [test_rule_b, test_rule_a])
+        test_rule_1 = Rule("DomainSuffix", "a.example.com", "TEST1")
+        test_rule_2 = Rule("DomainSuffix", "b.example.com", "TEST2")
+        test_ruleset = RuleSet("Domain", [test_rule_2, test_rule_1])
         ruleset.sort(test_ruleset)
-        assert test_ruleset == RuleSet("Domain", [test_rule_a, test_rule_b])
+        assert test_ruleset == RuleSet("Domain", [test_rule_1, test_rule_2])
 
     def test_dedup(self):
-        test_rule_a = Rule("DomainSuffix", "1example.com")
-        test_rule_b = Rule("DomainSuffix", "a.1example.com")
-        test_rule_c = Rule("DomainFull", "1example.com")
-        test_rule_d = Rule("DomainSuffix", "1example.tld")
-        test_rule_e = Rule("DomainSuffix", "a.1example.tld")
-        test_rule_f = Rule("DomainFull", "1example.tld")
+        test_rule_1 = Rule("DomainSuffix", "1.example.com")
+        test_rule_2 = Rule("DomainSuffix", "a.1.example.com")
+        test_rule_3 = Rule("DomainFull", "1.example.com")
+        test_rule_4 = Rule("DomainSuffix", "2.example.com")
+        test_rule_5 = Rule("DomainSuffix", "a.2.example.com")
+        test_rule_6 = Rule("DomainFull", "2.example.com")
         test_ruleset = RuleSet("Domain",
-                               [test_rule_a, test_rule_b, test_rule_c, test_rule_d, test_rule_e, test_rule_f])
+                               [test_rule_1, test_rule_2, test_rule_3, test_rule_4, test_rule_5, test_rule_6])
         ruleset.dedup(test_ruleset)
-        assert test_ruleset == RuleSet("Domain", [test_rule_a, test_rule_d])
+        assert test_ruleset == RuleSet("Domain", [test_rule_1, test_rule_4])
