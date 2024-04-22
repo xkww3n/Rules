@@ -20,8 +20,9 @@ def build():
     src_cidr = connection.get(config.URL_DOMESTIC_IP_V4).text.splitlines()
     ruleset_cidr = RuleSet("IPCIDR", [])
     for line in src_cidr:
-        if not line.startswith("#"):
-            ruleset_cidr.add(Rule("IPCIDR", line))
+        if line.startswith("#"):
+            continue
+        ruleset_cidr.add(Rule("IPCIDR", line))
     logging.info(f"Processed {len(ruleset_cidr)} domestic IPv4 rules.")
 
     ruleset.batch_dump(ruleset_cidr, config.TARGETS, config.PATH_DIST, "domestic_ip")

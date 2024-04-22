@@ -25,21 +25,23 @@ def load(src: Path) -> RuleSet:
                     ruleset_loaded.add(Rule("DomainFull", line))
         case "IPCIDR":
             for line in src_toload:
-                if line and not line.startswith("#"):
-                    if ":" in line:
-                        ruleset_loaded.add(Rule("IPCIDR6", line))
-                    else:
-                        ruleset_loaded.add(Rule("IPCIDR", line))
+                if not line or line.startswith("#"):
+                    continue
+                if ":" in line:
+                    ruleset_loaded.add(Rule("IPCIDR6", line))
+                else:
+                    ruleset_loaded.add(Rule("IPCIDR", line))
         case "Combined":
             for line in src_toload:
-                if line and not line.startswith("#"):
-                    parsed = line.split(",")
-                    rule_type = config.RULE_TYPE_CONVERSION[parsed[0]]
-                    if len(parsed) == 3:
-                        parsed_rule = Rule(rule_type, parsed[1], parsed[2])
-                    else:
-                        parsed_rule = Rule(rule_type, parsed[1])
-                    ruleset_loaded.add(parsed_rule)
+                if not line or line.startswith("#"):
+                    continue
+                parsed = line.split(",")
+                rule_type = config.RULE_TYPE_CONVERSION[parsed[0]]
+                if len(parsed) == 3:
+                    parsed_rule = Rule(rule_type, parsed[1], parsed[2])
+                else:
+                    parsed_rule = Rule(rule_type, parsed[1])
+                ruleset_loaded.add(parsed_rule)
     return ruleset_loaded
 
 

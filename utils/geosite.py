@@ -32,14 +32,14 @@ def parse(src_path: Path, excluded_imports=None, excluded_tags=None) -> RuleSet:
             parsed_rule.set_payload(line.strip("full:"))
         elif line.startswith("include:"):
             name_import = line.split("include:")[1]
-            if name_import not in excluded_imports:
-                logging.debug(f'Line "{raw_line}" is a import rule. Start importing "{name_import}".')
-                ruleset_parsed |= parse(src_path.parent/name_import, excluded_imports, excluded_tags)
-                logging.debug(f'Imported "{name_import}".')
-                continue
-            else:
+            if name_import in excluded_imports:
                 logging.debug(f'Line "{raw_line}" is a import rule, but hit exclusion "{name_import}", skipped.')
                 continue
+            logging.debug(f'Line "{raw_line}" is a import rule. Start importing "{name_import}".')
+            ruleset_parsed |= parse(src_path.parent/name_import, excluded_imports, excluded_tags)
+            logging.debug(f'Imported "{name_import}".')
+            continue  # Import rule itself doesn't contain any content and can't be included in a ruleset,
+            # so whether an import rule is processed or not, the code below shouldn't be executed.
         else:
             logging.debug(f'Unsupported rule: "{raw_line}", skipped.')
             continue

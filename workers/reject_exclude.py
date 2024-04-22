@@ -22,10 +22,11 @@ def build():
     src_psl = connection.get("https://publicsuffix.org/list/public_suffix_list.dat").text.splitlines()
     set_psl = set()
     for line in src_psl:
-        if "//" not in line and "." in line:
-            if line.startswith("*"):
-                line = line.strip("*")
-            set_psl.add(line)
+        if "//" in line or "." not in line:
+            continue
+        if line.startswith("*"):
+            line = line.strip("*")
+        set_psl.add(line)
 
     src_rejections = []
     for url in config.LIST_REJECT_URL:
