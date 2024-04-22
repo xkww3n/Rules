@@ -44,32 +44,32 @@ def build():
 
     for line in parse_filterlist(src_rejections):
         line_stripped = rule.strip_adblock(line)
-        if line_stripped and rule.is_domain(line_stripped):
-            if line.action == "block":
-                if line.text.startswith("."):
-                    line_stripped = line.text.strip(".").strip("^")
-                else:
-                    line_stripped = line.text.strip("|").strip("^")
-                domain_level = line_stripped.count(".")
-                if any(ps in line_stripped for ps in set_psl):
-                    domain_level -= 1
-                if domain_level == 1:
-                    rule_reject = Rule("DomainSuffix", line_stripped)
-                else:
-                    # If a domain isn't a level-1 domain, this domain mostly doesn't have any other subdomain.
-                    rule_reject = Rule("DomainFull", line_stripped)
-                ruleset_rejections.add(rule_reject)
-                logging.debug(f'Line "{line.text}" is added to reject set. "{rule_reject}".')
-            elif line.action == "allow":
-                src_exclusions.append(line.text)
-                logging.debug(f'Line "{line.text}" is added to exclude set.')
+        if not line_stripped:
+            continue
+        if line.action == "block":
+            if line_stripped.startswith("."):
+                line_stripped = line_stripped.strip(".")
+            domain_level = line_stripped.count(".")
+            if any(ps in line_stripped for ps in set_psl):
+                domain_level -= 1
+            if domain_level == 1:
+                rule_reject = Rule("DomainSuffix", line_stripped)
+            else:
+                # If a domain isn't a level-1 domain, this domain mostly doesn't have any other subdomain.
+                rule_reject = Rule("DomainFull", line_stripped)
+            ruleset_rejections.add(rule_reject)
+            logging.debug(f'Line "{line.text}" is added to reject set. "{rule_reject}".')
+        elif line.action == "allow":
+            src_exclusions.append(line.text)
+            logging.debug(f'Line "{line.text}" is added to exclude set.')
 
     for line in parse_filterlist(src_exclusions):
         line_stripped = rule.strip_adblock(line)
-        if line_stripped and rule.is_domain(line_stripped):
-            rule_exclude = Rule("DomainFull", line_stripped)
-            ruleset_exclusions_raw.add(rule_exclude)
-            logging.debug(f'Line "{line.text}" is added to raw exclude set. "{rule_exclude}".')
+        if not line_stripped:
+            continue
+        rule_exclude = Rule("DomainFull", line_stripped)
+        ruleset_exclusions_raw.add(rule_exclude)
+        logging.debug(f'Line "{line.text}" is added to raw exclude set. "{rule_exclude}".')
 
     ruleset_rejections = ruleset.patch(ruleset_rejections, "reject")
     ruleset_exclusions = RuleSet("Domain", [])
