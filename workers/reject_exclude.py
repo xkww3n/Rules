@@ -25,8 +25,8 @@ def build():
         if "//" in line or "." not in line:
             continue
         if line.startswith("*"):
-            line = line.strip("*")
-        set_psl.add(line)
+            line = line.strip("*.")
+        set_psl.add(f".{line}")
 
     src_rejections = []
     for url in config.LIST_REJECT_URL:
@@ -51,12 +51,13 @@ def build():
             if line_stripped.startswith("."):
                 line_stripped = line_stripped.strip(".")
             domain_level = line_stripped.count(".")
-            if any(ps in line_stripped for ps in set_psl):
-                domain_level -= 1
-            if domain_level == 1:
+            for ps in set_psl:
+                if line_stripped.endswith(ps):
+                    domain_level -= ps.count(".") - 1
+            if domain_level <= 2:
                 rule_reject = Rule("DomainSuffix", line_stripped)
             else:
-                # If a domain isn't a level-1 domain, this domain mostly doesn't have any other subdomain.
+                # If a domain's level is bigger than 2, this domain mostly doesn't have any other subdomain.
                 rule_reject = Rule("DomainFull", line_stripped)
             ruleset_rejections.add(rule_reject)
             logging.debug(f'(ruleset) Reject: Added "{line.text}" as "{rule_reject}".')
