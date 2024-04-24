@@ -152,12 +152,12 @@ def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleS
     return src
 
 
-def sort(ruleset: RuleSet):
+def sort(ruleset: RuleSet) -> None:
     if ruleset.Type == "Combined":
         logging.warning("Skipped: Combined-type ruleset shouldn't be sorted as maybe ordered.")
         return
 
-    def sort_key(item):
+    def sort_key(item) -> tuple:
         match item.Type:
             # Domain suffixes should always in front of full domains
             # Shorter domains should in front of longer domains
@@ -167,7 +167,7 @@ def sort(ruleset: RuleSet):
             case "DomainFull":
                 sortkey = (1, len(item.Payload), item.Payload)
             case _:
-                sortkey = item.Payload
+                sortkey = (2, len(item.Payload), item.Payload)
         return sortkey
 
     ruleset.Payload.sort(key=sort_key)
