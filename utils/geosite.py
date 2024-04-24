@@ -17,7 +17,6 @@ def parse(src_path: Path, excluded_imports=None, excluded_tags=None) -> RuleSet:
         line = raw_line.split("#")[0].strip()
         if not line:
             continue
-        parsed_rule = Rule()
         if "@" in line:
             parsed_rule_tag = line.split("@")[1]
             if parsed_rule_tag in excluded_tags:
@@ -25,11 +24,9 @@ def parse(src_path: Path, excluded_imports=None, excluded_tags=None) -> RuleSet:
                 continue
             line = line.split(" @")[0]
         if ":" not in line:
-            parsed_rule.set_type("DomainSuffix")
-            parsed_rule.set_payload(line)
+            parsed_rule = Rule("DomainSuffix", line)
         elif line.startswith("full:"):
-            parsed_rule.set_type("DomainFull")
-            parsed_rule.set_payload(line.strip("full:"))
+            parsed_rule = Rule("DomainFull", line.strip("full:"))
         elif line.startswith("include:"):
             name_import = line.split("include:")[1]
             if name_import in excluded_imports:
