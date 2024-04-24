@@ -21,7 +21,7 @@ def parse(src_path: Path, excluded_imports=None, excluded_tags=None) -> RuleSet:
         if "@" in line:
             parsed_rule_tag = line.split("@")[1]
             if parsed_rule_tag in excluded_tags:
-                logging.debug(f'Line "{raw_line}" has a excluded tag "{parsed_rule_tag}", skipped.')
+                logging.debug(f'Skipped (excl.tag "{parsed_rule_tag}"): "{raw_line}"')
                 continue
             line = line.split(" @")[0]
         if ":" not in line:
@@ -33,18 +33,18 @@ def parse(src_path: Path, excluded_imports=None, excluded_tags=None) -> RuleSet:
         elif line.startswith("include:"):
             name_import = line.split("include:")[1]
             if name_import in excluded_imports:
-                logging.debug(f'Line "{raw_line}" is a import rule, but hit exclusion "{name_import}", skipped.')
+                logging.debug(f'Skipped (excl.import "{name_import}"): "{raw_line}"')
                 continue
-            logging.debug(f'Line "{raw_line}" is a import rule. Start importing "{name_import}".')
+            logging.debug(f'Import ("{raw_line}"): "{name_import}"')
             ruleset_parsed |= parse(src_path.parent/name_import, excluded_imports, excluded_tags)
             logging.debug(f'Imported "{name_import}".')
             continue  # Import rule itself doesn't contain any content and can't be included in a ruleset,
             # so whether an import rule is processed or not, the code below shouldn't be executed.
         else:
-            logging.debug(f'Unsupported rule: "{raw_line}", skipped.')
+            logging.debug(f'Skipped (unsupported): "{raw_line}"')
             continue
         ruleset_parsed.add(parsed_rule)
-        logging.debug(f'Line "{raw_line}" is parsed: {parsed_rule}')
+        logging.debug(f'Parsed: "{raw_line}" as "{parsed_rule}"')
     return ruleset_parsed
 
 

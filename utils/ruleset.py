@@ -139,13 +139,13 @@ def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleS
         if parsed_line[0] == "ADD":
             if rule not in src:
                 src.add(rule)
-                logging.debug(f'Rule "{rule}" added.')
+                logging.debug(f'Added: "{rule}"')
             else:
                 logging.warning(f"Already exist: {rule}")
         elif parsed_line[0] == "REM":
             if rule in src:
                 src.remove(rule)
-                logging.debug(f'Rule "{rule}" Removed.')
+                logging.debug(f'Removed: "{rule}"')
             else:
                 logging.warning(f"Not found: {rule}")
     logging.info(f'Patch "{name + ".txt"}" applied.')
@@ -154,7 +154,7 @@ def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleS
 
 def sort(ruleset: RuleSet):
     if ruleset.Type == "Combined":
-        logging.warning("Combined-type ruleset shouldn't be sorted as maybe ordered, skipped.")
+        logging.warning("Skipped: Combined-type ruleset shouldn't be sorted as maybe ordered.")
         return
 
     def sort_key(item):
@@ -181,7 +181,7 @@ def dedup(src: RuleSet) -> RuleSet:
         for added in list_unique:
             if added.includes(item):
                 flag_unique = False
-                logging.debug(f"{item} is removed as duplicated with {added}.")
+                logging.debug(f'Remove "{item}": duplicated with "{added}".')
         if flag_unique:
             list_unique.append(item)
     src.Payload = list_unique
