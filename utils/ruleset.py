@@ -181,7 +181,7 @@ def dedup(src: RuleSet) -> RuleSet:
         for added in list_unique:
             if added.includes(item):
                 flag_unique = False
-                logging.debug(f'Remove "{item}": duplicated with "{added}".')
+                logging.debug(f'Remove "{item}": included in "{added}".')
         if flag_unique:
             list_unique.append(item)
     src.Payload = list_unique

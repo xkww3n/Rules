@@ -41,7 +41,7 @@ def parse(src_path: Path, excluded_imports=None, excluded_tags=None) -> RuleSet:
             logging.debug(f'Skipped (unsupported): "{raw_line}"')
             continue
         ruleset_parsed.add(parsed_rule)
-        logging.debug(f'Parsed: "{raw_line}" as "{parsed_rule}"')
+        logging.debug(f'Parsed: "{raw_line}" -> "{parsed_rule}"')
     return ruleset_parsed
 
 

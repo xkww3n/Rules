@@ -60,7 +60,7 @@ def build():
                 # If a domain's level is bigger than 2, this domain mostly doesn't have any other subdomain.
                 rule_reject = Rule("DomainFull", line_stripped)
             ruleset_rejections.add(rule_reject)
-            logging.debug(f'(ruleset) Reject: Added "{line.text}" as "{rule_reject}".')
+            logging.debug(f'(ruleset) Reject: Added "{line.text}" -> "{rule_reject}".')
         elif line.action == "allow":
             src_exclusions.append(line.text)
             logging.debug(f'(source) Exclude: Added "{line.text}"')
@@ -71,7 +71,7 @@ def build():
             continue
         rule_exclude = Rule("DomainFull", line_stripped)
         ruleset_exclusions_raw.add(rule_exclude)
-        logging.debug(f'(ruleset) Exclude_raw: Added "{line.text}" as "{rule_exclude}"')
+        logging.debug(f'(ruleset) Exclude_raw: Added "{line.text}" -> "{rule_exclude}"')
 
     ruleset_rejections = ruleset.patch(ruleset_rejections, "reject")
     ruleset_exclusions = RuleSet("Domain", [])
@@ -82,7 +82,7 @@ def build():
             if domain_reject == domain_exclude or domain_exclude.includes(domain_reject):
                 ruleset_rejections.remove(domain_reject)
                 ruleset_exclusions_raw.remove(domain_exclude)
-                logging.debug(f"Removed {domain_reject}: excluded by {domain_exclude}.")
+                logging.debug(f'Removed "{domain_reject}": excluded by "{domain_exclude}"')
     ruleset.batch_dump(ruleset_rejections, config.TARGETS, config.PATH_DIST, "reject")
     logging.info(f"Processed {len(ruleset_rejections)} reject rules.")
 
@@ -90,7 +90,7 @@ def build():
         for domain_reject in ruleset_rejections:
             if domain_exclude.Payload.endswith(domain_reject.Payload):
                 ruleset_exclusions.add(domain_exclude)
-                logging.debug(f"(ruleset) Exclude: Added {domain_exclude}")
+                logging.debug(f'(ruleset) Exclude: Added "{domain_exclude}"')
     ruleset_exclusions = ruleset.patch(ruleset_exclusions, "exclude")
     logging.info(f"Processed {len(ruleset_exclusions)} exclude rules.")
     ruleset.batch_dump(ruleset_exclusions, config.TARGETS, config.PATH_DIST, "exclude")

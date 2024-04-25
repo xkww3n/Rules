@@ -19,7 +19,7 @@ class Rule:
             self.Tag = tag
 
     def __str__(self):
-        return f'Type: "{self.Type}", Payload: "{self.Payload}", Tag: {self.Tag if self.Tag else "NONE"}'
+        return f'{self.Type}: {self.Payload}{f" ({self.Tag})" if self.Tag else ""}'
 
     def __hash__(self):
         return hash(self.Type) + hash(self.Payload) + hash(self.Tag)

@@ -51,7 +51,7 @@ class Test:
 
     def test_to_str(self):
         test_rule = Rule("DomainSuffix", "example.com", "TEST")
-        assert str(test_rule) == 'Type: "DomainSuffix", Payload: "example.com", Tag: TEST'
+        assert str(test_rule) == "DomainSuffix: example.com (TEST)"
 
     def test_hash(self):
         test_rule_1 = Rule("DomainSuffix", "example.com", "TEST")
