@@ -9,6 +9,7 @@ DOMAIN,support.wechat.com
 DOMAIN,hkshort.wechat.com
 DOMAIN,hklong.wechat.com
 DOMAIN,tencentmap.wechat.com
+DOMAIN,dns.weixin.qq.com
 DOMAIN-SUFFIX,hk.wechat.com
 
 IP-CIDR,43.128.0.0/15,no-resolve
