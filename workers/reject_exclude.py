@@ -88,7 +88,7 @@ def build():
 
     for domain_exclude in ruleset_exclusions_raw:
         for domain_reject in ruleset_rejections:
-            if domain_exclude.Payload.endswith(domain_reject.Payload):
+            if domain_reject.includes(domain_exclude):
                 ruleset_exclusions.add(domain_exclude)
                 logging.debug(f'(ruleset) Exclude: Added "{domain_exclude}"')
     ruleset_exclusions = ruleset.patch(ruleset_exclusions, "exclude")
