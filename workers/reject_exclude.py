@@ -6,8 +6,9 @@ from requests import Session
 import config
 from models.rule import Rule
 from models.ruleset import RuleSet
-from utils import rule, ruleset
 from utils.log_decorator import log
+from utils.rule import strip_adblock
+from utils.ruleset import patch, dedup, batch_dump
 
 
 @log
@@ -44,7 +45,7 @@ def build():
     ruleset_exclusions_raw = RuleSet("Domain", [])
 
     for line in parse_filterlist(src_rejections):
-        line_stripped = rule.strip_adblock(line)
+        line_stripped = strip_adblock(line)
         if not line_stripped:
             continue
         if line.action == "block":
@@ -66,24 +67,24 @@ def build():
             logging.debug(f'(source) Exclude: Added "{line.text}"')
 
     for line in parse_filterlist(src_exclusions):
-        line_stripped = rule.strip_adblock(line)
+        line_stripped = strip_adblock(line)
         if not line_stripped:
             continue
         rule_exclude = Rule("DomainFull", line_stripped)
         ruleset_exclusions_raw.add(rule_exclude)
         logging.debug(f'(ruleset) Exclude_raw: Added "{line.text}" -> "{rule_exclude}"')
 
-    ruleset_rejections = ruleset.patch(ruleset_rejections, "reject")
+    ruleset_rejections = patch(ruleset_rejections, "reject")
     ruleset_exclusions = RuleSet("Domain", [])
     logging.debug("Deduplicate reject and exclude set.")
-    ruleset.dedup(ruleset_rejections)
+    dedup(ruleset_rejections)
     for domain_exclude in ruleset_exclusions_raw.deepcopy():
         for domain_reject in ruleset_rejections.deepcopy():
             if domain_reject == domain_exclude or domain_exclude.includes(domain_reject):
                 ruleset_rejections.remove(domain_reject)
                 ruleset_exclusions_raw.remove(domain_exclude)
                 logging.debug(f'Removed "{domain_reject}": excluded by "{domain_exclude}"')
-    ruleset.batch_dump(ruleset_rejections, config.TARGETS, config.PATH_DIST, "reject")
+    batch_dump(ruleset_rejections, config.TARGETS, config.PATH_DIST, "reject")
     logging.info(f"Processed {len(ruleset_rejections)} reject rules.")
 
     for domain_exclude in ruleset_exclusions_raw:
@@ -91,6 +92,6 @@ def build():
             if domain_reject.includes(domain_exclude):
                 ruleset_exclusions.add(domain_exclude)
                 logging.debug(f'(ruleset) Exclude: Added "{domain_exclude}"')
-    ruleset_exclusions = ruleset.patch(ruleset_exclusions, "exclude")
+    ruleset_exclusions = patch(ruleset_exclusions, "exclude")
     logging.info(f"Processed {len(ruleset_exclusions)} exclude rules.")
-    ruleset.batch_dump(ruleset_exclusions, config.TARGETS, config.PATH_DIST, "exclude")
+    batch_dump(ruleset_exclusions, config.TARGETS, config.PATH_DIST, "exclude")

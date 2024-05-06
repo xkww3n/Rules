@@ -1,5 +1,5 @@
 import config
-from utils import geosite
+from utils.geosite import batch_gen
 from utils.log_decorator import log
 
 
@@ -25,4 +25,4 @@ def build():
                    # Microsoft.
         "bing",  # Bing has a more restricted ver for Mainland China.
     ]
-    geosite.batch_gen(categories, config.TARGETS, exclusions)
+    batch_gen(categories, config.TARGETS, exclusions)

@@ -4,8 +4,9 @@ from requests import Session
 
 import config
 from models.rule import Rule
-from utils import ruleset, geosite
+from utils.geosite import parse
 from utils.log_decorator import log
+from utils.ruleset import patch, dedup, batch_dump
 
 
 @log
@@ -16,7 +17,7 @@ def build():
 
     connection = Session()
 
-    ruleset_domestic = geosite.parse(config.PATH_SOURCE_GEOSITE/"geolocation-cn", None, ["!cn"])
+    ruleset_domestic = parse(config.PATH_SOURCE_GEOSITE/"geolocation-cn", None, ["!cn"])
     logging.info(f"Imported {len(ruleset_domestic)} domestic rules from v2fly geolocation-cn list.")
 
     for item in ruleset_domestic.deepcopy():
@@ -31,12 +32,12 @@ def build():
     for line in raw.replace("server=/", "").replace("/114.114.114.114", "").splitlines():
         ruleset_domestic.add(Rule("DomainFull", line))
 
-    ruleset_domestic = ruleset.patch(ruleset_domestic, "domestic")
+    ruleset_domestic = patch(ruleset_domestic, "domestic")
 
     # Add all domestic TLDs to domestic rules, then perform deduplication.
-    ruleset_domestic_tlds = geosite.parse(config.PATH_SOURCE_GEOSITE/"tld-cn")
+    ruleset_domestic_tlds = parse(config.PATH_SOURCE_GEOSITE/"tld-cn")
     logging.info(f"Imported {len(ruleset_domestic_tlds)} domestic TLDs.")
     ruleset_domestic |= ruleset_domestic_tlds
-    ruleset.dedup(ruleset_domestic)
+    dedup(ruleset_domestic)
     logging.info(f"Processed {len(ruleset_domestic)} domestic rules.")
-    ruleset.batch_dump(ruleset_domestic, config.TARGETS, config.PATH_DIST, "domestic")
+    batch_dump(ruleset_domestic, config.TARGETS, config.PATH_DIST, "domestic")

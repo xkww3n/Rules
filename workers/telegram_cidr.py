@@ -3,8 +3,8 @@ from requests import Session
 import config
 from models.rule import Rule
 from models.ruleset import RuleSet
-from utils import ruleset
 from utils.log_decorator import log
+from utils.ruleset import batch_dump
 
 
 @log
@@ -23,4 +23,4 @@ def build():
         else:
             ruleset_cidr.add(Rule("IPCIDR6", line))
 
-    ruleset.batch_dump(ruleset_cidr, config.TARGETS, config.PATH_DIST, "telegram")
+    batch_dump(ruleset_cidr, config.TARGETS, config.PATH_DIST, "telegram")

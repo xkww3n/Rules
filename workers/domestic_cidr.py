@@ -5,8 +5,8 @@ from requests import Session
 import config
 from models.rule import Rule
 from models.ruleset import RuleSet
-from utils import ruleset
 from utils.log_decorator import log
+from utils.ruleset import batch_dump
 
 
 @log
@@ -25,7 +25,7 @@ def build():
         ruleset_cidr.add(Rule("IPCIDR", line))
     logging.info(f"Processed {len(ruleset_cidr)} domestic IPv4 rules.")
 
-    ruleset.batch_dump(ruleset_cidr, config.TARGETS, config.PATH_DIST, "domestic_ip")
+    batch_dump(ruleset_cidr, config.TARGETS, config.PATH_DIST, "domestic_ip")
 
     src_cidr6 = connection.get(config.URL_DOMESTIC_IP_V6).text.splitlines()
     ruleset_cidr6 = RuleSet("IPCIDR", [])
@@ -33,4 +33,4 @@ def build():
         ruleset_cidr6.add(Rule("IPCIDR6", line))
     logging.info(f"Processed {len(ruleset_cidr6)} domestic IPv6 rules.")
 
-    ruleset.batch_dump(ruleset_cidr6, config.TARGETS, config.PATH_DIST, "domestic_ip6")
+    batch_dump(ruleset_cidr6, config.TARGETS, config.PATH_DIST, "domestic_ip6")

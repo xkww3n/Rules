@@ -2,8 +2,9 @@ import logging
 from pathlib import Path
 
 import config
-from utils import ruleset
 from utils.log_decorator import log
+from utils.ruleset import batch_dump
+from utils.ruleset import load as ruleset_load
 
 
 @log
@@ -17,6 +18,6 @@ def build():
         if not filename.is_file():
             continue
         logging.debug(f'Build "{filename.name}".')
-        ruleset_custom = ruleset.load(filename)
-        ruleset.batch_dump(ruleset_custom, config.TARGETS, config.PATH_DIST, filename.stem)
+        ruleset_custom = ruleset_load(filename)
+        batch_dump(ruleset_custom, config.TARGETS, config.PATH_DIST, filename.stem)
         logging.debug(f"Processed {len(ruleset_custom)} rules.")

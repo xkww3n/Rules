@@ -2,7 +2,8 @@ import logging
 from pathlib import Path
 
 import config
-from utils import ruleset
+from utils.ruleset import batch_dump
+from utils.ruleset import load as ruleset_load
 
 
 def build():
@@ -10,6 +11,6 @@ def build():
     list_file_personal = Path.iterdir(config.PATH_SOURCE_CUSTOM/"personal")
     for filename in list_file_personal:
         logging.debug(f'Build "{filename.name}".')
-        ruleset_personal = ruleset.load(filename)
-        ruleset.batch_dump(ruleset_personal, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
-                           config.PATH_DIST/"personal", filename.stem)
+        ruleset_personal = ruleset_load(filename)
+        batch_dump(ruleset_personal, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
+                   config.PATH_DIST/"personal", filename.stem)
