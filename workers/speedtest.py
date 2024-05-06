@@ -1,7 +1,8 @@
 from json import loads as json_loads
-from time import sleep
 
 from requests import Session
+from requests.adapters import HTTPAdapter
+from urllib3.util import Retry
 
 import config
 from models.rule import Rule
@@ -55,6 +56,14 @@ def build():
     ]
 
     connection = Session()
+    retry_strategy = Retry(
+        total=4,
+        status_forcelist=[429],
+        backoff_factor=1,
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    connection.mount('https://', adapter)
+
     speedtest_ruleset = RuleSet("Domain", [
         Rule("DomainSuffix", "ooklaserver.net"),
         Rule("DomainSuffix", "speed.cloudflare.com"),
@@ -64,7 +73,6 @@ def build():
     for keyword in search_keywords:
         url = f"https://www.speedtest.net/api/js/servers?engine=js&search={keyword}&limit=100"
         resp = connection.get(url).text
-        sleep(0.5)  # Speedtest.net's private API interface has a rate limit
         servers_list = json_loads(resp)
         for server_info in servers_list:
             if server_info["cc"] not in accepted_ccs:
