@@ -65,9 +65,10 @@ def build():
     connection.mount('https://', adapter)
 
     speedtest_ruleset = RuleSet("Domain", [
+        Rule("DomainSuffix", "speedtest.net"),
+        Rule("DomainSuffix", "speedtestcustom.com"),
         Rule("DomainSuffix", "ooklaserver.net"),
-        Rule("DomainSuffix", "speed.cloudflare.com"),
-        Rule("DomainSuffix", "fast.com")
+        Rule("DomainSuffix", "speed.cloudflare.com")
     ])
 
     for keyword in search_keywords:
