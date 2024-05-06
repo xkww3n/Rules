@@ -22,7 +22,7 @@ class Rule:
         return f'{self.Type}: {self.Payload}{f" ({self.Tag})" if self.Tag else ""}'
 
     def __hash__(self):
-        return hash(self.Type) + hash(self.Payload) + hash(self.Tag)
+        return hash((self.Type, self.Payload, self.Tag))
 
     def __eq__(self, other):
         return self.Type == other.Type and self.Payload == other.Payload and self.Tag == other.Tag
