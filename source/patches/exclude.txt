@@ -1,4 +1,3 @@
 ADD:ad.doubleclick.net
-ADD:googleads.g.doubleclick.net
 ADD:ssl.p.jwpcdn.com
 ADD:click.mz.simba.taobao.com
