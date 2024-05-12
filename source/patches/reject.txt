@@ -5,6 +5,7 @@ REM:.storage.moegirl.org.cn
 REM:.bugly.qq.com
 REM:.adsense.google.cn
 REM:.cm.bilibili.com
+REM:.mcdn.bilivideo.cn
 
 ADD:.mediav.com
 ADD:.partwithner.com
