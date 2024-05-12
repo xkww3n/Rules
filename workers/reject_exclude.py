@@ -80,7 +80,7 @@ def build():
     dedup(ruleset_rejections)
     for domain_exclude in ruleset_exclusions_raw.deepcopy():
         for domain_reject in ruleset_rejections.deepcopy():
-            if domain_reject == domain_exclude or domain_exclude.includes(domain_reject):
+            if domain_exclude.includes(domain_reject):
                 ruleset_rejections.remove(domain_reject)
                 ruleset_exclusions_raw.remove(domain_exclude)
                 logging.debug(f'Removed "{domain_reject}": excluded by "{domain_exclude}"')
