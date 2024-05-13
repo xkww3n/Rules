@@ -23,31 +23,31 @@ class Test:
     def test_type_checking_runtime(self):
         test_rule = Rule()
         with raises(TypeError):
-            test_rule.set_type("NotAllowedType")
+            test_rule.type = "NotAllowedType"
 
-        test_rule.set_type("DomainSuffix")
+        test_rule.type = "DomainSuffix"
         with raises(ValueError):
-            test_rule.set_payload("[invalid_domain]")
+            test_rule.payload = "[invalid_domain]"
 
-        test_rule.set_type("DomainFull")
+        test_rule.type = "DomainFull"
         with raises(ValueError):
-            test_rule.set_payload("[invalid_domain]")
+            test_rule.payload = "[invalid_domain]"
 
-        test_rule.set_type("IPCIDR")
+        test_rule.type = "IPCIDR"
         with raises(ValueError):
-            test_rule.set_payload("114514")
+            test_rule.payload = "114514"
 
-        test_rule.set_type("IPCIDR6")
+        test_rule.type = "IPCIDR6"
         with raises(ValueError):
-            test_rule.set_payload("1919810")
+            test_rule.payload = "1919810"
 
-        test_rule.set_type("IPCIDR")
+        test_rule.type = "IPCIDR"
         with raises(ValueError):
-            test_rule.set_payload("fc00:114::514")
+            test_rule.payload = "fc00:114::514"
 
-        test_rule.set_type("IPCIDR6")
+        test_rule.type = "IPCIDR6"
         with raises(ValueError):
-            test_rule.set_payload("1.14.5.14")
+            test_rule.payload = "1.14.5.14"
 
     def test_to_str(self):
         test_rule = Rule("DomainSuffix", "example.com", "TEST")

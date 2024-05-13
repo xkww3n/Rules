@@ -4,57 +4,70 @@ from utils.rule import is_domain
 
 
 class Rule:
-    Type: str  # DomainSuffix / DomainFull / IPCIDR / IPCIDR6
-    Payload: str
-    Tag: str
+    type: str  # DomainSuffix / DomainFull / IPCIDR / IPCIDR6
+    payload: str
+    tag: str
 
     def __init__(self, rule_type: str = "", payload: str = "", tag: str = ""):
+        self._type = ""
+        self._payload = ""
+        self._tag = tag
         if rule_type or payload:
-            self.set_type(rule_type)
-            self.set_payload(payload)
-            self.set_tag(tag)
-        else:
-            self.Type = ""
-            self.Payload = ""
-            self.Tag = tag
+            self.type = rule_type
+            self.payload = payload
 
     def __str__(self):
-        return f'{self.Type}: {self.Payload}{f" ({self.Tag})" if self.Tag else ""}'
+        return f'{self.type}: {self.payload}{f" ({self.tag})" if self.tag else ""}'
 
     def __hash__(self):
-        return hash((self.Type, self.Payload, self.Tag))
+        return hash((self.type, self.payload, self.tag))
 
     def __eq__(self, other):
-        return self.Type == other.Type and self.Payload == other.Payload and self.Tag == other.Tag
+        return self.type == other.type and self.payload == other.payload and self.tag == other.tag
 
-    def set_type(self, rule_type: str):
-        allowed_type = ("DomainSuffix", "DomainFull", "IPCIDR", "IPCIDR6")
-        if rule_type not in allowed_type:
+    @property
+    def type(self) -> str:
+        return self._type
+
+    @type.setter
+    def type(self, rule_type: str):
+        allowed_types = ("DomainSuffix", "DomainFull", "IPCIDR", "IPCIDR6")
+        if rule_type not in allowed_types:
             raise TypeError(f"Unsupported type: {rule_type}")
-        self.Type = rule_type
+        self._type = rule_type
 
-    def set_payload(self, payload: str):
-        if "Domain" in self.Type:
+    @property
+    def payload(self) -> str:
+        return self._payload
+
+    @payload.setter
+    def payload(self, payload: str):
+        if "Domain" in self.type:
             if not is_domain(payload):
                 raise ValueError(f"Invalid domain: {payload}")
-        elif "IP" in self.Type:
+        elif "IP" in self.type:
             try:
                 ip_type = ip_network(payload)
             except ValueError:
                 raise ValueError(f"Invalid IP address: {payload}")
-            if self.Type == "IPCIDR6" and type(ip_type) is IPv4Network:
+            if self.type == "IPCIDR6" and type(ip_type) is IPv4Network:
                 raise ValueError(f"IPv4 address stored in IPv6 type: {payload}")
-            elif self.Type == "IPCIDR" and type(ip_type) is IPv6Network:
+            elif self.type == "IPCIDR" and type(ip_type) is IPv6Network:
                 raise ValueError(f"IPv6 address stored in IPv4 type: {payload}")
-        self.Payload = payload
+        self._payload = payload
 
-    def set_tag(self, tag: str = ""):
-        self.Tag = tag
+    @property
+    def tag(self) -> str:
+        return self._tag
+
+    @tag.setter
+    def tag(self, tag: str):
+        self._tag = tag
 
     def includes(self, other):
-        if self.Type == "DomainSuffix":
-            if self.Payload == other.Payload:
+        if self.type == "DomainSuffix":
+            if self.payload == other.payload:
                 return True
-            return other.Payload.endswith("." + self.Payload)
-        elif self.Type == "DomainFull":
+            return other.payload.endswith("." + self.payload)
+        elif self.type == "DomainFull":
             return self == other

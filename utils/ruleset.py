@@ -61,61 +61,61 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
     with open(dst/file, mode="w", encoding="utf-8") as dist:
         if target in ("text", "text-plus"):
             for rule in src:
-                to_write = rule.Payload if rule.Type in ("DomainFull", "IPCIDR", "IPCIDR6") else f".{rule.Payload}"
+                to_write = rule.payload if rule.type in ("DomainFull", "IPCIDR", "IPCIDR6") else f".{rule.payload}"
                 to_write = f"+{to_write}\n" if (target == "text-plus"
-                                                and rule.Type == "DomainSuffix"
+                                                and rule.type == "DomainSuffix"
                                                 ) else f"{to_write}\n"
                 dist.writelines(to_write)
         elif target in ("surge-compatible", "clash-compatible", "yaml"):
             if target == "yaml":
                 dist.writelines("payload:\n")
             for rule in src:
-                if target == "yaml" and src.Type != "Combined":
-                    to_write = f"+.{rule.Payload}" if rule.Type == "DomainSuffix" else rule.Payload
+                if target == "yaml" and src.type != "Combined":
+                    to_write = f"+.{rule.payload}" if rule.type == "DomainSuffix" else rule.payload
                 else:
                     prefix = list(config.RULE_TYPE_CONVERSION.keys())[
-                        list(config.RULE_TYPE_CONVERSION.values()).index(rule.Type)
+                        list(config.RULE_TYPE_CONVERSION.values()).index(rule.type)
                     ]  # Reverse lookup the conversion table
-                    to_write = f"{prefix},{rule.Payload}"
+                    to_write = f"{prefix},{rule.payload}"
                 if target == "clash-compatible":
                     to_write += ",Policy"
-                if rule.Tag:
-                    to_write += f",{rule.Tag}"
+                if rule.tag:
+                    to_write += f",{rule.tag}"
                 if target == "yaml":
                     to_write = f"  - '{to_write}'"
                 dist.writelines(f"{to_write}\n")
         elif target == "geosite":
             for rule in src:
-                match rule.Type:
+                match rule.type:
                     case "DomainSuffix":
-                        dist.writelines(f"{rule.Payload}\n")
+                        dist.writelines(f"{rule.payload}\n")
                     case "DomainFull":
-                        dist.writelines(f"full:{rule.Payload}\n")
+                        dist.writelines(f"full:{rule.payload}\n")
         elif target == "sing-ruleset":
             ruleset = {
                 "version": 1,
                 "rules": [{}]
             }
             for rule in src:
-                if rule.Type == "DomainFull":
+                if rule.type == "DomainFull":
                     key = "domain"
-                elif rule.Type == "DomainSuffix":
+                elif rule.type == "DomainSuffix":
                     key = "domain_suffix"
-                elif rule.Type in ("IPCIDR", "IPCIDR6"):
+                elif rule.type in ("IPCIDR", "IPCIDR6"):
                     key = "ip_cidr"
 
                 if key not in ruleset["rules"][0]:
                     ruleset["rules"][0][key] = []
 
-                ruleset["rules"][0][key].append(rule.Payload)
+                ruleset["rules"][0][key].append(rule.payload)
             dist.write(dumps(ruleset, indent=2))
 
 
 def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> None:
     for target in targets:
-        if src.Type in ["IPCIDR", "Combined"] and target in ["text-plus", "geosite"] \
-                or src.Type == "Combined" and target == "text":
-            logging.warning(f'{filename}: Ignored unsupported type "{target}" for {src.Type} ruleset.')
+        if src.type in ["IPCIDR", "Combined"] and target in ["text-plus", "geosite"] \
+                or src.type == "Combined" and target == "text":
+            logging.warning(f'{filename}: Ignored unsupported type "{target}" for {src.type} ruleset.')
             continue
         dump(src, target, dst_path/target, filename)
 
@@ -153,24 +153,24 @@ def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleS
 
 
 def sort(ruleset: RuleSet) -> None:
-    if ruleset.Type == "Combined":
+    if ruleset.type == "Combined":
         logging.warning("Skipped: Combined-type ruleset shouldn't be sorted as maybe ordered.")
         return
 
     def sort_key(item) -> tuple:
-        match item.Type:
+        match item.type:
             # Domain suffixes should always in front of full domains
             # Shorter domains should in front of longer domains
             # For IPCIDR ruleset, default sort method is ok.
             case "DomainSuffix":
-                sortkey = (0, len(item.Payload), item.Payload)
+                sortkey = (0, len(item.payload), item.payload)
             case "DomainFull":
-                sortkey = (1, len(item.Payload), item.Payload)
+                sortkey = (1, len(item.payload), item.payload)
             case _:
-                sortkey = (2, len(item.Payload), item.Payload)
+                sortkey = (2, len(item.payload), item.payload)
         return sortkey
 
-    ruleset.Payload.sort(key=sort_key)
+    ruleset.payload.sort(key=sort_key)
 
 
 def dedup(src: RuleSet) -> RuleSet:
@@ -184,5 +184,5 @@ def dedup(src: RuleSet) -> RuleSet:
                 logging.debug(f'Remove "{item}": included in "{added}".')
         if flag_unique:
             list_unique.append(item)
-    src.Payload = list_unique
+    src.payload = list_unique
     return src
