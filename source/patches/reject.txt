@@ -6,6 +6,7 @@ REM:.bugly.qq.com
 REM:.adsense.google.cn
 REM:.cm.bilibili.com
 REM:.mcdn.bilivideo.cn
+REM:.kskwai.com
 
 ADD:.mediav.com
 ADD:.partwithner.com
