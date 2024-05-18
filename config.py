@@ -20,7 +20,16 @@ LIST_REJECT_URL = [
     # 乘风 视频过滤规则
     "https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/mv.txt",
     # d3Host List by d3ward
-    "https://raw.githubusercontent.com/d3ward/toolz/master/src/d3host.adblock"
+    "https://raw.githubusercontent.com/d3ward/toolz/master/src/d3host.adblock",
+    # NextDNS native-tracking-domains
+    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/alexa",
+    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/apple",
+    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/huawei",
+    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/roku",
+    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/samsung",
+    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/sonos",
+    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/windows",
+    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/xiaomi"
 ]
 
 # AdGuard DNS Filter Whitelist
