@@ -1,4 +1,3 @@
-REM:.app-measurement.com
 REM:.jiguang.cn
 REM:.cnzz.com
 REM:.storage.moegirl.org.cn
