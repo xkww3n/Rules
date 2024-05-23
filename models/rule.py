@@ -18,13 +18,14 @@ class Rule:
             self.payload = payload
 
     def __str__(self):
-        return f'{self.type}: {self.payload}{f" ({self.tag})" if self.tag else ""}'
+        return f'{self._type}: {self._payload}{f" ({self._tag})" if self._tag else ""}'
 
     def __hash__(self):
-        return hash((self.type, self.payload, self.tag))
+        return hash((self._type, self._payload, self._tag))
 
     def __eq__(self, other):
-        return self.type == other.type and self.payload == other.payload and self.tag == other.tag
+        # noinspection PyProtectedMember
+        return self._type == other._type and self._payload == other._payload and self._tag == other._tag
 
     @property
     def type(self) -> str:
@@ -63,9 +64,11 @@ class Rule:
         self._tag = tag
 
     def includes(self, other):
-        if self.type == "DomainSuffix":
-            if self.payload == other.payload:
+        if self._type == "DomainSuffix":
+            # noinspection PyProtectedMember
+            if self._payload == other._payload:
                 return True
-            return other.payload.endswith("." + self.payload)
-        elif self.type == "DomainFull":
+            # noinspection PyProtectedMember
+            return other._payload.endswith("." + self._payload)
+        elif self._type == "DomainFull":
             return self == other

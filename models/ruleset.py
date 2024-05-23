@@ -17,10 +17,11 @@ class RuleSet:
         return hash((self._type, tuple(self._payload)))
 
     def __eq__(self, other):
-        return self.type == other.type and self.payload == other.payload
+        # noinspection PyProtectedMember
+        return self._type == other._type and self._payload == other._payload
 
     def __len__(self):
-        return len(self.payload)
+        return len(self._payload)
 
     def __or__(self, other):
         payload_set = set(self._payload)
@@ -32,10 +33,10 @@ class RuleSet:
         return self
 
     def __contains__(self, item):
-        return item in self.payload
+        return item in self._payload
 
     def __iter__(self):
-        return iter(self.payload)
+        return iter(self._payload)
 
     @property
     def type(self) -> str:
@@ -54,32 +55,35 @@ class RuleSet:
 
     @payload.setter
     def payload(self, payload: list):
-        match self.type:
-            case "Domain":
-                for item in payload:
-                    if "Domain" not in item.type:
-                        raise ValueError(f"{item.type}-type rule found in a domain-type ruleset.")
-            case "IPCIDR":
-                for item in payload:
-                    if "IPCIDR" not in item.type:
-                        raise ValueError(f"{item.type}-type rule found in a IPCIDR-type ruleset.")
+        if self._type == "Domain":
+            for item in payload:
+                # noinspection PyProtectedMember
+                if "Domain" not in item._type:
+                    # noinspection PyProtectedMember
+                    raise ValueError(f"{item._type}-type rule found in a domain-type ruleset.")
+        elif self._type == "IPCIDR":
+            for item in payload:
+                # noinspection PyProtectedMember
+                if "IPCIDR" not in item._type:
+                    # noinspection PyProtectedMember
+                    raise ValueError(f"{item._type}-type rule found in a IPCIDR-type ruleset.")
         self._payload = payload
 
     def deepcopy(self):
-        ruleset_copied = RuleSet(self.type, [])
+        ruleset_copied = RuleSet(self._type, [])
         payload_copied = []
-        for rule in self.payload:
+        for rule in self._payload:
             rule_copied = Rule()
-            rule_copied.type = rule.type
-            rule_copied.payload = rule.payload
-            rule_copied.tag = rule.tag
+            rule_copied._type = rule.type
+            rule_copied._payload = rule.payload
+            rule_copied._tag = rule.tag
             payload_copied.append(rule_copied)
-        ruleset_copied.payload = payload_copied
+        ruleset_copied._payload = payload_copied
         return ruleset_copied
 
     def add(self, rule):
-        if rule not in self.payload:
-            self.payload.append(rule)
+        if rule not in self._payload:
+            self._payload.append(rule)
 
     def remove(self, rule):
-        self.payload.remove(rule)
+        self._payload.remove(rule)
