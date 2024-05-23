@@ -23,9 +23,12 @@ class RuleSet:
         return len(self.payload)
 
     def __or__(self, other):
-        for rule in other.payload:
-            if rule not in self.payload:
-                self.payload.append(rule)
+        payload_set = set(self._payload)
+        # noinspection PyProtectedMember
+        for rule in other._payload:
+            if rule not in payload_set:
+                self._payload.append(rule)
+                payload_set.add(rule)
         return self
 
     def __contains__(self, item):
