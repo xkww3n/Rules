@@ -2,8 +2,8 @@ from models.rule import Rule
 
 
 class RuleSet:
-    type: str  # Domain / IPCIDR / Combined
-    payload: list[Rule]
+    _type: str  # Domain / IPCIDR / Combined
+    _payload: list[Rule]
 
     def __init__(self, ruleset_type: str, payload: list):
         self._type = ""

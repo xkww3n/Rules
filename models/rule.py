@@ -4,9 +4,9 @@ from utils.rule import is_domain
 
 
 class Rule:
-    type: str  # DomainSuffix / DomainFull / IPCIDR / IPCIDR6
-    payload: str
-    tag: str
+    _type: str  # DomainSuffix / DomainFull / IPCIDR / IPCIDR6
+    _payload: str
+    _tag: str
 
     def __init__(self, rule_type: str = "", payload: str = "", tag: str = ""):
         self._type = ""
