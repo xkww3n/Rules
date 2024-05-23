@@ -150,39 +150,3 @@ def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleS
                 logging.warning(f"Not found: {rule}")
     logging.info(f'Patch "{name + ".txt"}" applied.')
     return src
-
-
-def sort(ruleset: RuleSet) -> None:
-    if ruleset.type == "Combined":
-        logging.warning("Skipped: Combined-type ruleset shouldn't be sorted as maybe ordered.")
-        return
-
-    def sort_key(item) -> tuple:
-        match item.type:
-            # Domain suffixes should always in front of full domains
-            # Shorter domains should in front of longer domains
-            # For IPCIDR ruleset, default sort method is ok.
-            case "DomainSuffix":
-                sortkey = (0, len(item.payload), item.payload)
-            case "DomainFull":
-                sortkey = (1, len(item.payload), item.payload)
-            case _:
-                sortkey = (2, len(item.payload), item.payload)
-        return sortkey
-
-    ruleset.payload.sort(key=sort_key)
-
-
-def dedup(src: RuleSet) -> RuleSet:
-    sort(src)
-    list_unique = []
-    for item in src:
-        flag_unique = True
-        for added in list_unique:
-            if added.includes(item):
-                flag_unique = False
-                logging.debug(f'Remove "{item}": included in "{added}".')
-        if flag_unique:
-            list_unique.append(item)
-    src.payload = list_unique
-    return src

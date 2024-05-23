@@ -224,7 +224,7 @@ class TestMisc:
         test_rule_1 = Rule("DomainSuffix", "a.example.com", "TEST1")
         test_rule_2 = Rule("DomainSuffix", "b.example.com", "TEST2")
         test_ruleset = RuleSet("Domain", [test_rule_2, test_rule_1])
-        ruleset.sort(test_ruleset)
+        test_ruleset.sort()
         assert test_ruleset == RuleSet("Domain", [test_rule_1, test_rule_2])
 
     def test_dedup(self):
@@ -236,5 +236,5 @@ class TestMisc:
         test_rule_6 = Rule("DomainFull", "2.example.com")
         test_ruleset = RuleSet("Domain",
                                [test_rule_1, test_rule_2, test_rule_3, test_rule_4, test_rule_5, test_rule_6])
-        ruleset.dedup(test_ruleset)
+        test_ruleset.dedup()
         assert test_ruleset == RuleSet("Domain", [test_rule_1, test_rule_4])

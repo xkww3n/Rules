@@ -1,3 +1,5 @@
+import logging
+
 from models.rule import Rule
 
 
@@ -87,3 +89,37 @@ class RuleSet:
 
     def remove(self, rule):
         self._payload.remove(rule)
+
+    def sort(self):
+        if self._type == "Combined":
+            logging.warning("Skipped: Combined-type ruleset shouldn't be sorted as maybe ordered.")
+            return
+
+        # noinspection PyProtectedMember
+        def sort_key(item: Rule) -> tuple:
+            match item._type:
+                # Domain suffixes should always in front of full domains
+                # Shorter domains should in front of longer domains
+                # For IPCIDR ruleset, default sort method is ok.
+                case "DomainSuffix":
+                    sortkey = (0, len(item._payload), item._payload)
+                case "DomainFull":
+                    sortkey = (1, len(item._payload), item._payload)
+                case _:
+                    sortkey = (2, len(item._payload), item._payload)
+            return sortkey
+
+        self._payload.sort(key=sort_key)
+
+    def dedup(self):
+        self.sort()
+        list_unique = []
+        for item in self._payload:
+            flag_unique = True
+            for added in list_unique:
+                if added.includes(item):
+                    flag_unique = False
+                    logging.debug(f'Remove "{item}": included in "{added}".')
+            if flag_unique:
+                list_unique.append(item)
+        self._payload = list_unique

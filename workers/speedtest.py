@@ -9,7 +9,7 @@ import config
 from models.rule import Rule
 from models.ruleset import RuleSet
 from utils.log_decorator import log
-from utils.ruleset import dedup, batch_dump
+from utils.ruleset import batch_dump
 
 
 @log
@@ -87,6 +87,6 @@ def build():
             speedtest_ruleset.add(speedtest_rule)
             logging.debug(f'Added "{server_domain}"')
 
-    dedup(speedtest_ruleset)
+    speedtest_ruleset.dedup()
     batch_dump(speedtest_ruleset, config.TARGETS, config.PATH_DIST, "speedtest")
     logging.info(f"Processed {len(speedtest_ruleset)} speed testing rules.")

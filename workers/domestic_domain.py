@@ -6,7 +6,7 @@ import config
 from models.rule import Rule
 from utils.geosite import parse
 from utils.log_decorator import log
-from utils.ruleset import patch, dedup, batch_dump
+from utils.ruleset import batch_dump, patch
 
 
 @log
@@ -38,6 +38,6 @@ def build():
     ruleset_domestic_tlds = parse(config.PATH_SOURCE_GEOSITE/"tld-cn")
     logging.info(f"Imported {len(ruleset_domestic_tlds)} domestic TLDs.")
     ruleset_domestic |= ruleset_domestic_tlds
-    dedup(ruleset_domestic)
+    ruleset_domestic.dedup()
     logging.info(f"Processed {len(ruleset_domestic)} domestic rules.")
     batch_dump(ruleset_domestic, config.TARGETS, config.PATH_DIST, "domestic")

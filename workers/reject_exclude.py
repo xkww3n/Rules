@@ -8,7 +8,7 @@ from models.rule import Rule
 from models.ruleset import RuleSet
 from utils.log_decorator import log
 from utils.rule import strip_adblock
-from utils.ruleset import patch, dedup, batch_dump
+from utils.ruleset import batch_dump, patch
 
 
 @log
@@ -77,7 +77,7 @@ def build():
     ruleset_rejections = patch(ruleset_rejections, "reject")
     ruleset_exclusions = RuleSet("Domain", [])
     logging.debug("Deduplicate reject and exclude set.")
-    dedup(ruleset_rejections)
+    ruleset_rejections.dedup()
     for domain_exclude in ruleset_exclusions_raw.deepcopy():
         for domain_reject in ruleset_rejections.deepcopy():
             if domain_exclude.includes(domain_reject):
