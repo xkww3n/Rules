@@ -8,8 +8,9 @@ class RuleSet:
     def __init__(self, ruleset_type: str, payload: list):
         self._type = ""
         self._payload = []
-        if ruleset_type or payload:
+        if ruleset_type:
             self.type = ruleset_type
+        if payload:
             self.payload = payload
 
     def __hash__(self):

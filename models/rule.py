@@ -12,8 +12,9 @@ class Rule:
         self._type = ""
         self._payload = ""
         self._tag = tag
-        if rule_type or payload:
+        if rule_type:
             self.type = rule_type
+        if payload:
             self.payload = payload
 
     def __str__(self):
