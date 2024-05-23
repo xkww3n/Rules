@@ -14,7 +14,7 @@ class RuleSet:
             self.payload = payload
 
     def __hash__(self):
-        return hash((self.type, self.payload))
+        return hash((self._type, tuple(self._payload)))
 
     def __eq__(self, other):
         return self.type == other.type and self.payload == other.payload
