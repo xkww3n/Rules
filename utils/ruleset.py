@@ -86,23 +86,23 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                 dist.writelines(f"{to_write}\n")
         elif target == "geosite":
             for rule in src:
-                match rule.type:
-                    case "DomainSuffix":
-                        dist.writelines(f"{rule.payload}\n")
-                    case "DomainFull":
-                        dist.writelines(f"full:{rule.payload}\n")
+                if rule.type == "DomainSuffix":
+                    dist.writelines(f"{rule.payload}\n")
+                elif rule.type == "DomainFull":
+                    dist.writelines(f"full:{rule.payload}\n")
         elif target == "sing-ruleset":
             ruleset = {
                 "version": 1,
                 "rules": [{}]
             }
             for rule in src:
-                if rule.type == "DomainFull":
-                    key = "domain"
-                elif rule.type == "DomainSuffix":
-                    key = "domain_suffix"
-                elif rule.type in ("IPCIDR", "IPCIDR6"):
-                    key = "ip_cidr"
+                match rule.type:
+                    case "DomainFull":
+                        key = "domain"
+                    case "DomainSuffix":
+                        key = "domain_suffix"
+                    case _:
+                        key = "ip_cidr"
 
                 if key not in ruleset["rules"][0]:
                     ruleset["rules"][0][key] = []
