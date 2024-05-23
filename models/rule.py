@@ -43,17 +43,14 @@ class Rule:
 
     @payload.setter
     def payload(self, payload: str):
-        if "Domain" in self.type:
+        if "Domain" in self._type:
             if not is_domain(payload):
                 raise ValueError(f"Invalid domain: {payload}")
-        elif "IP" in self.type:
-            try:
-                ip_type = ip_network(payload)
-            except ValueError:
-                raise ValueError(f"Invalid IP address: {payload}")
-            if self.type == "IPCIDR6" and type(ip_type) is IPv4Network:
+        elif "IP" in self._type:
+            ip_type = ip_network(payload, strict=False)
+            if self._type == "IPCIDR6" and isinstance(ip_type, IPv4Network):
                 raise ValueError(f"IPv4 address stored in IPv6 type: {payload}")
-            elif self.type == "IPCIDR" and type(ip_type) is IPv6Network:
+            elif self._type == "IPCIDR" and isinstance(ip_type, IPv6Network):
                 raise ValueError(f"IPv6 address stored in IPv4 type: {payload}")
         self._payload = payload
 
