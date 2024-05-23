@@ -23,3 +23,4 @@ build = "python main.py"
 test = "pytest"
 debug.cmd = "python main.py"
 debug.env = {DEBUG = "1"}
+profile = "python -m cProfile -o performance.prof main.py"
