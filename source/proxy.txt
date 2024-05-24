@@ -3148,3 +3148,5 @@
 .ncbtech.cn
 .bignox.com
 .iproyal.cn
+.weather.com
+.weatherfx.com
