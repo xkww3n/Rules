@@ -3,6 +3,7 @@ REM:.cnzz.com
 REM:.bugly.qq.com
 REM:.adsense.google.cn
 REM:.kskwai.com
+REM:.lf1-cdn-tos.bytegoofy.com
 
 ADD:.mediav.com
 ADD:.partwithner.com
