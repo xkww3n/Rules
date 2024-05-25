@@ -9,12 +9,18 @@ PATH_DIST = Path("dists/")
 LIST_REJECT_URL = [
     # AdGuard Base Filter
     "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers.txt",
-    # Easylist China
-    "https://easylist-downloads.adblockplus.org/easylistchina.txt",
-    # もちフィルタ
-    "https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi_filter.txt",
     # AdGuard Mobile Filter
     "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt",
+    # AdGuard third-party
+    "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers_firstparty.txt",
+    # EasyList China
+    "https://easylist-downloads.adblockplus.org/easylistchina.txt",
+    # EasyList third-party
+    "https://raw.githubusercontent.com/easylist/easylist/master/easylist/easylist_thirdparty.txt",
+    # EasyList adult third-party
+    "https://raw.githubusercontent.com/easylist/easylist/master/easylist_adult/adult_thirdparty.txt",
+    # もちフィルタ
+    "https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi_filter.txt",
     # AWAvenue 秋风广告规则
     "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/AWAvenue-Ads-Rule.txt",
     # d3Host List by d3ward
