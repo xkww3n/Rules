@@ -59,16 +59,17 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
             file = filename + ".txt"
     dst.mkdir(parents=True, exist_ok=True)
     with open(dst/file, mode="w", encoding="utf-8") as dist:
+        dist_built = ""
         if target in ("text", "text-plus"):
             for rule in src:
                 to_write = rule.payload if rule.type in ("DomainFull", "IPCIDR", "IPCIDR6") else f".{rule.payload}"
                 to_write = f"+{to_write}\n" if (target == "text-plus"
                                                 and rule.type == "DomainSuffix"
                                                 ) else f"{to_write}\n"
-                dist.writelines(to_write)
+                dist_built += to_write
         elif target in ("surge-compatible", "clash-compatible", "yaml"):
             if target == "yaml":
-                dist.writelines("payload:\n")
+                dist_built += "payload:\n"
             for rule in src:
                 if target == "yaml" and src.type != "Combined":
                     to_write = f"+.{rule.payload}" if rule.type == "DomainSuffix" else rule.payload
@@ -83,13 +84,13 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                     to_write += f",{rule.tag}"
                 if target == "yaml":
                     to_write = f"  - '{to_write}'"
-                dist.writelines(f"{to_write}\n")
+                dist_built += f"{to_write}\n"
         elif target == "geosite":
             for rule in src:
                 if rule.type == "DomainSuffix":
-                    dist.writelines(f"{rule.payload}\n")
+                    dist_built += f"{rule.payload}\n"
                 elif rule.type == "DomainFull":
-                    dist.writelines(f"full:{rule.payload}\n")
+                    dist_built += f"full:{rule.payload}\n"
         elif target == "sing-ruleset":
             ruleset = {
                 "version": 1,
@@ -108,7 +109,9 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                     ruleset["rules"][0][key] = []
 
                 ruleset["rules"][0][key].append(rule.payload)
-            dist.write(dumps(ruleset, indent=2))
+            dist_built = dumps(ruleset, indent=2)
+
+        dist.write(dist_built)
 
 
 def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> None:
