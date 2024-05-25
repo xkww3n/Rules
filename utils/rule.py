@@ -15,8 +15,8 @@ def is_ipv4addr(addr: str) -> bool:
 
 
 def is_domain(addr: str) -> bool:
-    blacklist_include = ("/", "*", "=", "~", "?", "#", ",", ":", " ", "(", ")", "[", "]", "_", "|", "@", "^")
-    if (any([bl_char in addr for bl_char in blacklist_include])
+    blacklist_include = {"/", "*", "=", "~", "?", "#", ",", ":", " ", "(", ")", "[", "]", "_", "|", "@", "^"}
+    if (any(bl_char in addr for bl_char in blacklist_include)
             or addr.startswith("-")
             or addr.endswith(".")
             or addr.endswith("-")
