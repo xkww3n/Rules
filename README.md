@@ -43,11 +43,12 @@
 
 本项目离不开其他优质开源项目的支持，在此对这些项目表示感谢：
 
-- [AdGuard Content Blocking Filters](https://github.com/AdguardTeam/AdguardFilters/)
+- [AdGuard](https://adguard.com)
 - [EasyList](https://easylist.to)
+- [NextDNS](https://nextdns.io)
 - [もちフィルタ](https://eeii0a5l.github.io/mochifilter_homepage/mochi.html)
 - [ADgk](https://github.com/banbendalao/ADgk)
-- [-AWAvenue 秋风广告规则（AWAvenue-Adblock-Rule）-](https://github.com/TG-Twilight/AWAvenue-Adblock-Rule)
+- [秋风广告规则](https://awavenue.top)
 - [乘风广告过滤规则](https://github.com/xinggsf/Adblock-Plus-Rule/)
 - [d3Host List by d3ward](https://github.com/d3ward/toolz/blob/master/src/d3host.adblock)
 - [Domain list community](https://github.com/v2fly/domain-list-community)
