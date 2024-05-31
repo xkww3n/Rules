@@ -62,7 +62,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
         dist_built = ""
         if target in ("text", "text-plus"):
             for rule in src:
-                to_write = rule.payload if rule.type in ("DomainFull", "IPCIDR", "IPCIDR6") else f".{rule.payload}"
+                to_write = rule.payload if rule.type in {"DomainFull", "IPCIDR", "IPCIDR6"} else f".{rule.payload}"
                 to_write = f"+{to_write}\n" if (target == "text-plus"
                                                 and rule.type == "DomainSuffix"
                                                 ) else f"{to_write}\n"
@@ -116,7 +116,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
 
 def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> None:
     for target in targets:
-        if src.type in ["IPCIDR", "Combined"] and target in ["text-plus", "geosite"] \
+        if src.type in {"IPCIDR", "Combined"} and target in {"text-plus", "geosite"} \
                 or src.type == "Combined" and target == "text":
             logging.warning(f'{filename}: Ignored unsupported type "{target}" for {src.type} ruleset.')
             continue

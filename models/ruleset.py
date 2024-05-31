@@ -46,7 +46,7 @@ class RuleSet:
 
     @type.setter
     def type(self, ruleset_type: str):
-        allowed_types = ("Domain", "IPCIDR", "Combined")
+        allowed_types = {"Domain", "IPCIDR", "Combined"}
         if ruleset_type not in allowed_types:
             raise TypeError(f"Unsupported type: {ruleset_type}")
         self._type = ruleset_type
@@ -59,16 +59,12 @@ class RuleSet:
     def payload(self, payload: list):
         if self._type == "Domain":
             for item in payload:
-                # noinspection PyProtectedMember
-                if "Domain" not in item._type:
-                    # noinspection PyProtectedMember
-                    raise ValueError(f"{item._type}-type rule found in a domain-type ruleset.")
+                if "Domain" not in item.type:
+                    raise ValueError(f"{item.type}-type rule found in a domain-type ruleset.")
         elif self._type == "IPCIDR":
             for item in payload:
-                # noinspection PyProtectedMember
-                if "IPCIDR" not in item._type:
-                    # noinspection PyProtectedMember
-                    raise ValueError(f"{item._type}-type rule found in a IPCIDR-type ruleset.")
+                if "IPCIDR" not in item.type:
+                    raise ValueError(f"{item.type}-type rule found in a IPCIDR-type ruleset.")
         self._payload = payload
 
     def deepcopy(self):
@@ -95,18 +91,17 @@ class RuleSet:
             logging.warning("Skipped: Combined-type ruleset shouldn't be sorted as maybe ordered.")
             return
 
-        # noinspection PyProtectedMember
         def sort_key(item: Rule) -> tuple:
-            match item._type:
+            match item.type:
                 # Domain suffixes should always in front of full domains
                 # Shorter domains should in front of longer domains
                 # For IPCIDR ruleset, default sort method is ok.
                 case "DomainSuffix":
-                    sortkey = (0, len(item._payload), item._payload)
+                    sortkey = (0, len(item.payload), item.payload)
                 case "DomainFull":
-                    sortkey = (1, len(item._payload), item._payload)
+                    sortkey = (1, len(item.payload), item.payload)
                 case _:
-                    sortkey = (2, len(item._payload), item._payload)
+                    sortkey = (2, len(item.payload), item.payload)
             return sortkey
 
         self._payload.sort(key=sort_key)
