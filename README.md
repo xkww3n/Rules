@@ -39,25 +39,6 @@
 
 如无特别声明，本项目的一切内容均使用 MIT 许可证授权。
 
-## 鸣谢
+## 致谢
 
-本项目离不开其他优质开源项目的支持，在此对这些项目表示感谢：
-
-- [AdGuard](https://adguard.com)
-- [EasyList](https://easylist.to)
-- [NextDNS](https://nextdns.io)
-- [もちフィルタ](https://eeii0a5l.github.io/mochifilter_homepage/mochi.html)
-- [ADgk](https://github.com/banbendalao/ADgk)
-- [秋风广告规则](https://awavenue.top)
-- [乘风广告过滤规则](https://github.com/xinggsf/Adblock-Plus-Rule/)
-- [d3Host List by d3ward](https://github.com/d3ward/toolz/blob/master/src/d3host.adblock)
-- [Domain list community](https://github.com/v2fly/domain-list-community)
-- [dnsmasq-china-list](https://github.com/felixonmars/dnsmasq-china-list)
-- [chnroutes2 (better-aggregated chnroutes)](https://github.com/misakaio/chnroutes2/)
-- [中国运营商IP地址库](https://github.com/gaoyifan/china-operator-ip)
-- [aggregate6](https://github.com/job/aggregate6)
-- [python-abp](https://hg.adblockplus.org/python-abp/)
-- [Loyalsoldier / domain-list-custom](https://github.com/Loyalsoldier/domain-list-custom/)
-- [Loyalsoldier / geoip](https://github.com/Loyalsoldier/geoip/)
-- [SagerNet / sing-geosite](https://github.com/sagernet/sing-geosite/)
-- [SagerNet / sing-geoip](https://github.com/sagernet/sing-geoip/)
+本项目离不开其他优质开源项目的支持，请前往 [本项目的 GitHub Wiki](https://github.com/xkww3n/Rules/wiki/致谢) 查看致谢名单。
