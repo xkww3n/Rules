@@ -13,6 +13,8 @@ LIST_REJECT_URL = [
     "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt",
     # AdGuard third-party
     "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/adservers_firstparty.txt",
+    # AdGuard CNAME
+    "https://raw.githubusercontent.com/AdguardTeam/cname-trackers/master/data/combined_disguised_ads_justdomains.txt",
     # EasyList China
     "https://easylist-downloads.adblockplus.org/easylistchina.txt",
     # EasyList third-party
@@ -36,6 +38,9 @@ LIST_REJECT_URL = [
     "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/xiaomi",
     # NoCoin
     "https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/nocoin.txt"
+    "https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/nocoin.txt",
+    # CoinBlockerLists
+    "https://zerodot1.gitlab.io/CoinBlockerLists/list_browser.txt",
 ]
 
 # AdGuard DNS Filter Whitelist
