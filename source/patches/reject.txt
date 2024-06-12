@@ -15,3 +15,5 @@ ADD:.wuzbhjpvsf.com
 ADD:iadmusicmat.music.126.net
 ADD:ios.bugly.qq.com
 ADD:android.bugly.qq.com
+ADD:.d.meituan.net
+ADD:.dreport.meituan.net
