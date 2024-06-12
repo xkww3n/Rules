@@ -1,5 +1,4 @@
 REM:.jiguang.cn
-REM:.cnzz.com
 REM:.bugly.qq.com
 REM:.adsense.google.cn
 REM:.kskwai.com
