@@ -3,7 +3,6 @@ REM:.cnzz.com
 REM:.bugly.qq.com
 REM:.adsense.google.cn
 REM:.kskwai.com
-REM:.lf1-cdn-tos.bytegoofy.com
 REM:staticsns.cdn.bcebos.com
 
 ADD:.mediav.com
