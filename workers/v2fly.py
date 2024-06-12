@@ -10,6 +10,7 @@ def build():
     """
 
     categories = [
+        "anthropic",
         "bahamut",
         "bing",
         "dmm",
