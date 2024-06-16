@@ -1,5 +1,5 @@
-import importlib.util as iu
 import logging.config
+from importlib.util import spec_from_file_location, module_from_spec
 from os import environ
 from pathlib import Path
 
@@ -12,7 +12,7 @@ if environ.get("DEBUG"):
 workers = Path("workers").rglob("*.py")
 for worker in workers:
     worker_name = worker.stem
-    spec = iu.spec_from_file_location(worker_name, Path("workers")/worker.name)
-    module = iu.module_from_spec(spec)
+    spec = spec_from_file_location(worker_name, Path("workers")/worker.name)
+    module = module_from_spec(spec)
     spec.loader.exec_module(module)
     module.build()
