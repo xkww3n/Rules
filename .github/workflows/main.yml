@@ -14,13 +14,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Install PDM
         uses: pdm-project/setup-pdm@v4
         with:
           python-version: '3.11'
           cache: 'true'
+
       - name: Install dependencies
         run: pdm install
+
       - name: Run tests
         run: pdm run test
 
@@ -30,27 +33,34 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Install PDM
         uses: pdm-project/setup-pdm@v4
         with:
           python-version: '3.11'
           cache: 'true'
+
       - name: Set up Go
         uses: actions/setup-go@v5
+
       - name: Pull v2fly community domain list
         uses: actions/checkout@v4
         with:
           repository: 'v2fly/domain-list-community'
           path: 'domain-list-community'
+
       - name: Pull Loyalsoldier's geosite tool
         uses: actions/checkout@v4
         with:
           repository: 'Loyalsoldier/domain-list-custom'
           path: 'tool_geosite'
+
       - name: Install Loyalsoldier's geoip tool
         run: go install github.com/Loyalsoldier/geoip@latest
+
       - name: Build rulesets
         run: pdm run build
+
       - name: Download MaxMind GeoLite2 Country DB
         env:
           MAXMIND_KEY: ${{ secrets.MAXMIND_KEY }}
@@ -58,10 +68,12 @@ jobs:
               wget -O ./GeoLite2-Country.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=${MAXMIND_KEY}&suffix=tar.gz"
               tar xzvf ./GeoLite2-Country.tar.gz
               cp ./GeoLite2-Country_*/GeoLite2-Country.mmdb ./
+
       - name: Build Geosite DB
         run: |
               cd tool_geosite
               go run ./ --datapath=../dists/geosite --outputpath=../dists --exportlists="" --togfwlist=""
+
       - name: Build GeoIP DB
         run: |
               cat <<EOF > config.json
@@ -128,13 +140,52 @@ jobs:
                 ]
               }
               EOF
+
               geoip -c config.json
+
       - name: Remove tmp files
         run: |
               rm -rf dists/geosite
               rm dists/gfwlist.txt
+
       - name: Build homepage
-        run: python build_homepage.py
+        run: |
+              python build_homepage.py
+
+              cat <<EOF > dists/robots.txt
+              User-agent: *
+              Disallow: /*.txt
+              Disallow: /*.yaml
+              Disallow: /*.dat
+              Disallow: /*.mmdb
+              Disallow: /*.json
+              EOF
+
+              cat <<EOF > dists/404.html
+              <!DOCTYPE html>
+              <html lang="zh">
+                <head>
+                  <meta charset="utf-8">
+                  <title>404 - xkww3n's Rules</title>
+                  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+                  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+                </head>
+                <body>
+                  <main>
+                    <h1>xkww3n's Rules</h1>
+                    <p>由 <a href="https://www.xkww3n.cyou">xkww3n</a> 维护的，面向多个代理软件的规则集</p>
+                    <p>支持： Surge、Clash (Premium / Meta)、Stash、Choc、Quantumult (X)、Loon、Shadowrocket、LanceX 等</p>
+                    <p>
+                      项目源代码托管于 <a href="https://github.com/xkww3n/Rules/">GitHub</a>，
+                      以 <a href="https://github.com/xkww3n/Rules/blob/main/LICENSE" target="_blank">MIT</a> 协议授权
+                    </p>
+                    <hr>
+                    <p>资源不存在</p>
+                  </main>
+                </body>
+              </html>
+              EOF
+
       - name: Publish to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
