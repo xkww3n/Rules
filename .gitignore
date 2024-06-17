@@ -5,6 +5,7 @@ __pycache__/
 .vscode/
 .idea/
 .venv/
+scripts/
 .pdm-python
 *.log
 *.prof
