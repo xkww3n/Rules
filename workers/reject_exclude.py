@@ -9,6 +9,7 @@ from models.ruleset import RuleSet
 from utils.log_decorator import log
 from utils.rule import strip_adblock
 from utils.ruleset import batch_dump, patch
+from utils.geosite import parse as geosite_parse
 
 
 @log
@@ -65,6 +66,10 @@ def build():
         elif line.action == "allow":
             src_exclusions.append(line.text)
             logging.debug(f'(source) Exclude: Added "{line.text}"')
+
+    ruleset_rejections_v2fly = geosite_parse(config.PATH_SOURCE_GEOSITE/"category-ads")
+    ruleset_rejections |= ruleset_rejections_v2fly
+    logging.info(f"Imported {(len(ruleset_rejections_v2fly))} reject rules from v2fly category-ads list.")
 
     for line in parse_filterlist(src_exclusions):
         line_stripped = strip_adblock(line)
