@@ -4,8 +4,8 @@ from abp.filters.parser import parse_filterlist
 from requests import Session
 
 import config
-from models.rule import Rule
-from models.ruleset import RuleSet
+from models.rule import Rule, RuleType
+from models.ruleset import RuleSet, RuleSetType
 from utils.log_decorator import log
 from utils.rule import strip_adblock
 from utils.ruleset import batch_dump, patch
@@ -42,8 +42,8 @@ def build():
 
     logging.info(f"Imported {len(src_exclusions)} lines of exclude rules from defined sources.")
 
-    ruleset_rejections = RuleSet("Domain", [])
-    ruleset_exclusions_raw = RuleSet("Domain", [])
+    ruleset_rejections = RuleSet(RuleSetType.Domain, [])
+    ruleset_exclusions_raw = RuleSet(RuleSetType.Domain, [])
 
     for line in parse_filterlist(src_rejections):
         line_stripped = strip_adblock(line)
@@ -57,10 +57,10 @@ def build():
                 if line_stripped.endswith(ps):
                     domain_level -= ps.count(".") - 1
             if domain_level <= 2:
-                rule_reject = Rule("DomainSuffix", line_stripped)
+                rule_reject = Rule(RuleType.DomainSuffix, line_stripped)
             else:
                 # If a domain's level is bigger than 2, this domain mostly doesn't have any other subdomain.
-                rule_reject = Rule("DomainFull", line_stripped)
+                rule_reject = Rule(RuleType.DomainFull, line_stripped)
             ruleset_rejections.add(rule_reject)
             logging.debug(f'(ruleset) Reject: Added "{line.text}" -> "{rule_reject}".')
         elif line.action == "allow":
@@ -75,12 +75,12 @@ def build():
         line_stripped = strip_adblock(line)
         if not line_stripped:
             continue
-        rule_exclude = Rule("DomainFull", line_stripped)
+        rule_exclude = Rule(RuleType.DomainFull, line_stripped)
         ruleset_exclusions_raw.add(rule_exclude)
         logging.debug(f'(ruleset) Exclude_raw: Added "{line.text}" -> "{rule_exclude}"')
 
     ruleset_rejections = patch(ruleset_rejections, "reject")
-    ruleset_exclusions = RuleSet("Domain", [])
+    ruleset_exclusions = RuleSet(RuleSetType.Domain, [])
     logging.debug("Deduplicate reject and exclude set.")
     ruleset_rejections.dedup()
     for domain_exclude in ruleset_exclusions_raw.deepcopy():

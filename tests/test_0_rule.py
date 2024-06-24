@@ -1,77 +1,65 @@
 from pytest import raises
 
-from models.rule import Rule
+from models.rule import Rule, RuleType
 
 
 class Test:
     def test_type_checking_init(self):
-        with raises(TypeError):
-            Rule("NotAllowedType", "test_payload")
         with raises(ValueError):
-            Rule("DomainSuffix", "[invalid_domain]")
+            Rule(RuleType.DomainSuffix, "[invalid_domain]")
         with raises(ValueError):
-            Rule("DomainFull", "[invalid_domain]")
+            Rule(RuleType.DomainFull, "[invalid_domain]")
         with raises(ValueError):
-            Rule("IPCIDR", "114514")
+            Rule(RuleType.IPCIDR, "114514")
         with raises(ValueError):
-            Rule("IPCIDR6", "1919810")
+            Rule(RuleType.IPCIDR6, "1919810")
         with raises(ValueError):
-            Rule("IPCIDR", "fc00:114::514")
+            Rule(RuleType.IPCIDR, "fc00:114::514")
         with raises(ValueError):
-            Rule("IPCIDR6", "1.14.5.14")
+            Rule(RuleType.IPCIDR6, "1.14.5.14")
 
     def test_type_checking_runtime(self):
-        test_rule = Rule()
-        with raises(TypeError):
-            test_rule.type = "NotAllowedType"
-
-        test_rule.type = "DomainSuffix"
         with raises(ValueError):
-            test_rule.payload = "[invalid_domain]"
+            Rule(RuleType.DomainSuffix, "[invalid_domain]")
 
-        test_rule.type = "DomainFull"
         with raises(ValueError):
-            test_rule.payload = "[invalid_domain]"
+            Rule(RuleType.DomainFull, "[invalid_domain]")
 
-        test_rule.type = "IPCIDR"
         with raises(ValueError):
-            test_rule.payload = "114514"
+            Rule(RuleType.IPCIDR, "114514")
 
-        test_rule.type = "IPCIDR6"
         with raises(ValueError):
-            test_rule.payload = "1919810"
+            Rule(RuleType.IPCIDR6, "1919810")
 
-        test_rule.type = "IPCIDR"
         with raises(ValueError):
-            test_rule.payload = "fc00:114::514"
+            Rule(RuleType.IPCIDR, "fc00:114::514")
 
-        test_rule.type = "IPCIDR6"
         with raises(ValueError):
-            test_rule.payload = "1.14.5.14"
+            Rule(RuleType.IPCIDR6, "1.14.5.14")
 
     def test_to_str(self):
-        test_rule = Rule("DomainSuffix", "example.com", "TEST")
+        test_rule = Rule(RuleType.DomainSuffix, "example.com", "TEST")
         assert str(test_rule) == "DomainSuffix: example.com (TEST)"
 
     def test_hash(self):
-        test_rule_1 = Rule("DomainSuffix", "example.com", "TEST")
-        test_rule_2 = Rule("DomainFull", "example.com", "TEST2")
-        test_dict = [Rule("DomainSuffix", "example.com", "TEST")]
+        test_rule_1 = Rule(RuleType.DomainSuffix, "example.com", "TEST")
+        test_rule_2 = Rule(RuleType.DomainFull, "example.com", "TEST2")
+        test_dict = [Rule(RuleType.DomainSuffix, "example.com", "TEST")]
         assert test_rule_1 in test_dict
         assert test_rule_2 not in test_dict
 
     def test_eq(self):
-        test_rule_1 = Rule("DomainSuffix", "example.com", "TEST")
-        test_rule_2 = Rule("DomainSuffix", "example.com", "TEST")
+        test_rule_1 = Rule(RuleType.DomainSuffix, "example.com", "TEST")
+        test_rule_2 = Rule(RuleType.DomainSuffix, "example.com", "TEST")
         assert test_rule_1 == test_rule_2
 
     def test_include(self):
-        test_self_rule = Rule("DomainSuffix", "example.com", "TEST")
-        test_rule_1 = Rule("DomainSuffix", "a.example.com", "TEST")
-        test_rule_2 = Rule("DomainFull", "b.example.com", "TEST")
-        test_rule_3 = Rule("DomainFull", "example.com", "TEST")
-        test_rule_4 = Rule("DomainSuffix", "example.com", "TEST")
-        test_rule_5 = Rule("DomainFull", "1example.com", "TEST")
+        test_self_rule = Rule(RuleType.DomainSuffix, "example.com", "TEST")
+        test_rule_1 = Rule(RuleType.DomainSuffix, "a.example.com", "TEST")
+        test_rule_2 = Rule(RuleType.DomainFull, "b.example.com", "TEST")
+        test_rule_3 = Rule(RuleType.DomainFull, "example.com", "TEST")
+        test_rule_4 = Rule(RuleType.DomainSuffix, "example.com", "TEST")
+        test_rule_5 = Rule(RuleType.DomainFull, "1example.com", "TEST")
         assert test_self_rule.includes(test_rule_1)
         assert test_self_rule.includes(test_rule_2)
         assert test_self_rule.includes(test_rule_3)

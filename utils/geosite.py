@@ -2,8 +2,8 @@ import logging
 from pathlib import Path
 
 import config
-from models.rule import Rule
-from models.ruleset import RuleSet
+from models.rule import Rule, RuleType
+from models.ruleset import RuleSet, RuleSetType
 from utils import ruleset
 
 
@@ -12,7 +12,7 @@ def parse(src_path: Path, excluded_imports=None, excluded_tags=None) -> RuleSet:
         src = raw.read().splitlines()
     excluded_imports = [] if not excluded_imports else excluded_imports
     excluded_tags = [] if not excluded_tags else excluded_tags
-    ruleset_parsed = RuleSet("Domain", [])
+    ruleset_parsed = RuleSet(RuleSetType.Domain, [])
     for raw_line in src:
         line = raw_line.split("#")[0].strip()
         if not line:
@@ -24,9 +24,9 @@ def parse(src_path: Path, excluded_imports=None, excluded_tags=None) -> RuleSet:
                 continue
             line = line.split(" @")[0]
         if ":" not in line:
-            parsed_rule = Rule("DomainSuffix", line)
+            parsed_rule = Rule(RuleType.DomainSuffix, line)
         elif line.startswith("full:"):
-            parsed_rule = Rule("DomainFull", line.strip("full:"))
+            parsed_rule = Rule(RuleType.DomainFull, line.strip("full:"))
         elif line.startswith("include:"):
             name_import = line.split("include:")[1]
             if name_import in excluded_imports:

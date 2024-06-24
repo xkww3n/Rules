@@ -1,10 +1,10 @@
 import logging
-from json import dumps
+from json import dumps as json_dumps
 from pathlib import Path
 
 import config
-from models.rule import Rule
-from models.ruleset import RuleSet
+from models.rule import Rule, RuleType
+from models.ruleset import RuleSet, RuleSetType
 
 
 def load(src: Path) -> RuleSet:
@@ -15,28 +15,28 @@ def load(src: Path) -> RuleSet:
     except IndexError:
         logging.warning(f"File {src} doesn't have a valid type header, treat as domain type.")
         ruleset_type = "Domain"
-    ruleset_loaded = RuleSet(ruleset_type, [])
+    ruleset_loaded = RuleSet(RuleSetType[ruleset_type], [])
     match ruleset_type:
         case "Domain":
             for line in src_toload:
                 if line.startswith("."):
-                    ruleset_loaded.add(Rule("DomainSuffix", line.strip(".")))
+                    ruleset_loaded.add(Rule(RuleType.DomainSuffix, line.strip(".")))
                 elif line and not line.startswith("#"):
-                    ruleset_loaded.add(Rule("DomainFull", line))
+                    ruleset_loaded.add(Rule(RuleType.DomainFull, line))
         case "IPCIDR":
             for line in src_toload:
                 if not line or line.startswith("#"):
                     continue
                 if ":" in line:
-                    ruleset_loaded.add(Rule("IPCIDR6", line))
+                    ruleset_loaded.add(Rule(RuleType.IPCIDR6, line))
                 else:
-                    ruleset_loaded.add(Rule("IPCIDR", line))
+                    ruleset_loaded.add(Rule(RuleType.IPCIDR, line))
         case "Combined":
             for line in src_toload:
                 if not line or line.startswith("#"):
                     continue
                 parsed = line.split(",")
-                rule_type = config.RULE_TYPE_CONVERSION[parsed[0]]
+                rule_type = RuleType(parsed[0])
                 if len(parsed) == 3:
                     parsed_rule = Rule(rule_type, parsed[1], parsed[2])
                 else:
@@ -60,23 +60,21 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
     dst.mkdir(parents=True, exist_ok=True)
     with open(dst/file, mode="w", encoding="utf-8") as dist:
         dist_built = ""
-        if target in ("text", "text-plus"):
+        if target in {"text", "text-plus"}:
             for rule in src:
-                to_write = rule.payload if rule.type in {"DomainFull", "IPCIDR", "IPCIDR6"} else f".{rule.payload}"
-                to_write = f"+{to_write}\n" if (target == "text-plus"
-                                                and rule.type == "DomainSuffix"
-                                                ) else f"{to_write}\n"
+                if rule.type == RuleType.DomainSuffix:
+                    to_write = f"+.{rule.payload}\n" if target == "text-plus" else f".{rule.payload}\n"
+                else:
+                    to_write = f"{rule.payload}\n"
                 dist_built += to_write
-        elif target in ("surge-compatible", "clash-compatible", "yaml"):
+        elif target in {"surge-compatible", "clash-compatible", "yaml"}:
             if target == "yaml":
                 dist_built += "payload:\n"
             for rule in src:
-                if target == "yaml" and src.type != "Combined":
-                    to_write = f"+.{rule.payload}" if rule.type == "DomainSuffix" else rule.payload
+                if target == "yaml" and src.type != RuleSetType.Combined:
+                    to_write = f"+.{rule.payload}" if rule.type == RuleType.DomainSuffix else rule.payload
                 else:
-                    prefix = list(config.RULE_TYPE_CONVERSION.keys())[
-                        list(config.RULE_TYPE_CONVERSION.values()).index(rule.type)
-                    ]  # Reverse lookup the conversion table
+                    prefix = rule.type.value
                     to_write = f"{prefix},{rule.payload}"
                 if target == "clash-compatible":
                     to_write += ",Policy"
@@ -87,9 +85,9 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                 dist_built += f"{to_write}\n"
         elif target == "geosite":
             for rule in src:
-                if rule.type == "DomainSuffix":
+                if rule.type == RuleType.DomainSuffix:
                     dist_built += f"{rule.payload}\n"
-                elif rule.type == "DomainFull":
+                elif rule.type == RuleType.DomainFull:
                     dist_built += f"full:{rule.payload}\n"
         elif target == "sing-ruleset":
             ruleset = {
@@ -98,9 +96,9 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
             }
             for rule in src:
                 match rule.type:
-                    case "DomainFull":
+                    case RuleType.DomainFull:
                         key = "domain"
-                    case "DomainSuffix":
+                    case RuleType.DomainSuffix:
                         key = "domain_suffix"
                     case _:
                         key = "ip_cidr"
@@ -109,16 +107,16 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                     ruleset["rules"][0][key] = []
 
                 ruleset["rules"][0][key].append(rule.payload)
-            dist_built = dumps(ruleset, indent=2)
+            dist_built = json_dumps(ruleset, indent=2)
 
         dist.write(dist_built)
 
 
 def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> None:
     for target in targets:
-        if src.type in {"IPCIDR", "Combined"} and target in {"text-plus", "geosite"} \
-                or src.type == "Combined" and target == "text":
-            logging.warning(f'{filename}: Ignored unsupported type "{target}" for {src.type} ruleset.')
+        if src.type in {RuleSetType.IPCIDR, RuleSetType.Combined} and target in {"text-plus", "geosite"} \
+                or src.type == RuleSetType.Combined and target == "text":
+            logging.warning(f'{filename}: Ignore unsupported type "{target}" for {src.type.name} ruleset.')
             continue
         dump(src, target, dst_path/target, filename)
 
@@ -136,9 +134,9 @@ def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleS
             continue
         parsed_line = line.split(":")
         if parsed_line[1].startswith("."):
-            rule = Rule("DomainSuffix", parsed_line[1].strip("."))
+            rule = Rule(RuleType.DomainSuffix, parsed_line[1].strip("."))
         else:
-            rule = Rule("DomainFull", parsed_line[1])
+            rule = Rule(RuleType.DomainFull, parsed_line[1])
         if parsed_line[0] == "ADD":
             if rule not in src:
                 src.add(rule)

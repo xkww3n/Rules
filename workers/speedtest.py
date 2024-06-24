@@ -6,8 +6,8 @@ from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
 
 import config
-from models.rule import Rule
-from models.ruleset import RuleSet
+from models.rule import Rule, RuleType
+from models.ruleset import RuleSet, RuleSetType
 from utils.log_decorator import log
 from utils.ruleset import batch_dump
 
@@ -60,16 +60,16 @@ def build():
     retry_strategy = Retry(
         total=4,
         status_forcelist=[429],
-        backoff_factor=1,
+        backoff_factor=2,
     )
     adapter = HTTPAdapter(max_retries=retry_strategy)
     connection.mount('https://', adapter)
 
-    speedtest_ruleset = RuleSet("Domain", [
-        Rule("DomainSuffix", "speedtest.net"),
-        Rule("DomainSuffix", "speedtestcustom.com"),
-        Rule("DomainSuffix", "ooklaserver.net"),
-        Rule("DomainSuffix", "speed.cloudflare.com")
+    speedtest_ruleset = RuleSet(RuleSetType.Domain, [
+        Rule(RuleType.DomainSuffix, "speedtest.net"),
+        Rule(RuleType.DomainSuffix, "speedtestcustom.com"),
+        Rule(RuleType.DomainSuffix, "ooklaserver.net"),
+        Rule(RuleType.DomainSuffix, "speed.cloudflare.com")
     ])
 
     for keyword in search_keywords:
@@ -83,7 +83,7 @@ def build():
                 logging.debug(f'Server "{server_info["sponsor"]}" ({server_info["country"]}) ignored.')
                 continue
             server_domain = server_info["host"].split(":")[0]
-            speedtest_rule = Rule("DomainFull", server_domain)
+            speedtest_rule = Rule(RuleType.DomainFull, server_domain)
             speedtest_ruleset.add(speedtest_rule)
             logging.debug(f'Added "{server_domain}"')
 

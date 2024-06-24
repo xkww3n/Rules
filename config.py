@@ -51,10 +51,3 @@ LIST_EXCL_URL = [
 
 URL_DOMESTIC_IP_V4 = "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt"
 URL_DOMESTIC_IP_V6 = "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt"
-
-RULE_TYPE_CONVERSION = {
-    "DOMAIN": "DomainFull",
-    "DOMAIN-SUFFIX": "DomainSuffix",
-    "IP-CIDR": "IPCIDR",
-    "IP-CIDR6": "IPCIDR6"
-}

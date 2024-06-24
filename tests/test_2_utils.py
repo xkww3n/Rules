@@ -1,8 +1,8 @@
 from pathlib import Path
 
 import config
-from models.rule import Rule
-from models.ruleset import RuleSet
+from models.rule import Rule, RuleType
+from models.ruleset import RuleSet, RuleSetType
 from utils import rule, ruleset
 
 
@@ -10,27 +10,27 @@ class TestLoad:
     def test_load_domain(self):
         test_src_path = Path("tests/src/custom_ruleset/")
         loaded_ruleset = ruleset.load(test_src_path/"domain.txt")
-        assert loaded_ruleset == RuleSet("Domain",
-                                         [Rule("DomainSuffix", "example.com"),
-                                          Rule("DomainFull", "example.com")])
+        assert loaded_ruleset == RuleSet(RuleSetType.Domain,
+                                         [Rule(RuleType.DomainSuffix, "example.com"),
+                                          Rule(RuleType.DomainFull, "example.com")])
 
     def test_load_ipcidr(self):
         test_src_path = Path("tests/src/custom_ruleset/")
         loaded_ruleset = ruleset.load(test_src_path/"ipcidr.txt")
-        assert loaded_ruleset == RuleSet("IPCIDR",
-                                         [Rule("IPCIDR", "11.4.5.14"),
-                                          Rule("IPCIDR6", "fc00:114::514")])
+        assert loaded_ruleset == RuleSet(RuleSetType.IPCIDR,
+                                         [Rule(RuleType.IPCIDR, "11.4.5.14"),
+                                          Rule(RuleType.IPCIDR6, "fc00:114::514")])
 
     def test_load_combined(self):
         test_src_path = Path("tests/src/custom_ruleset/")
         loaded_ruleset = ruleset.load(test_src_path/"combined.txt")
-        assert loaded_ruleset == RuleSet("Combined",
-                                         [Rule("DomainFull", "example.com"),
-                                          Rule("DomainSuffix", "example.com"),
-                                          Rule("IPCIDR", "11.4.5.14"),
-                                          Rule("IPCIDR6", "fc00:114::514"),
-                                          Rule("IPCIDR", "11.4.5.14", "no-resolve"),
-                                          Rule("IPCIDR6", "fc00:114::514", "no-resolve")])
+        assert loaded_ruleset == RuleSet(RuleSetType.Combined,
+                                         [Rule(RuleType.DomainFull, "example.com"),
+                                          Rule(RuleType.DomainSuffix, "example.com"),
+                                          Rule(RuleType.IPCIDR, "11.4.5.14"),
+                                          Rule(RuleType.IPCIDR6, "fc00:114::514"),
+                                          Rule(RuleType.IPCIDR, "11.4.5.14", "no-resolve"),
+                                          Rule(RuleType.IPCIDR6, "fc00:114::514", "no-resolve")])
 
 
 class TestDump:
@@ -216,25 +216,25 @@ class TestMisc:
 
     def test_patch(self):
         test_src_patch = Path("tests/src/patch/")
-        test_ruleset = RuleSet("Domain", [Rule("DomainFull", "example.com")])
+        test_ruleset = RuleSet(RuleSetType.Domain, [Rule(RuleType.DomainFull, "example.com")])
         ruleset.patch(test_ruleset, "patch", test_src_patch)
-        assert test_ruleset == RuleSet("Domain", [Rule("DomainSuffix", "example.com")])
+        assert test_ruleset == RuleSet(RuleSetType.Domain, [Rule(RuleType.DomainSuffix, "example.com")])
 
     def test_sort(self):
-        test_rule_1 = Rule("DomainSuffix", "a.example.com", "TEST1")
-        test_rule_2 = Rule("DomainSuffix", "b.example.com", "TEST2")
-        test_ruleset = RuleSet("Domain", [test_rule_2, test_rule_1])
+        test_rule_1 = Rule(RuleType.DomainSuffix, "a.example.com", "TEST1")
+        test_rule_2 = Rule(RuleType.DomainSuffix, "b.example.com", "TEST2")
+        test_ruleset = RuleSet(RuleSetType.Domain, [test_rule_2, test_rule_1])
         test_ruleset.sort()
-        assert test_ruleset == RuleSet("Domain", [test_rule_1, test_rule_2])
+        assert test_ruleset == RuleSet(RuleSetType.Domain, [test_rule_1, test_rule_2])
 
     def test_dedup(self):
-        test_rule_1 = Rule("DomainSuffix", "1.example.com")
-        test_rule_2 = Rule("DomainSuffix", "a.1.example.com")
-        test_rule_3 = Rule("DomainFull", "1.example.com")
-        test_rule_4 = Rule("DomainSuffix", "2.example.com")
-        test_rule_5 = Rule("DomainSuffix", "a.2.example.com")
-        test_rule_6 = Rule("DomainFull", "2.example.com")
-        test_ruleset = RuleSet("Domain",
+        test_rule_1 = Rule(RuleType.DomainSuffix, "1.example.com")
+        test_rule_2 = Rule(RuleType.DomainSuffix, "a.1.example.com")
+        test_rule_3 = Rule(RuleType.DomainFull, "1.example.com")
+        test_rule_4 = Rule(RuleType.DomainSuffix, "2.example.com")
+        test_rule_5 = Rule(RuleType.DomainSuffix, "a.2.example.com")
+        test_rule_6 = Rule(RuleType.DomainFull, "2.example.com")
+        test_ruleset = RuleSet(RuleSetType.Domain,
                                [test_rule_1, test_rule_2, test_rule_3, test_rule_4, test_rule_5, test_rule_6])
         test_ruleset.dedup()
-        assert test_ruleset == RuleSet("Domain", [test_rule_1, test_rule_4])
+        assert test_ruleset == RuleSet(RuleSetType.Domain, [test_rule_1, test_rule_4])
