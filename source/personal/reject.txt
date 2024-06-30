@@ -1,3 +1,0 @@
-#@Domain
-.mcdn.bilivideo.cn
-.szbdyd.com
