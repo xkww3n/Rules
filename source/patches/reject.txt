@@ -1,7 +1,6 @@
 REM:.jiguang.cn
 REM:.bugly.qq.com
 REM:.adsense.google.cn
-REM:.kskwai.com
 REM:staticsns.cdn.bcebos.com
 
 ADD:.mediav.com

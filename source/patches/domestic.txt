@@ -3,9 +3,4 @@ ADD:anime1.me
 ADD:.push.apple.com
 
 REM:.wechat.com
-REM:.cncbinternational.com
-REM:.bochk.com
-REM:.icbcasia.com
 REM:.chinamobile.com
-REM:.rfchost.com
-REM:.trip.com
