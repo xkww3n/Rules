@@ -141,7 +141,7 @@ jobs:
               }
               EOF
 
-              geoip -c config.json
+              geoip convert -c config.json
 
       - name: Remove tmp files
         run: |
