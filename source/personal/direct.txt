@@ -6,5 +6,3 @@ epns.eset.com
 iploc.eset.com
 pki.eset.com
 versioncheck.eset.com
-its.bochk.com
-pib.ncb.com.hk
