@@ -2,6 +2,7 @@ REM:.jiguang.cn
 REM:.bugly.qq.com
 REM:.adsense.google.cn
 REM:staticsns.cdn.bcebos.com
+REM:.optimus-ads.amap.com
 
 ADD:.mediav.com
 ADD:.partwithner.com
