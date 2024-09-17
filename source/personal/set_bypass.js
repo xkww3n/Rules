@@ -5,30 +5,29 @@ const GLOBAL_WIFI = [
     "McDonald's"
 ];
 
-var bypass;
+var bypass_cellular = true;
+var bypass_wifi = true;
 
-if ($network.wifi.ssid) {
-    if (GLOBAL_WIFI.includes($network.wifi.ssid)) {
-        bypass = 1;
+try {
+    if ($intent.parameter === "内地") {
+        bypass_cellular = false;
     }
     else {
-        bypass = 0;
-    };
-    $persistentStore.write(bypass, "bypass");
-    $done();
+        bypass_cellular = true;
+    }
+    $persistentStore.write(bypass_cellular, "bypass_cellular");
 }
-else {
-    try {
-        if ($indent.parameter === "内地") {
-            bypass = 0;
+catch (err) { // triggered by network-changed event, no `$intent` passed in
+    if ($network.wifi.ssid) {
+        if (GLOBAL_WIFI.includes($network.wifi.ssid)){
+            bypass_wifi = true;
         }
         else {
-            bypass = 1;
+            bypass_wifi = false;
         }
-        $persistentStore.write(bypass, "bypass");
-        $done();
+        $persistentStore.write(bypass_wifi, "bypass_wifi");
     }
-    catch (err) {
-        $done();
-    }
+}
+finally {
+    $done();
 }
