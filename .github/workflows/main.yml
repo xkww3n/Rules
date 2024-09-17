@@ -59,7 +59,9 @@ jobs:
         run: go install github.com/Loyalsoldier/geoip@latest
 
       - name: Build rulesets
-        run: pdm run build
+        run: |
+              pdm run build
+              cp source/personal/*.js dists/personal/
 
       - name: Download MaxMind GeoLite2 Country DB
         env:
