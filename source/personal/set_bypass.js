@@ -12,12 +12,15 @@ try {
     if ($intent.parameter === "内地") {
         bypass_cellular = false;
     }
+    else if ($intent.parameter === "f0rC3") {  //force bypass regardless of network
+        $persistentStore.write(true, "bypass_wifi");
+    }
     else {
         bypass_cellular = true;
     }
     $persistentStore.write(bypass_cellular, "bypass_cellular");
 }
-catch (err) { // triggered by network-changed event, no `$intent` passed in
+catch (err) {  // triggered by network-changed event, no `$intent` passed in
     if ($network.wifi.ssid) {
         if (GLOBAL_WIFI.includes($network.wifi.ssid)){
             bypass_wifi = true;
