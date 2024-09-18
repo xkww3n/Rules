@@ -154,13 +154,11 @@ jobs:
         run: |
               python build_homepage.py
 
-              cat <<EOF > dists/robots.txt
-              User-agent: *
-              Disallow: /*.txt
-              Disallow: /*.yaml
-              Disallow: /*.dat
-              Disallow: /*.mmdb
-              Disallow: /*.json
+              cat <<EOF > dists/_headers
+              /*
+                X-Robots-Tag: noindex
+              /
+                ! X-Robots-Tag
               EOF
 
               cat <<EOF > dists/404.html
