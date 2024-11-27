@@ -25,17 +25,6 @@ LIST_REJECT_URL = [
     "https://raw.githubusercontent.com/eEIi0A5L/adblock_filter/master/mochi_filter.txt",
     # AWAvenue 秋风广告规则
     "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/AWAvenue-Ads-Rule.txt",
-    # d3Host List by d3ward
-    "https://raw.githubusercontent.com/d3ward/toolz/master/src/d3host.adblock",
-    # NextDNS native-tracking-domains
-    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/alexa",
-    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/apple",
-    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/huawei",
-    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/roku",
-    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/samsung",
-    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/sonos",
-    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/windows",
-    "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/xiaomi",
     # NoCoin
     "https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/nocoin.txt",
     # CoinBlockerLists
