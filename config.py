@@ -37,10 +37,9 @@ LIST_REJECT_URL = [
     "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/windows",
     "https://raw.githubusercontent.com/nextdns/native-tracking-domains/main/domains/xiaomi",
     # NoCoin
-    "https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/nocoin.txt"
     "https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/nocoin.txt",
     # CoinBlockerLists
-    "https://zerodot1.gitlab.io/CoinBlockerLists/list_browser.txt",
+    "https://zerodot1.gitlab.io/CoinBlockerLists/list_browser_AdBlock.txt"
 ]
 
 # AdGuard DNS Filter Whitelist
