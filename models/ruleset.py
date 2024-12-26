@@ -22,16 +22,14 @@ class RuleSet:
         return hash((self.type, tuple(self._payload)))
 
     def __eq__(self, other):
-        # noinspection PyProtectedMember
-        return self.type == other.type and self._payload == other._payload
+        return self.type == other.type and self._payload == other.payload
 
     def __len__(self):
         return len(self._payload)
 
     def __or__(self, other):
         payload_set = set(self._payload)
-        # noinspection PyProtectedMember
-        for rule in other._payload:
+        for rule in other.payload:
             if rule not in payload_set:
                 self._payload.append(rule)
                 payload_set.add(rule)

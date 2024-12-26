@@ -11,11 +11,11 @@ def load(src: Path) -> RuleSet:
     with open(src, mode="r", encoding="utf-8") as raw:
         src_toload = raw.read().splitlines()
     try:
-        ruleset_type = src_toload[0].split("@")[1]
+        ruleset_type = RuleSetType[src_toload[0].split("@")[1]]
     except IndexError:
         logging.warning(f"File {src} doesn't have a valid type header, treat as domain type.")
-        ruleset_type = "Domain"
-    ruleset_loaded = RuleSet(RuleSetType[ruleset_type], [])
+        ruleset_type = RuleSetType.Domain
+    ruleset_loaded = RuleSet(ruleset_type, [])
     match ruleset_type:
         case "Domain":
             for line in src_toload:

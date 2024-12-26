@@ -28,8 +28,7 @@ class Rule:
         return hash((self.type, self.tag, self._payload))
 
     def __eq__(self, other):
-        # noinspection PyProtectedMember
-        return self.type == other.type and self.tag == other.tag and self._payload == other._payload
+        return self.type == other.type and self.tag == other.tag and self._payload == other.payload
 
     @property
     def payload(self) -> str:
@@ -50,10 +49,8 @@ class Rule:
 
     def includes(self, other):
         if self.type == RuleType.DomainSuffix:
-            # noinspection PyProtectedMember
-            if self._payload == other._payload:
+            if self._payload == other.payload:
                 return True
-            # noinspection PyProtectedMember
-            return other._payload.endswith("." + self._payload)
+            return other.payload.endswith("." + self._payload)
         elif self.type == RuleType.DomainFull:
             return self == other
