@@ -17,13 +17,13 @@ def load(src: Path) -> RuleSet:
         ruleset_type = RuleSetType.Domain
     ruleset_loaded = RuleSet(ruleset_type, [])
     match ruleset_type:
-        case "Domain":
+        case RuleSetType.Domain:
             for line in src_toload:
                 if line.startswith("."):
                     ruleset_loaded.add(Rule(RuleType.DomainSuffix, line.strip(".")))
                 elif line and not line.startswith("#"):
                     ruleset_loaded.add(Rule(RuleType.DomainFull, line))
-        case "IPCIDR":
+        case RuleSetType.IPCIDR:
             for line in src_toload:
                 if not line or line.startswith("#"):
                     continue
@@ -31,7 +31,7 @@ def load(src: Path) -> RuleSet:
                     ruleset_loaded.add(Rule(RuleType.IPCIDR6, line))
                 else:
                     ruleset_loaded.add(Rule(RuleType.IPCIDR, line))
-        case "Combined":
+        case RuleSetType.Combined:
             for line in src_toload:
                 if not line or line.startswith("#"):
                     continue
