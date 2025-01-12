@@ -4,6 +4,7 @@ REM:.adsense.google.cn
 REM:staticsns.cdn.bcebos.com
 REM:.optimus-ads.amap.com
 REM:.dig.bdurl.net
+REM:.grpc.biliapi.net
 
 ADD:.mediav.com
 ADD:.partwithner.com
