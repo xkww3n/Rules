@@ -5,6 +5,9 @@ REM:staticsns.cdn.bcebos.com
 REM:.optimus-ads.amap.com
 REM:.dig.bdurl.net
 REM:.grpc.biliapi.net
+REM:a0.app.xiaomi.com
+REM:.getui.com
+REM:.shouji.sogou.com
 
 ADD:.mediav.com
 ADD:.partwithner.com
@@ -17,3 +20,4 @@ ADD:ios.bugly.qq.com
 ADD:android.bugly.qq.com
 ADD:.d.meituan.net
 ADD:.dreport.meituan.net
+ADD:sq.bls.mdt.qq.com
