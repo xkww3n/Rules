@@ -28,7 +28,11 @@ def is_domain(addr: str) -> bool:
 def strip_adblock(filter_to_strip: Filter) -> str | None:
     if (filter_to_strip.type != "filter"
             or filter_to_strip.selector["type"] != "url-pattern"
-            or filter_to_strip.options and filter_to_strip.options != [("all", True)]
+            or filter_to_strip.options and filter_to_strip.options not in (
+                [("all", True)],
+                [("document", True)],
+                [("popup", True)]
+            )
             or filter_to_strip.text.startswith("^")):
         return
     stripped = filter_to_strip.selector["value"].strip("@").strip("|").strip("^")
