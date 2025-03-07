@@ -15,6 +15,7 @@ def build():
         "bing",
         "dmm",
         "googlefcm",
+        "google-deepmind",
         "microsoft",
         "niconico",
         "openai",
