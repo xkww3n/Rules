@@ -8,6 +8,8 @@ REM:.grpc.biliapi.net
 REM:a0.app.xiaomi.com
 REM:.getui.com
 REM:.shouji.sogou.com
+REM:.crashlytics.com
+REM:.crashlyticsreports-pa.googleapis.com
 
 ADD:.mediav.com
 ADD:.partwithner.com
