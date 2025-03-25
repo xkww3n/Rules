@@ -29,10 +29,8 @@ class RuleSet:
 
     def __or__(self, other):
         payload_set = set(self._payload)
-        for rule in other.payload:
-            if rule not in payload_set:
-                self._payload.append(rule)
-                payload_set.add(rule)
+        new_rules = [rule for rule in other.payload if rule not in payload_set]
+        self._payload.extend(new_rules)
         return self
 
     def __contains__(self, item):
@@ -58,15 +56,12 @@ class RuleSet:
         self._payload = payload
 
     def deepcopy(self):
-        ruleset_copied = RuleSet(self.type, [])
         payload_copied = []
-        for rule in self._payload:
-            rule_copied_type = rule.type
-            rule_copied_payload = rule.payload
-            rule_copied_tag = rule.tag
-            rule_copied = Rule(rule_copied_type, rule_copied_payload, rule_copied_tag)
-            payload_copied.append(rule_copied)
-        ruleset_copied._payload = payload_copied
+        payload_copied.extend(
+            Rule(rule.type, rule.payload, rule.tag)
+            for rule in self._payload
+        )
+        ruleset_copied = RuleSet(self.type, payload_copied)
         return ruleset_copied
 
     def add(self, rule):

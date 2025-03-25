@@ -1,5 +1,6 @@
 import logging
 from json import loads as json_loads
+from concurrent.futures import ThreadPoolExecutor
 
 from requests import Session
 from requests.adapters import HTTPAdapter
@@ -59,10 +60,11 @@ def build():
     connection = Session()
     retry_strategy = Retry(
         total=4,
-        status_forcelist=[429],
+        status_forcelist=[429, 500, 502, 503, 504],
         backoff_factor=2,
+        respect_retry_after_header=True,
     )
-    adapter = HTTPAdapter(max_retries=retry_strategy)
+    adapter = HTTPAdapter(max_retries=retry_strategy, pool_connections=10, pool_maxsize=20)
     connection.mount('https://', adapter)
 
     speedtest_ruleset = RuleSet(RuleSetType.Domain, [
@@ -72,20 +74,32 @@ def build():
         Rule(RuleType.DomainSuffix, "speed.cloudflare.com")
     ])
 
-    for keyword in search_keywords:
+    def process_keyword(keyword):
         logging.debug(f'Using keyword "{keyword}"')
         url = f"https://www.speedtest.net/api/js/servers?engine=js&search={keyword}&limit=100"
         resp = connection.get(url).text
         servers_list = json_loads(resp)
-        logging.debug(f"Retrieved {len(servers_list)} servers.")
-        for server_info in servers_list:
-            if server_info["cc"] not in accepted_ccs:
-                logging.debug(f'Server "{server_info["sponsor"]}" ({server_info["country"]}) ignored.')
-                continue
+
+        acceptable_servers = [
+            server_info for server_info in servers_list 
+            if server_info["cc"] in accepted_ccs
+        ]
+        logging.debug(f"Retrieved {len(servers_list)} servers, {len(acceptable_servers)} acceptable.")
+
+        new_rules = []
+        for server_info in acceptable_servers:
             server_domain = server_info["host"].split(":")[0]
-            speedtest_rule = Rule(RuleType.DomainFull, server_domain)
-            speedtest_ruleset.add(speedtest_rule)
+            new_rules.append(Rule(RuleType.DomainFull, server_domain))
             logging.debug(f'Added "{server_domain}"')
+
+        return new_rules
+
+    with ThreadPoolExecutor(max_workers=min(len(search_keywords), 10)) as executor:
+        all_rules = executor.map(process_keyword, search_keywords)
+
+    for rules in all_rules:
+        for rule in rules:
+            speedtest_ruleset.add(rule)
 
     speedtest_ruleset.dedup()
     batch_dump(speedtest_ruleset, config.TARGETS, config.PATH_DIST, "speedtest")
