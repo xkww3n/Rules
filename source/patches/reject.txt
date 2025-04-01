@@ -23,3 +23,4 @@ ADD:android.bugly.qq.com
 ADD:.d.meituan.net
 ADD:.dreport.meituan.net
 ADD:sq.bls.mdt.qq.com
+ADD:api-access.pangolin-sdk-toutiao-b.com
