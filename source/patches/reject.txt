@@ -10,6 +10,7 @@ REM:.getui.com
 REM:.shouji.sogou.com
 REM:.crashlytics.com
 REM:.crashlyticsreports-pa.googleapis.com
+REM:.polaris.zijieapi.com
 
 ADD:.mediav.com
 ADD:.partwithner.com
