@@ -25,3 +25,16 @@ ADD:.d.meituan.net
 ADD:.dreport.meituan.net
 ADD:sq.bls.mdt.qq.com
 ADD:api-access.pangolin-sdk-toutiao-b.com
+ADD:.yfanads.com
+ADD:api-v3.mentamob.com
+ADD:sdk.mentamob.com
+ADD:.ubixioe.com
+ADD:.ad.gameley.com
+ADD:ads-sdk-api.ranfenghd.com
+ADD:.adx.adwangmai.com
+ADD:.vlion.cn
+ADD:.1rtb.com
+ADD:.adintl.cn
+ADD:adx.tuia.cn
+ADD:.zhangyuyidong.cn
+ADD:msdk.voiceads.cn
