@@ -3,5 +3,4 @@
 .ncb.com.hk
 .cncbinternational.com
 .hsbc.com.hk
-.hsbc.co.uk
 .icbcasia.com

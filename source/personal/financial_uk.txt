@@ -1,0 +1,8 @@
+#@Domain
+.hsbc.co.uk
+.curve.app
+.curve.com
+.imaginecurve.com
+curve.api.kustomerapp.com
+.capitalone.co.uk
+capitalone-ukeu.apps-imiconnect.io
