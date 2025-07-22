@@ -21,7 +21,8 @@ def build():
         "openai",
         "paypal",
         "youtube",
-        "line"
+        "line",
+        "instagram"
     ]
     exclusions = [
         "github",  # GitHub's domains are included in "microsoft", but its connectivity mostly isn't as high as
