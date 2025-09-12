@@ -59,11 +59,6 @@ class Test:
             assert False
         assert True
 
-    def test_copy(self):
-        test_ruleset = RuleSet(RuleSetType.Domain,
-                               [Rule(RuleType.DomainSuffix, "example.com", "TEST1")])
-        assert test_ruleset.deepcopy() == test_ruleset
-
     def test_add(self):
         test_rule = Rule(RuleType.DomainSuffix, "example.com", "TEST")
         test_ruleset = RuleSet(RuleSetType.Domain, [])

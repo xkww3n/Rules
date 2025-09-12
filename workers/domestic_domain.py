@@ -18,13 +18,16 @@ def build():
     connection = Session()
 
     ruleset_domestic = geosite_parse(config.PATH_SOURCE_GEOSITE/"geolocation-cn", None, ["!cn"])
-    logging.info(f"Imported {len(ruleset_domestic)} domestic rules from v2fly geolocation-cn list.")
+    logging.info(f"{len(ruleset_domestic)} domestic rules recieved from v2fly geolocation-cn list.")
 
-    for item in ruleset_domestic.deepcopy():
-        tld_overseas = (".hk", ".kr", ".my", ".sg", ".au", ".tw", ".in", ".ru", ".us", ".fr", ".th", ".id", ".jp")
-        if any(item.payload.endswith(os_tld) for os_tld in tld_overseas):
-            ruleset_domestic.remove(item)
-            logging.debug(f"{item} removed for having a overseas TLD.")
+    tld_overseas = (".hk", ".kr", ".my", ".sg", ".au", ".tw", ".in", ".ru", ".us", ".fr", ".th", ".id", ".jp")
+    items_to_remove = [
+        item for item in ruleset_domestic 
+        if any(item.payload.endswith(os_tld) for os_tld in tld_overseas)
+    ]
+    for item in items_to_remove:
+        ruleset_domestic.remove(item)
+        logging.debug(f"{item} removed for having a overseas TLD.")
 
     # Import dnsmasq-china-list
     raw = connection.get(
@@ -36,8 +39,8 @@ def build():
 
     # Add all domestic TLDs to domestic rules, then perform deduplication.
     ruleset_domestic_tlds = geosite_parse(config.PATH_SOURCE_GEOSITE/"tld-cn")
-    logging.info(f"Imported {len(ruleset_domestic_tlds)} domestic TLDs.")
+    logging.info(f"{len(ruleset_domestic_tlds)} domestic TLDs recieved.")
     ruleset_domestic |= ruleset_domestic_tlds
     ruleset_domestic.dedup()
-    logging.info(f"Processed {len(ruleset_domestic)} domestic rules.")
+    logging.info(f"{len(ruleset_domestic)} domestic rules generated.")
     batch_dump(ruleset_domestic, config.TARGETS, config.PATH_DIST, "domestic")

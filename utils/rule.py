@@ -3,20 +3,18 @@ from abp.filters.parser import Filter
 
 
 def is_ipv4addr(addr: str) -> bool:
-    if addr.count(".") != 3:
+    parts = addr.split(".")
+    if len(parts) != 4:
         return False
-    for part in addr.split("."):
-        if not part.isdigit():
-            return False
-        i = int(part)
-        if i < 0 or i > 255:
-            return False
-    return True
+    return all(
+        part.isdigit() and 0 <= int(part) <= 255 
+        for part in parts
+    )
 
 
 def is_domain(addr: str) -> bool:
-    blacklist_include = {"/", "*", "=", "~", "?", "#", ",", ":", " ", "(", ")", "[", "]", "|", "@", "^"}
-    if (any(bl_char in addr for bl_char in blacklist_include)
+    blacklist_chars = frozenset("/,*=~?#,: ()[]|@^")
+    if (any(char in blacklist_chars for char in addr)
             or addr.startswith("-")
             or addr.endswith(".")
             or addr.endswith("-")

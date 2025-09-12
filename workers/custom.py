@@ -20,4 +20,4 @@ def build():
         logging.debug(f'Build "{filename.name}".')
         ruleset_custom = ruleset_load(filename)
         batch_dump(ruleset_custom, config.TARGETS, config.PATH_DIST, filename.stem)
-        logging.debug(f"Processed {len(ruleset_custom)} rules.")
+        logging.debug(f"{len(ruleset_custom)} rules generated.")

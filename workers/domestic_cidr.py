@@ -23,7 +23,7 @@ def build():
         if line.startswith("#"):
             continue
         ruleset_cidr.add(Rule(RuleType.IPCIDR, line))
-    logging.info(f"Processed {len(ruleset_cidr)} domestic IPv4 rules.")
+    logging.info(f"{len(ruleset_cidr)} domestic IPv4 rules generated.")
 
     batch_dump(ruleset_cidr, config.TARGETS, config.PATH_DIST, "domestic_ip")
 
@@ -31,6 +31,6 @@ def build():
     ruleset_cidr6 = RuleSet(RuleSetType.IPCIDR, [])
     for line in src_cidr6:
         ruleset_cidr6.add(Rule(RuleType.IPCIDR6, line))
-    logging.info(f"Processed {len(ruleset_cidr6)} domestic IPv6 rules.")
+    logging.info(f"{len(ruleset_cidr6)} domestic IPv6 rules generated.")
 
     batch_dump(ruleset_cidr6, config.TARGETS, config.PATH_DIST, "domestic_ip6")

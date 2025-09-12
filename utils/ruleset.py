@@ -71,24 +71,22 @@ def load(src: Path) -> RuleSet:
 def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
     if target not in config.TARGETS:
         raise TypeError("Invalid target.")
-    match target:
-        case "yaml":
-            file = filename + ".yaml"
-        case "geosite":
-            file = filename
-        case "sing-ruleset":
-            file = filename + ".json"
-        case _:
-            file = filename + ".txt"
+    
+    # Determine file extension
+    ext_map = {
+        "yaml": ".yaml",
+        "geosite": "",
+        "sing-ruleset": ".json"
+    }
+    file = filename + ext_map.get(target, ".txt")
     dst.mkdir(parents=True, exist_ok=True)
 
     def generate_content():
         if target in {"text", "text-plus"}:
             for rule in src:
-                if rule.type == RuleType.DomainSuffix:
-                    yield f"+.{rule.payload}\n" if target == "text-plus" else f".{rule.payload}\n"
-                else:
-                    yield f"{rule.payload}\n"
+                prefix = "+." if target == "text-plus" and rule.type == RuleType.DomainSuffix else ("." if rule.type == RuleType.DomainSuffix else "")
+                yield f"{prefix}{rule.payload}\n"
+        
         elif target in {"surge-compatible", "clash-compatible", "yaml"}:
             if target == "yaml":
                 yield "payload:\n"
@@ -96,39 +94,36 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                 if target == "yaml" and src.type != RuleSetType.Combined:
                     to_write = f"+.{rule.payload}" if rule.type == RuleType.DomainSuffix else rule.payload
                 else:
-                    prefix = rule.type.value
-                    to_write = f"{prefix},{rule.payload}"
+                    to_write = f"{rule.type.value},{rule.payload}"
+                
                 if target == "clash-compatible":
                     to_write += ",Policy"
                 if rule.tag:
                     to_write += f",{rule.tag}"
                 if target == "yaml":
                     to_write = f"  - '{to_write}'"
+                
                 yield f"{to_write}\n"
+        
         elif target == "geosite":
             for rule in src:
-                if rule.type == RuleType.DomainSuffix:
-                    yield f"{rule.payload}\n"
-                elif rule.type == RuleType.DomainFull:
-                    yield f"full:{rule.payload}\n"
+                prefix = "" if rule.type == RuleType.DomainSuffix else "full:" if rule.type == RuleType.DomainFull else None
+                if prefix is not None:
+                    yield f"{prefix}{rule.payload}\n"
+        
         elif target == "sing-ruleset":
-            ruleset = {
-                "version": 1,
-                "rules": [{}]
+            ruleset = {"version": 1, "rules": [{}]}
+            key_map = {
+                RuleType.DomainFull: "domain",
+                RuleType.DomainSuffix: "domain_suffix"
             }
+            
             for rule in src:
-                match rule.type:
-                    case RuleType.DomainFull:
-                        key = "domain"
-                    case RuleType.DomainSuffix:
-                        key = "domain_suffix"
-                    case _:
-                        key = "ip_cidr"
-
+                key = key_map.get(rule.type, "ip_cidr")
                 if key not in ruleset["rules"][0]:
                     ruleset["rules"][0][key] = []
-
                 ruleset["rules"][0][key].append(rule.payload)
+            
             yield json_dumps(ruleset, indent=2)
 
     with open(dst/file, mode="w", encoding="utf-8", buffering=8192) as dist:
@@ -141,7 +136,7 @@ def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> No
     for target in targets:
         if src.type in {RuleSetType.IPCIDR, RuleSetType.Combined} and target in {"text-plus", "geosite"} \
                 or src.type == RuleSetType.Combined and target == "text":
-            logging.warning(f'{filename}: Ignore unsupported type "{target}" for {src.type.name} ruleset.')
+            logging.warning(f'{filename}: "{target}" not available for {src.type.name} ruleset.')
             continue
         compatible_targets.append(target)
 
