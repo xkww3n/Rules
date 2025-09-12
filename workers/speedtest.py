@@ -96,11 +96,11 @@ def build():
 
     with ThreadPoolExecutor(max_workers=min(len(search_keywords), 10)) as executor:
         all_rules = executor.map(process_keyword, search_keywords)
-
-    for rules in all_rules:
-        for rule in rules:
-            speedtest_ruleset.add(rule)
+        
+        for rules in all_rules:
+            for rule in rules:
+                speedtest_ruleset.add(rule)
 
     speedtest_ruleset.dedup()
     batch_dump(speedtest_ruleset, config.TARGETS, config.PATH_DIST, "speedtest")
-    logging.info(f"Processed {len(speedtest_ruleset)} speed testing rules.")
+    logging.info(f"{len(speedtest_ruleset)} speed testing rules generated.")

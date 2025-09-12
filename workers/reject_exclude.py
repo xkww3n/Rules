@@ -33,13 +33,13 @@ def build():
     for url in config.LIST_REJECT_URL:
         src_rejections += (connection.get(url).text.splitlines())
 
-    logging.info(f"Imported {len(src_rejections)} lines of reject rules from defined sources.")
+    logging.info(f"{len(src_rejections)} lines of reject rule recieved.")
 
     src_exclusions = []
     for url in config.LIST_EXCL_URL:
         src_exclusions += connection.get(url).text.splitlines()
 
-    logging.info(f"Imported {len(src_exclusions)} lines of exclude rules from defined sources.")
+    logging.info(f"{len(src_exclusions)} lines of exclude rule recieved.")
 
     ruleset_rejections = RuleSet(RuleSetType.Domain, [])
     ruleset_exclusions_raw = RuleSet(RuleSetType.Domain, [])
@@ -78,14 +78,23 @@ def build():
     ruleset_exclusions = RuleSet(RuleSetType.Domain, [])
     logging.debug("Deduplicate reject and exclude set.")
     ruleset_rejections.dedup()
-    for domain_exclude in ruleset_exclusions_raw.deepcopy():
-        for domain_reject in ruleset_rejections.deepcopy():
+    
+    # Remove rejected domains that are included in exclusions
+    rejections_to_remove = set()
+    exclusions_to_remove = set()
+    for domain_exclude in ruleset_exclusions_raw:
+        for domain_reject in ruleset_rejections:
             if domain_exclude.includes(domain_reject):
-                ruleset_rejections.remove(domain_reject)
-                ruleset_exclusions_raw.remove(domain_exclude)
+                rejections_to_remove.add(domain_reject)
+                exclusions_to_remove.add(domain_exclude)
                 logging.debug(f'Removed "{domain_reject}": excluded by "{domain_exclude}"')
+    
+    for item in rejections_to_remove:
+        ruleset_rejections.remove(item)
+    for item in exclusions_to_remove:
+        ruleset_exclusions_raw.remove(item)
     batch_dump(ruleset_rejections, config.TARGETS, config.PATH_DIST, "reject")
-    logging.info(f"Processed {len(ruleset_rejections)} reject rules.")
+    logging.info(f"{len(ruleset_rejections)} reject rules generated.")
 
     for domain_exclude in ruleset_exclusions_raw:
         for domain_reject in ruleset_rejections:
@@ -93,5 +102,5 @@ def build():
                 ruleset_exclusions.add(domain_exclude)
                 logging.debug(f'(ruleset) Exclude: Added "{domain_exclude}"')
     ruleset_exclusions = patch(ruleset_exclusions, "exclude")
-    logging.info(f"Processed {len(ruleset_exclusions)} exclude rules.")
+    logging.info(f"{len(ruleset_exclusions)} exclude rules generated.")
     batch_dump(ruleset_exclusions, config.TARGETS, config.PATH_DIST, "exclude")
