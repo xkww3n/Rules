@@ -8,7 +8,7 @@ authors = [
 dependencies = [
     "pytest~=8.1",
     "requests~=2.31",
-    "python-abp~=0.2",
+    "python-abp>=0.2.0",
 ]
 requires-python = "==3.11.*"
 readme = "README.md"
