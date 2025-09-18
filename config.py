@@ -1,6 +1,6 @@
 from pathlib import Path
 
-TARGETS = ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible", "geosite", "sing-ruleset"]
+TARGETS = ["text", "text-plus", "yaml", "classical", "quantumult", "geosite", "sing-ruleset"]
 PATH_SOURCE_GEOSITE = Path("domain-list-community/data/")
 PATH_SOURCE_CUSTOM = Path("source/")
 PATH_SOURCE_PATCH = Path("source/patches/")

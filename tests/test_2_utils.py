@@ -49,13 +49,13 @@ class TestDump:
             assert f.read() == ("+.example.com\n"
                                 "example.com\n")
 
-        assert (test_dist/"clash-compatible"/"domain.txt").exists()
-        with open(test_dist/"clash-compatible"/"domain.txt", mode="r") as f:
-            assert f.read() == ("DOMAIN-SUFFIX,example.com,Policy\n"
-                                "DOMAIN,example.com,Policy\n")
+        assert (test_dist/"quantumult"/"domain.txt").exists()
+        with open(test_dist/"quantumult"/"domain.txt", mode="r") as f:
+            assert f.read() == ("host-suffix, example.com, policy\n"
+                                "host, example.com, policy\n")
 
-        assert (test_dist/"surge-compatible"/"domain.txt").exists()
-        with open(test_dist/"surge-compatible"/"domain.txt", mode="r") as f:
+        assert (test_dist/"classical"/"domain.txt").exists()
+        with open(test_dist/"classical"/"domain.txt", mode="r") as f:
             assert f.read() == ("DOMAIN-SUFFIX,example.com\n"
                                 "DOMAIN,example.com\n")
 
@@ -99,13 +99,13 @@ class TestDump:
             assert f.read() == ("11.4.5.14\n"
                                 "fc00:114::514\n")
 
-        assert (test_dist/"clash-compatible"/"ipcidr.txt").exists()
-        with open(test_dist/"clash-compatible"/"ipcidr.txt", mode="r") as f:
-            assert f.read() == ("IP-CIDR,11.4.5.14,Policy\n"
-                                "IP-CIDR6,fc00:114::514,Policy\n")
+        assert (test_dist/"quantumult"/"ipcidr.txt").exists()
+        with open(test_dist/"quantumult"/"ipcidr.txt", mode="r") as f:
+            assert f.read() == ("ip-cidr, 11.4.5.14, policy\n"
+                                "ip6-cidr, fc00:114::514, policy\n")
 
-        assert (test_dist/"surge-compatible"/"ipcidr.txt").exists()
-        with open(test_dist/"surge-compatible"/"ipcidr.txt", mode="r") as f:
+        assert (test_dist/"classical"/"ipcidr.txt").exists()
+        with open(test_dist/"classical"/"ipcidr.txt", mode="r") as f:
             assert f.read() == ("IP-CIDR,11.4.5.14\n"
                                 "IP-CIDR6,fc00:114::514\n")
 
@@ -138,17 +138,17 @@ class TestDump:
         assert not (test_dist/"text-plus"/"combined.txt").exists()
         assert not (test_dist/"geosite"/"combined").exists()
 
-        assert (test_dist/"clash-compatible"/"combined.txt").exists()
-        with open(test_dist/"clash-compatible"/"combined.txt", mode="r") as f:
-            assert f.read() == ("DOMAIN,example.com,Policy\n"
-                                "DOMAIN-SUFFIX,example.com,Policy\n"
-                                "IP-CIDR,11.4.5.14,Policy\n"
-                                "IP-CIDR6,fc00:114::514,Policy\n"
-                                "IP-CIDR,11.4.5.14,Policy,no-resolve\n"
-                                "IP-CIDR6,fc00:114::514,Policy,no-resolve\n")
+        assert (test_dist/"quantumult"/"combined.txt").exists()
+        with open(test_dist/"quantumult"/"combined.txt", mode="r") as f:
+            assert f.read() == ("host, example.com, policy\n"
+                                "host-suffix, example.com, policy\n"
+                                "ip-cidr, 11.4.5.14, policy\n"
+                                "ip6-cidr, fc00:114::514, policy\n"
+                                "ip-cidr, 11.4.5.14, policy, no-resolve\n"
+                                "ip6-cidr, fc00:114::514, policy, no-resolve\n")
 
-        assert (test_dist/"surge-compatible"/"combined.txt").exists()
-        with open(test_dist/"surge-compatible"/"combined.txt", mode="r") as f:
+        assert (test_dist/"classical"/"combined.txt").exists()
+        with open(test_dist/"classical"/"combined.txt", mode="r") as f:
             assert f.read() == ("DOMAIN,example.com\n"
                                 "DOMAIN-SUFFIX,example.com\n"
                                 "IP-CIDR,11.4.5.14\n"

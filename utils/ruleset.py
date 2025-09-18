@@ -87,7 +87,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                 prefix = "+." if target == "text-plus" and rule.type == RuleType.DomainSuffix else ("." if rule.type == RuleType.DomainSuffix else "")
                 yield f"{prefix}{rule.payload}\n"
         
-        elif target in {"surge-compatible", "clash-compatible", "yaml"}:
+        elif target in {"classical", "yaml"}:
             if target == "yaml":
                 yield "payload:\n"
             for rule in src:
@@ -95,9 +95,6 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                     to_write = f"+.{rule.payload}" if rule.type == RuleType.DomainSuffix else rule.payload
                 else:
                     to_write = f"{rule.type.value},{rule.payload}"
-                
-                if target == "clash-compatible":
-                    to_write += ",Policy"
                 if rule.tag:
                     to_write += f",{rule.tag}"
                 if target == "yaml":
@@ -125,6 +122,21 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                 ruleset["rules"][0][key].append(rule.payload)
             
             yield json_dumps(ruleset, indent=2)
+        
+        elif target == "quantumult":
+            qx_types_map = {
+                RuleType.DomainFull: "host",
+                RuleType.DomainSuffix: "host-suffix",
+                RuleType.IPCIDR: "ip-cidr",
+                RuleType.IPCIDR6: "ip6-cidr"
+            }
+            for rule in src:
+                to_write = f"{qx_types_map.get(rule.type)}, {rule.payload}, policy"
+                if rule.tag:
+                    to_write += f", {rule.tag}"
+                yield f"{to_write}\n"
+
+            
 
     with open(dst/file, mode="w", encoding="utf-8", buffering=8192) as dist:
         for chunk in generate_content():

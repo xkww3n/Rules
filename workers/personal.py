@@ -12,5 +12,5 @@ def build():
     for filename in list_file_personal:
         logging.debug(f'Build "{filename.name}".')
         ruleset_personal = ruleset_load(filename)
-        batch_dump(ruleset_personal, ["text", "text-plus", "yaml", "surge-compatible", "clash-compatible"],
+        batch_dump(ruleset_personal, ["text", "text-plus", "yaml", "classical", "quantumult"],
                    config.PATH_DIST/"personal", filename.stem)
