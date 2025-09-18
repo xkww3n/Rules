@@ -14,9 +14,9 @@
     - 适用于 Clash Premium（2023.04.13 及更新的版本）和 Clash Meta（v1.14.4 及更新的版本）。
 - YAML 规则集
     - 适用于 Clash Premium、Clash Meta 和 [Stash](https://stash.ws/)。
-- Clash 传统规则集
-    - 适用于兼容传统 Clash 规则的代理软件，如 [Quantumult](https://quantumult.app/) [(X)](https://quantumult.app/x/)。
-- Surge 传统规则集
+- Quantumult 规则集
+    - 适用于 [Quantumult](https://quantumult.app/) 和 [Quantumult X](https://quantumult.app/x/)。
+- 传统规则集
     - 适用于兼容传统 Surge 规则的代理软件，如低于 v3 版本的
       Surge、[Loon](https://www.nsloon.com/)、[Shadowrocket](https://apps.apple.com/us/app/shadowrocket/id932747118)
       和 [LanceX](https://shadowboat.app/lancex/)。
