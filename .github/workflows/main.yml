@@ -63,13 +63,10 @@ jobs:
               pdm run build
               cp source/personal/*.js dists/personal/
 
-      - name: Download MaxMind GeoLite2 Country DB
+      - name: Download IPinfo Lite DB
         env:
-          MAXMIND_KEY: ${{ secrets.MAXMIND_KEY }}
-        run: |
-              wget -O ./GeoLite2-Country.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=${MAXMIND_KEY}&suffix=tar.gz"
-              tar xzvf ./GeoLite2-Country.tar.gz
-              cp ./GeoLite2-Country_*/GeoLite2-Country.mmdb ./
+          IPINFO_KEY: ${{ secrets.IPINFO_KEY }}
+        run: wget -O ./ipinfo_lite.mmdb "https://ipinfo.io/data/ipinfo_lite.mmdb?token=${IPINFO_KEY}"
 
       - name: Build Geosite DB
         run: |
@@ -86,10 +83,10 @@ jobs:
                     "action": "add"
                   },
                   {
-                    "type": "maxmindMMDB",
+                    "type": "ipinfoCountryMMDB",
                     "action": "add",
                     "args": {
-                      "uri": "./GeoLite2-Country.mmdb"
+                      "uri": "./ipinfo_lite.mmdb"
                     }
                   },
                   {
