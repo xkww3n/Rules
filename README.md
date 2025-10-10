@@ -22,14 +22,16 @@
       和 [LanceX](https://shadowboat.app/lancex/)。
 - V2Ray GeoSite/GeoIP 数据库
     - 适用于 [V2Ray](https://www.v2fly.org/)。
-        - GeoSite 数据库：<https://rules.xkww3n.cyou/geosite.dat>
-        - GeoIP 数据库：<https://rules.xkww3n.cyou/geoip.dat>
-- ~~sing-box GeoSite/GeoIP 数据库~~ 该类型已在 sing-box v1.8.0
-  中被弃用，请改用规则集。参阅：<https://sing-box.sagernet.org/migration/>
+    - GeoSite 数据库：<https://rules.xkww3n.cyou/geosite.dat>
+    - GeoIP 数据库：<https://cdn.xkww3n.cyou/geoip.dat>（<https://rules.xkww3n.cyou/geoip.dat> 会重定向至此），使用 IPinfo Lite 数据生成
+        - 小体积简化版：<https://rules.xkww3n.cyou/geoip_lite.dat>，使用 MaxMind GeoLite 与其他数据源混合生成
+- ~~sing-box GeoSite/GeoIP 数据库~~ 该类型已在 sing-box v1.8.0 中被弃用，请改用规则集。参阅：<https://sing-box.sagernet.org/migration/>
 - sing-box 规则集
     - 适用于 [sing-box](https://sing-box.sagernet.org/)。
 - MaxMind MMDB 数据库
-    - GeoIP 数据库：<https://rules.xkww3n.cyou/geoip.mmdb>
+    - GeoIP 数据库：<https://cdn.xkww3n.cyou/geoip.mmdb>（<https://rules.xkww3n.cyou/geoip.mmdb> 会重定向至此），使用 IPinfo Lite 数据生成
+    - 小体积简化版：<https://rules.xkww3n.cyou/geoip_lite.mmdb>，使用 MaxMind GeoLite 与其他数据源混合生成
+
 
 ## 文档
 
