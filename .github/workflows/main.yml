@@ -68,12 +68,20 @@ jobs:
           IPINFO_KEY: ${{ secrets.IPINFO_KEY }}
         run: wget -O ./ipinfo_lite.mmdb "https://ipinfo.io/data/ipinfo_lite.mmdb?token=${IPINFO_KEY}"
 
+      - name: Download MaxMind GeoLite2 Country DB
+        env:
+          MAXMIND_KEY: ${{ secrets.MAXMIND_KEY }}
+        run: |
+              wget -O ./GeoLite2-Country.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=${MAXMIND_KEY}&suffix=tar.gz"
+              tar xzvf ./GeoLite2-Country.tar.gz
+              cp ./GeoLite2-Country_*/GeoLite2-Country.mmdb ./
+
       - name: Build Geosite DB
         run: |
               cd tool_geosite
               go run ./ --datapath=../dists/geosite --outputpath=../dists --exportlists="" --togfwlist=""
 
-      - name: Build GeoIP DB
+      - name: Build GeoIP Lite DB
         run: |
               cat <<EOF > config.json
               {
@@ -83,10 +91,10 @@ jobs:
                     "action": "add"
                   },
                   {
-                    "type": "ipinfoCountryMMDB",
+                    "type": "maxmindMMDB",
                     "action": "add",
                     "args": {
-                      "uri": "./ipinfo_lite.mmdb"
+                      "uri": "./GeoLite2-Country.mmdb"
                     }
                   },
                   {
@@ -120,7 +128,7 @@ jobs:
                     "type": "v2rayGeoIPDat",
                     "action": "output",
                     "args": {
-                      "outputName": "geoip.dat",
+                      "outputName": "geoip_lite.dat",
                       "outputDir": "./dists"
                     }
                   },
@@ -128,12 +136,49 @@ jobs:
                     "type": "maxmindMMDB",
                     "action": "output",
                     "args": {
-                      "outputName": "geoip.mmdb",
+                      "outputName": "geoip_lite.mmdb",
                       "outputDir": "./dists",
-                      "overwriteList": [
-                        "cn",
-                        "private"
-                      ]
+                      "overwriteList": ["cn"]
+                    }
+                  }
+                ]
+              }
+              EOF
+
+              geoip convert -c config.json
+      
+      - name: Build GeoIP Full DB
+        run: |
+              cat <<EOF > config.json
+              {
+                "input": [
+                  {
+                    "type": "private",
+                    "action": "add"
+                  },
+                  {
+                    "type": "ipinfoCountryMMDB",
+                    "action": "add",
+                    "args": {
+                      "uri": "./ipinfo_lite.mmdb"
+                    }
+                  }
+                ],
+                "output": [
+                  {
+                    "type": "v2rayGeoIPDat",
+                    "action": "output",
+                    "args": {
+                      "outputName": "geoip.dat",
+                      "outputDir": "./dists_geoip_full"
+                    }
+                  },
+                  {
+                    "type": "maxmindMMDB",
+                    "action": "output",
+                    "args": {
+                      "outputName": "geoip.mmdb",
+                      "outputDir": "./dists_geoip_full"
                     }
                   }
                 ]
@@ -189,3 +234,14 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: 2e54d1245681bc04eaa33ed5d68bdfa7
           command: pages deploy dists --project-name=xkww3n-rules
+      
+      - name: Publish GeoIP full database to Cloudflare R2
+        uses: ryand56/r2-upload-action@latest
+        with:
+          r2-account-id: 2e54d1245681bc04eaa33ed5d68bdfa7
+          r2-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
+          r2-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          r2-bucket: xkww3n-cdn
+          source-dir: dists_geoip_full
+          destination-dir: ./
+          output-file-url: false
