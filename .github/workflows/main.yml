@@ -196,6 +196,13 @@ jobs:
         run: |
               python build_homepage.py
 
+              cat <<EOF > dists/_redirects
+              /geoip.dat https://cdn.xkww3n.cyou/geoip.dat 301
+              /geoip.mmdb https://cdn.xkww3n.cyou/geoip.mmdb 301
+              /clash-compatible/* /quantumult/:splat 301
+              /surge-compatible/* /classical/:splat 301
+              EOF
+
               cat <<EOF > dists/_headers
               /*
                 X-Robots-Tag: noindex
