@@ -37,3 +37,10 @@ def strip_adblock(filter_to_strip: Filter) -> str | None:
     if is_domain(stripped):
         return stripped
     return
+
+def count_domain_level(domain: str, psl: set) -> int:
+    domain_level = domain.count(".")
+    for ps in psl:
+        if domain.endswith(ps):
+            domain_level -= ps.count(".") - 1
+    return domain_level
