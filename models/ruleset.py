@@ -76,6 +76,7 @@ class RuleSet:
         self.payload.sort(key=sort_key)
 
     def dedup(self):
+        self.sort()
         list_unique = self._dedup_domains_trie()
         
         self.payload = list_unique
