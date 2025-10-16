@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 import config
 
@@ -8,7 +8,7 @@ def template(urls: list) -> str:
     for url in urls[1:-2]:
         url_list += f'        <li><a href="/{url}" target="_blank">{url}</a></li>\n'
     url_list += f'        <li><a href="/{urls[-1]}" target="_blank">{urls[-1]}</a></li>'
-    build_date = str(datetime.utcnow()) + " UTC"
+    build_date = str(datetime.now(timezone.utc)) + " UTC"
     return \
         f"""\
 <!DOCTYPE html>
