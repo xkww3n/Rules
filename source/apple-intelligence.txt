@@ -3,3 +3,6 @@ apple-relay.cloudflare.com
 apple-relay.fastly-edge.com
 cp4.cloudflare.com
 apple-relay.apple.com
+
+# This is required to unlock ChatGPT integration
+gspe1-ssl.ls.apple.com
