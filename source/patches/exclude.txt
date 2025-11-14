@@ -1,7 +1,0 @@
-ADD:ad.doubleclick.net
-ADD:ssl.p.jwpcdn.com
-ADD:click.mz.simba.taobao.com
-ADD:www.cnzz.com
-ADD:help.cnzz.com
-ADD:open.cnzz.com
-ADD:new.cnzz.com
