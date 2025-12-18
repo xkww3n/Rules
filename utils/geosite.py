@@ -26,7 +26,7 @@ def parse(src_path: Path, excluded_imports=None, excluded_tags=None) -> RuleSet:
         if ":" not in line:
             parsed_rule = Rule(RuleType.DomainSuffix, line)
         elif line.startswith("full:"):
-            parsed_rule = Rule(RuleType.DomainFull, line.strip("full:"))
+            parsed_rule = Rule(RuleType.DomainFull, line.replace("full:",""))
         elif line.startswith("include:"):
             name_import = line.split("include:")[1]
             if name_import in excluded_imports:
