@@ -14,6 +14,7 @@ def build():
         "bahamut",
         "bing",
         "dmm",
+        "google",
         "googlefcm",
         "google-deepmind",
         "microsoft",
