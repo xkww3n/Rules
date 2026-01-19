@@ -8,6 +8,9 @@ REM:.optimus-ads.amap.com
 REM:.polaris.zijieapi.com
 REM:.shouji.sogou.com
 REM:a0.app.xiaomi.com
+REM:.h5.hpplay.com.cn
+REM:.saas.hpplay.cn
+REM:.vipauth.hpplay.cn
 
 ADD:.17admob.com
 ADD:.1rtb.net
@@ -139,3 +142,6 @@ ADD:v6-adashx.ut.amap.com
 ADD:v6-adashx.ut.ele.me
 ADD:v6-adashx.ut.youku.com
 ADD:wup.imtt.qq.com
+
+ADD:logu.lebo.cn
+ADD:rps.lebo.cn
