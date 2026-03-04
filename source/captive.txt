@@ -1,0 +1,15 @@
+#@Domain
+.cloudflarecp.com
+.cloudflareok.com
+.cloudflareportal.com
+.msftconnecttest.com
+.msftncsi.com
+captive.apple.com
+connectivity.cloudflareclient.com
+connectivitycheck.android.com
+connectivitycheck.gstatic.com
+detectportal.firefox.com
+network-test.debian.org
+networkcheck.kde.org
+ping.archlinux.org
+securelogin.arubanetworks.com
