@@ -14,13 +14,16 @@ requires-python = "==3.11.*"
 readme = "README.md"
 license = {text = "MIT"}
 
-
-[tool.pdm]
-distribution = false
-
-[tool.pdm.scripts]
+[tool.poe.tasks]
 build = "python main.py"
 test = "pytest"
-debug.cmd = "python main.py"
-debug.env = {DEBUG = "1"}
 profile = "python -m cProfile -o performance.prof main.py"
+
+[tool.poe.tasks.debug]
+cmd = "python main.py"
+env = {DEBUG = "1"}
+
+[dependency-groups]
+dev = [
+    "poethepoet>=0.42.1",
+]
