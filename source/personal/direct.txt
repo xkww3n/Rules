@@ -6,3 +6,4 @@ epns.eset.com
 iploc.eset.com
 pki.eset.com
 versioncheck.eset.com
+.onfastspring.com
