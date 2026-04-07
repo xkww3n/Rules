@@ -1,8 +1,6 @@
 REM:.adsense.google.cn
-REM:.bugly.qq.com
 REM:.crashlyticsreports-pa.googleapis.com
 REM:.dig.bdurl.net
-REM:.getui.com
 REM:.jiguang.cn
 REM:.optimus-ads.amap.com
 REM:.polaris.zijieapi.com
@@ -65,7 +63,6 @@ ADD:.lydass.net
 ADD:.maplehaze.cn
 ADD:.mc7clurd09pla4nrtat7ion.com
 ADD:.mediav.com
-ADD:.medproad.com
 ADD:.miaozhen.com
 ADD:.mobmore.com
 ADD:.mobrtb.com
@@ -79,7 +76,6 @@ ADD:.qchannel01.com
 ADD:.readgps.com
 ADD:.rhinokeen.com
 ADD:.rxeosevsso.com
-ADD:.sigmob.cn
 ADD:.slyxmobi.com
 ADD:.smadex.com
 ADD:.tianmu.mobi
@@ -121,7 +117,6 @@ ADD:h-adashx.ut.ele.me
 ADD:h-adashx.ut.youku.com
 ADD:huatuocode.huatuo.qq.com
 ADD:hudong.alicdn.com
-ADD:iadmusicmat.music.126.net
 ADD:im-x.jd.com
 ADD:info4.video.qq.com
 ADD:info6.video.qq.com
