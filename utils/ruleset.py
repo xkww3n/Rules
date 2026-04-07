@@ -131,7 +131,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                 RuleType.IPCIDR6: "ip6-cidr"
             }
             for rule in src:
-                to_write = f"{qx_types_map.get(rule.type)}, {rule.payload}, policy"
+                to_write = f"{qx_types_map.get(rule.type)}, {rule.payload}, policy, via-interface=%TUN%"
                 if rule.tag:
                     to_write += f", {rule.tag}"
                 yield f"{to_write}\n"
