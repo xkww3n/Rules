@@ -51,8 +51,8 @@ class TestDump:
 
         assert (test_dist/"quantumult"/"domain.txt").exists()
         with open(test_dist/"quantumult"/"domain.txt", mode="r") as f:
-            assert f.read() == ("host-suffix, example.com, policy\n"
-                                "host, example.com, policy\n")
+            assert f.read() == ("host-suffix, example.com, policy, via-interface=%TUN%\n"
+                                "host, example.com, policy, via-interface=%TUN%\n")
 
         assert (test_dist/"classical"/"domain.txt").exists()
         with open(test_dist/"classical"/"domain.txt", mode="r") as f:
@@ -101,8 +101,8 @@ class TestDump:
 
         assert (test_dist/"quantumult"/"ipcidr.txt").exists()
         with open(test_dist/"quantumult"/"ipcidr.txt", mode="r") as f:
-            assert f.read() == ("ip-cidr, 11.4.5.14, policy\n"
-                                "ip6-cidr, fc00:114::514, policy\n")
+            assert f.read() == ("ip-cidr, 11.4.5.14, policy, via-interface=%TUN%\n"
+                                "ip6-cidr, fc00:114::514, policy, via-interface=%TUN%\n")
 
         assert (test_dist/"classical"/"ipcidr.txt").exists()
         with open(test_dist/"classical"/"ipcidr.txt", mode="r") as f:
@@ -140,12 +140,12 @@ class TestDump:
 
         assert (test_dist/"quantumult"/"combined.txt").exists()
         with open(test_dist/"quantumult"/"combined.txt", mode="r") as f:
-            assert f.read() == ("host, example.com, policy\n"
-                                "host-suffix, example.com, policy\n"
-                                "ip-cidr, 11.4.5.14, policy\n"
-                                "ip6-cidr, fc00:114::514, policy\n"
-                                "ip-cidr, 11.4.5.14, policy, no-resolve\n"
-                                "ip6-cidr, fc00:114::514, policy, no-resolve\n")
+            assert f.read() == ("host, example.com, policy, via-interface=%TUN%\n"
+                                "host-suffix, example.com, policy, via-interface=%TUN%\n"
+                                "ip-cidr, 11.4.5.14, policy, via-interface=%TUN%\n"
+                                "ip6-cidr, fc00:114::514, policy, via-interface=%TUN%\n"
+                                "ip-cidr, 11.4.5.14, policy, via-interface=%TUN%, no-resolve\n"
+                                "ip6-cidr, fc00:114::514, policy, via-interface=%TUN%, no-resolve\n")
 
         assert (test_dist/"classical"/"combined.txt").exists()
         with open(test_dist/"classical"/"combined.txt", mode="r") as f:
