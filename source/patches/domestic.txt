@@ -1,6 +1,5 @@
 ADD:masuit.com
 ADD:anime1.me
-ADD:.push.apple.com
 
 REM:.wechat.com
 REM:.chinamobile.com
