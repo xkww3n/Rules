@@ -35,12 +35,13 @@ def build():
     for line in raw.replace("server=/", "").replace("/114.114.114.114", "").splitlines():
         ruleset_domestic.add(Rule(RuleType.DomainFull, line))
 
-    ruleset_domestic = patch(ruleset_domestic, "domestic")
-
     # Add all domestic TLDs to domestic rules, then perform deduplication.
     ruleset_domestic_tlds = geosite_parse(config.PATH_SOURCE_GEOSITE/"tld-cn")
     logging.info(f"{len(ruleset_domestic_tlds)} domestic TLDs recieved.")
     ruleset_domestic |= ruleset_domestic_tlds
     ruleset_domestic.dedup()
+
+    ruleset_domestic = patch(ruleset_domestic, "domestic")
+
     logging.info(f"{len(ruleset_domestic)} domestic rules generated.")
     batch_dump(ruleset_domestic, config.TARGETS, config.PATH_DIST, "domestic")

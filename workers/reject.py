@@ -77,9 +77,9 @@ def build():
         ruleset_exclusions.add(rule)
         logging.debug(f'Exclude: Added "{line.text}" -> "{rule}"')
 
-    ruleset_rejections = patch(ruleset_rejections, "reject")
     logging.debug("Deduplicate reject ruleset.")
     ruleset_rejections.dedup()
+    ruleset_rejections = patch(ruleset_rejections, "reject")
     
     # Remove rejected domains that are included in exclusions
     new_ruleset_rejections = [item for item in ruleset_rejections if item not in ruleset_exclusions]
