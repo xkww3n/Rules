@@ -6,3 +6,4 @@
 curve.api.kustomerapp.com
 .capitalone.co.uk
 capitalone-ukeu.apps-imiconnect.io
+.experian.co.uk
