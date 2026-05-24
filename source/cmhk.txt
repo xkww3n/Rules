@@ -1,0 +1,5 @@
+#@Domain
+.hk.chinamobile.com
+.mpaas-cn-hongkong.aliyuncs.com
+mylink.komect.com
+mylink.oss-accelerate.aliyuncs.com
