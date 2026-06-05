@@ -67,12 +67,11 @@ def build():
     adapter = HTTPAdapter(max_retries=retry_strategy, pool_connections=10, pool_maxsize=20)
     connection.mount('https://', adapter)
 
-    speedtest_ruleset = RuleSet(RuleSetType.Domain, [
-        Rule(RuleType.DomainSuffix, "speedtest.net"),
-        Rule(RuleType.DomainSuffix, "speedtestcustom.com"),
-        Rule(RuleType.DomainSuffix, "ooklaserver.net"),
-        Rule(RuleType.DomainSuffix, "speed.cloudflare.com")
-    ])
+    speedtest_ruleset = RuleSet(RuleSetType.Domain)
+    speedtest_ruleset.add(Rule(RuleType.DomainSuffix, "speedtest.net"))
+    speedtest_ruleset.add(Rule(RuleType.DomainSuffix, "speedtestcustom.com"))
+    speedtest_ruleset.add(Rule(RuleType.DomainSuffix, "ooklaserver.net"))
+    speedtest_ruleset.add(Rule(RuleType.DomainSuffix, "speed.cloudflare.com"))
 
     def process_keyword(keyword):
         logging.debug(f'Using keyword "{keyword}"')
@@ -101,6 +100,4 @@ def build():
             for rule in rules:
                 speedtest_ruleset.add(rule)
 
-    speedtest_ruleset.dedup()
     batch_dump(speedtest_ruleset, config.TARGETS, config.PATH_DIST, "speedtest")
-    logging.info(f"{len(speedtest_ruleset)} speed testing rules generated.")

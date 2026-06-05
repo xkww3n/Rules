@@ -1,6 +1,6 @@
 import logging
 from enum import Enum
-from typing import Optional
+from ipaddress import IPv4Network, IPv6Network, collapse_addresses, ip_network
 
 from models.rule import Rule, RuleType
 
@@ -11,160 +11,263 @@ class RuleSetType(Enum):
     Combined = 3
 
 
-class RuleSet:
-    type: RuleSetType
-    payload: list[Rule]
+class DomainTrieNode:
+    def __init__(self):
+        self.children: dict[str, DomainTrieNode] = {}
+        self.suffix_rule = False
+        self.full_rule = False
+        self.subtree_rule_count = 0
 
-    def __init__(self, ruleset_type: RuleSetType, payload: list):
-        self.type = ruleset_type
-        if self.type == RuleSetType.Domain:
-            for item in payload:
-                if item.type not in {RuleType.DomainSuffix, RuleType.DomainFull}:
-                    raise ValueError(f"{item.type.value} rule found in a domain-type ruleset.")
-        elif self.type == RuleSetType.IPCIDR:
-            for item in payload:
-                if item.type not in {RuleType.IPCIDR, RuleType.IPCIDR6}:
-                    raise ValueError(f"{item.type.value} rule found in a IPCIDR-type ruleset.")
-        self.payload = payload
 
-    def __hash__(self):
-        return hash((self.type, tuple(self.payload)))
-
-    def __eq__(self, other):
-        return self.type == other.type and self.payload == other.payload
+class DomainTrie:
+    def __init__(self):
+        self.root = DomainTrieNode()
 
     def __len__(self):
-        return len(self.payload)
+        return self.root.subtree_rule_count
+
+    def __iter__(self):
+        return iter(self.to_rules())
+
+    @staticmethod
+    def _parts(payload: str) -> list[str]:
+        return payload.split(".")[::-1]
+
+    @staticmethod
+    def _payload(parts: list[str]) -> str:
+        return ".".join(parts[::-1])
+
+    def insert(self, rule: Rule) -> None:
+        self._validate_rule(rule)
+        parts = self._parts(rule.payload)
+        node = self.root
+        path = [self.root]
+
+        for part in parts:
+            if node.suffix_rule:
+                self._mark_domain_covered(rule)
+                return
+            if part not in node.children:
+                node.children[part] = DomainTrieNode()
+            node = node.children[part]
+            path.append(node)
+
+        if node.suffix_rule and rule.type == RuleType.DomainSuffix:
+            self._mark_domain_duplicate(rule)
+            return
+        if node.suffix_rule:
+            self._mark_domain_covered(rule)
+            return
+
+        if rule.type == RuleType.DomainSuffix:
+            self._insert_suffix(rule, node, path)
+        elif rule.type == RuleType.DomainFull:
+            self._insert_full(rule, node, path)
+
+    def find_covering(self, rule: Rule) -> Rule | None:
+        self._validate_rule(rule)
+        node = self.root
+        parts = self._parts(rule.payload)
+        traversed = []
+
+        for part in parts:
+            if node.suffix_rule:
+                return Rule(RuleType.DomainSuffix, self._payload(traversed))
+            if part not in node.children:
+                return None
+            node = node.children[part]
+            traversed.append(part)
+
+        if node.suffix_rule:
+            return Rule(RuleType.DomainSuffix, rule.payload)
+        if rule.type == RuleType.DomainFull and node.full_rule:
+            return Rule(RuleType.DomainFull, rule.payload)
+        return None
+
+    def contains_exact(self, rule: Rule) -> bool:
+        self._validate_rule(rule)
+        node = self.root
+        for part in self._parts(rule.payload):
+            if part not in node.children:
+                return False
+            node = node.children[part]
+
+        if rule.type == RuleType.DomainSuffix:
+            return node.suffix_rule
+        if rule.type == RuleType.DomainFull:
+            return node.full_rule
+        return False
+
+    def to_rules(self) -> list[Rule]:
+        result = []
+
+        def walk(node: DomainTrieNode, parts: list[str]) -> None:
+            if node.suffix_rule:
+                result.append(Rule(RuleType.DomainSuffix, self._payload(parts)))
+                return
+            if node.full_rule:
+                result.append(Rule(RuleType.DomainFull, self._payload(parts)))
+            for part in sorted(node.children):
+                walk(node.children[part], parts + [part])
+
+        for part in sorted(self.root.children):
+            walk(self.root.children[part], [part])
+        return result
+
+    def _insert_suffix(self, rule: Rule, node: DomainTrieNode, path: list[DomainTrieNode]) -> None:
+        covered_count = node.subtree_rule_count
+        if covered_count:
+            logging.debug(f'Remove {covered_count} domain rules: included in "{rule}".')
+
+        node.suffix_rule = True
+        node.full_rule = False
+        node.subtree_rule_count = 1
+        for ancestor in path[:-1]:
+            ancestor.subtree_rule_count += 1 - covered_count
+
+    def _insert_full(self, rule: Rule, node: DomainTrieNode, path: list[DomainTrieNode]) -> None:
+        if node.full_rule:
+            self._mark_domain_duplicate(rule)
+            return
+
+        node.full_rule = True
+        for item in path:
+            item.subtree_rule_count += 1
+
+    def _mark_domain_duplicate(self, rule: Rule) -> None:
+        logging.debug(f'Remove "{rule}": exact duplicate.')
+
+    def _mark_domain_covered(self, rule: Rule) -> None:
+        logging.debug(f'Remove "{rule}": included in an existing domain suffix rule.')
+
+    @staticmethod
+    def _validate_rule(rule: Rule) -> None:
+        if rule.type not in {RuleType.DomainSuffix, RuleType.DomainFull}:
+            raise ValueError(f"{rule.type.value} rule found in a domain trie.")
+        if rule.tag:
+            raise ValueError(f'Tagged rule "{rule}" found in a domain trie.')
+
+
+class RuleSet:
+    type: RuleSetType
+
+    def __init__(self, ruleset_type: RuleSetType):
+        self.type = ruleset_type
+        self._domain_trie = None
+        self._ip_networks: list[set[IPv4Network] | set[IPv6Network]] | None = None
+        self._combined_rules: list[Rule] = []
+
+        if self.type == RuleSetType.Domain:
+            self._domain_trie = DomainTrie()
+        elif self.type == RuleSetType.IPCIDR:
+            self._ip_networks = [set(), set()]
+        else:
+            self._combined_rules = []
+
+    def __hash__(self):
+        return hash((self.type, tuple(self)))
+
+    def __eq__(self, other):
+        if not isinstance(other, RuleSet):
+            return False
+        return self.type == other.type and list(self) == list(other)
+
+    def __len__(self):
+        if self.type == RuleSetType.Domain:
+            return len(self._domain_trie)
+        if self.type == RuleSetType.IPCIDR:
+            return len(self._ip_networks[0]) + len(self._ip_networks[1])
+        return len(self._combined_rules)
 
     def __or__(self, other):
-        payload_set = set(self.payload)
-        self.payload.extend(rule for rule in other.payload if rule not in payload_set)
+        if self.type != other.type:
+            raise ValueError("Cannot merge rulesets with different types.")
+        for rule in other:
+            self.add(rule)
         return self
 
     def __contains__(self, item):
-        return item in self.payload
+        if self.type == RuleSetType.Domain:
+            return self._domain_trie.contains_exact(item)
+        if self.type == RuleSetType.IPCIDR:
+            self._validate_rule(item)
+            network = ip_network(item.payload, strict=False)
+            return network in self._ip_networks[self._ip_index(item.type)]
+        return item in self._combined_rules
 
     def __iter__(self):
-        return iter(self.payload)
-
+        if self.type == RuleSetType.Domain:
+            return iter(self._domain_trie)
+        if self.type == RuleSetType.IPCIDR:
+            return iter(self._ip_rules())
+        return iter(self._combined_rules)
 
     def add(self, rule):
-        if rule not in self.payload:
-            self.payload.append(rule)
+        self._validate_rule(rule)
+        if self.type == RuleSetType.Domain:
+            self._domain_trie.insert(rule)
+            return
+        if self.type == RuleSetType.IPCIDR:
+            self._ip_networks[self._ip_index(rule.type)].add(ip_network(rule.payload, strict=False))
+            return
+        if rule not in self._combined_rules:
+            self._combined_rules.append(rule)
 
     def remove(self, rule):
-        self.payload.remove(rule)
-
-    def sort(self):
-        if self.type == RuleSetType.Combined:
-            logging.warning("Skipped: Combined-type ruleset shouldn't be sorted as maybe ordered.")
+        if self.type == RuleSetType.Domain:
+            payload = list(self)
+            payload.remove(rule)
+            self._domain_trie = DomainTrie()
+            for item in payload:
+                self.add(item)
             return
+        if self.type == RuleSetType.IPCIDR:
+            self._validate_rule(rule)
+            self._ip_networks[self._ip_index(rule.type)].remove(ip_network(rule.payload, strict=False))
+            return
+        self._combined_rules.remove(rule)
 
-        def sort_key(item: Rule) -> tuple:
-            match item.type:
-                # Domain suffixes should always in front of full domains
-                # Shorter domains should in front of longer domains
-                # For IPCIDR ruleset, default sort method is ok.
-                case RuleType.DomainSuffix:
-                    sortkey = (0, len(item.payload), item.payload)
-                case RuleType.DomainFull:
-                    sortkey = (1, len(item.payload), item.payload)
-                case _:
-                    sortkey = (2, len(item.payload), item.payload)
-            return sortkey
+    def find_covering(self, rule: Rule) -> Rule | None:
+        if self.type != RuleSetType.Domain:
+            raise TypeError("Only domain-type rulesets support domain coverage lookup.")
+        return self._domain_trie.find_covering(rule)
 
-        self.payload.sort(key=sort_key)
+    def dedup_ipcidr(self) -> None:
+        if self.type != RuleSetType.IPCIDR:
+            raise TypeError("Only IPCIDR-type rulesets support CIDR deduplication.")
+        self._ip_networks = [
+            set(collapse_addresses(self._ip_networks[0])),
+            set(collapse_addresses(self._ip_networks[1])),
+        ]
 
-    def dedup(self):
-        self.sort()
-        list_unique = self._dedup_domains_trie()
-        
-        self.payload = list_unique
-    
-    def _dedup_domains_trie(self):
-        
-        class TrieNode:
-            def __init__(self):
-                self.children: dict = {}
-                self.is_suffix_rule: bool = False
-                self.is_full_rule: bool = False
-                self.original_rule: Optional[Rule] = None
-        
-        root = TrieNode()
-        list_unique = []
+    def _ip_rules(self) -> list[Rule]:
+        return [
+            *[
+                Rule(RuleType.IPCIDR, network.with_prefixlen)
+                for network in self._sorted_networks(self._ip_networks[0])
+            ],
+            *[
+                Rule(RuleType.IPCIDR6, network.with_prefixlen)
+                for network in self._sorted_networks(self._ip_networks[1])
+            ],
+        ]
 
-        for rule in self.payload:
-            if rule.type == RuleType.DomainSuffix:
-                parts = rule.payload.split('.')[::-1]
-                node = root
-                is_redundant = False
-                
-                for i, part in enumerate(parts):
-                    if node.is_suffix_rule:
-                        logging.debug(f'Remove "{rule}": included in "{node.original_rule}".')
-                        is_redundant = True
-                        break
-                    
-                    if part not in node.children:
-                        node.children[part] = TrieNode()
-                    node = node.children[part]
-                
-                if not is_redundant:
-                    node.is_suffix_rule = True
-                    node.original_rule = rule
-                    list_unique.append(rule)
-                    
-                    self._remove_covered_rules(node, rule)
-                    
-            elif rule.type == RuleType.DomainFull:
-                parts = rule.payload.split('.')[::-1]
-                node = root
-                is_covered = False
-                
-                for part in parts:
-                    if node.is_suffix_rule:
-                        logging.debug(f'Remove "{rule}": included in "{node.original_rule}".')
-                        is_covered = True
-                        break
-                    
-                    if part in node.children:
-                        node = node.children[part]
-                    else:
-                        break
-                
-                if not is_covered and node.is_suffix_rule:
-                    logging.debug(f'Remove "{rule}": included in "{node.original_rule}".')
-                    is_covered = True
-                
-                if not is_covered:
-                    parts = rule.payload.split('.')[::-1]
-                    node = root
-                    for part in parts:
-                        if part not in node.children:
-                            node.children[part] = TrieNode()
-                        node = node.children[part]
-                    
-                    if not node.is_full_rule:
-                        node.is_full_rule = True
-                        node.original_rule = rule
-                        list_unique.append(rule)
-        
-        return list_unique
-    
-    def _remove_covered_rules(self, node, covering_rule):
-        def traverse(current_node):
-            if current_node.is_suffix_rule and current_node.original_rule != covering_rule:
-                if current_node.original_rule in self.payload:
-                    logging.debug(f'Remove "{current_node.original_rule}": included in "{covering_rule}".')
-                    current_node.is_suffix_rule = False
-            
-            if current_node.is_full_rule:
-                if current_node.original_rule in self.payload:
-                    logging.debug(f'Remove "{current_node.original_rule}": included in "{covering_rule}".')
-                    current_node.is_full_rule = False
-            
-            for child in current_node.children.values():
-                traverse(child)
-        
-        for child in node.children.values():
-            traverse(child)
+    @staticmethod
+    def _sorted_networks(networks):
+        return sorted(networks, key=lambda network: (int(network.network_address), network.prefixlen))
+
+    @staticmethod
+    def _ip_index(rule_type: RuleType) -> int:
+        return 0 if rule_type == RuleType.IPCIDR else 1
+
+    def _validate_rule(self, rule: Rule) -> None:
+        if self.type == RuleSetType.Domain:
+            if rule.type not in {RuleType.DomainSuffix, RuleType.DomainFull}:
+                raise ValueError(f"{rule.type.value} rule found in a domain-type ruleset.")
+            if rule.tag:
+                raise ValueError(f'Tagged rule "{rule}" found in a domain-type ruleset.')
+        elif self.type == RuleSetType.IPCIDR:
+            if rule.type not in {RuleType.IPCIDR, RuleType.IPCIDR6}:
+                raise ValueError(f"{rule.type.value} rule found in a IPCIDR-type ruleset.")
+            if rule.tag:
+                raise ValueError(f'Tagged rule "{rule}" found in a IPCIDR-type ruleset.')

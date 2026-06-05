@@ -39,9 +39,7 @@ def build():
     ruleset_domestic_tlds = geosite_parse(config.PATH_SOURCE_GEOSITE/"tld-cn")
     logging.info(f"{len(ruleset_domestic_tlds)} domestic TLDs recieved.")
     ruleset_domestic |= ruleset_domestic_tlds
-    ruleset_domestic.dedup()
 
     ruleset_domestic = patch(ruleset_domestic, "domestic")
 
-    logging.info(f"{len(ruleset_domestic)} domestic rules generated.")
     batch_dump(ruleset_domestic, config.TARGETS, config.PATH_DIST, "domestic")

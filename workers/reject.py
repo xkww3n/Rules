@@ -11,6 +11,46 @@ from utils.rule import count_domain_level, strip_adblock
 from utils.ruleset import batch_dump, patch
 
 
+def apply_allowlist(ruleset_rejections: RuleSet, ruleset_exclusions: RuleSet) -> RuleSet:
+    filtered_rejections = RuleSet(RuleSetType.Domain)
+    removed_by_allowlist = 0
+
+    for rule in ruleset_rejections:
+        covering_allow = ruleset_exclusions.find_covering(rule)
+        if covering_allow:
+            removed_by_allowlist += 1
+            logging.debug(f'Remove "{rule}": allowlisted by "{covering_allow}".')
+            continue
+        filtered_rejections.add(rule)
+
+    conflicts = []
+    for rule in sorted(ruleset_exclusions, key=lambda item: (item.payload, item.type.value, item.tag)):
+        covering_block = filtered_rejections.find_covering(rule)
+        if covering_block:
+            conflicts.append((rule, covering_block))
+
+    blocking_rules_to_remove = {blocking_rule for _, blocking_rule in conflicts}
+    if blocking_rules_to_remove:
+        resolved_rejections = RuleSet(RuleSetType.Domain)
+        for rule in filtered_rejections:
+            if rule not in blocking_rules_to_remove:
+                resolved_rejections.add(rule)
+        filtered_rejections = resolved_rejections
+
+    if removed_by_allowlist:
+        logging.info(f"{removed_by_allowlist} reject rules removed by allowlist.")
+
+    if conflicts:
+        logging.warning(
+            f"{len(conflicts)} allowlist rules were covered by reject rules; "
+            f"{len(blocking_rules_to_remove)} reject rules removed."
+        )
+        for allowed_rule, blocking_rule in conflicts:
+            logging.debug(f'Allowlist conflict: "{blocking_rule}" removed for covering "{allowed_rule}".')
+
+    return filtered_rejections
+
+
 @log
 def build():
     """
@@ -41,8 +81,8 @@ def build():
 
     logging.info(f"{len(src_exclusions)} lines of exclude rule recieved.")
 
-    ruleset_rejections = RuleSet(RuleSetType.Domain, [])
-    ruleset_exclusions = set()
+    ruleset_rejections = RuleSet(RuleSetType.Domain)
+    ruleset_exclusions = RuleSet(RuleSetType.Domain)
 
     for line in parse_filterlist(src_rejections):
         line_stripped = strip_adblock(line)
@@ -77,13 +117,11 @@ def build():
         ruleset_exclusions.add(rule)
         logging.debug(f'Exclude: Added "{line.text}" -> "{rule}"')
 
-    logging.debug("Deduplicate reject ruleset.")
-    ruleset_rejections.dedup()
+    logging.debug("Use deduplicated raw reject and allowlist rulesets.")
+
     ruleset_rejections = patch(ruleset_rejections, "reject")
-    
-    # Remove rejected domains that are included in exclusions
-    new_ruleset_rejections = [item for item in ruleset_rejections if item not in ruleset_exclusions]
-    ruleset_rejections.payload = new_ruleset_rejections
+
+    ruleset_rejections = apply_allowlist(ruleset_rejections, ruleset_exclusions)
     
     batch_dump(ruleset_rejections, config.TARGETS, config.PATH_DIST, "reject")
     logging.info(f"{len(ruleset_rejections)} reject rules generated.")

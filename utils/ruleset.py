@@ -15,42 +15,28 @@ def load(src: Path) -> RuleSet:
     except IndexError:
         logging.warning(f"File {src} doesn't have a valid type header, treat as domain type.")
         ruleset_type = RuleSetType.Domain
-    ruleset_loaded = RuleSet(ruleset_type, [])
-
-    rules_to_add = []
+    ruleset_loaded = RuleSet(ruleset_type)
 
     match ruleset_type:
         case RuleSetType.Domain:
-            domain_suffix_rules = [
-                Rule(RuleType.DomainSuffix, line.strip("."))
-                for line in src_toload
-                if line.startswith(".") and line
-            ]
-
-            domain_full_rules = [
-                Rule(RuleType.DomainFull, line)
-                for line in src_toload
-                if line and not line.startswith("#") and not line.startswith(".")
-            ]
-
-            rules_to_add.extend(domain_suffix_rules)
-            rules_to_add.extend(domain_full_rules)
+            for line in src_toload:
+                if not line or line.startswith("#"):
+                    continue
+                if line.startswith("."):
+                    ruleset_loaded.add(Rule(RuleType.DomainSuffix, line.strip(".")))
+                else:
+                    ruleset_loaded.add(Rule(RuleType.DomainFull, line))
 
         case RuleSetType.IPCIDR:
-            ipv4_rules = [
-                Rule(RuleType.IPCIDR, line)
-                for line in src_toload
-                if line and not line.startswith("#") and ":" not in line
-            ]
+            for line in src_toload:
+                if not line or line.startswith("#"):
+                    continue
+                if ":" not in line:
+                    ruleset_loaded.add(Rule(RuleType.IPCIDR, line))
+                else:
+                    ruleset_loaded.add(Rule(RuleType.IPCIDR6, line))
 
-            ipv6_rules = [
-                Rule(RuleType.IPCIDR6, line)
-                for line in src_toload
-                if line and not line.startswith("#") and ":" in line
-            ]
-
-            rules_to_add.extend(ipv4_rules)
-            rules_to_add.extend(ipv6_rules)
+            ruleset_loaded.dedup_ipcidr()
 
         case RuleSetType.Combined:
             for line in src_toload:
@@ -62,9 +48,8 @@ def load(src: Path) -> RuleSet:
                     parsed_rule = Rule(rule_type, parsed[1], parsed[2])
                 else:
                     parsed_rule = Rule(rule_type, parsed[1])
-                rules_to_add.append(parsed_rule)
+                ruleset_loaded.add(parsed_rule)
 
-    ruleset_loaded.payload = rules_to_add
     return ruleset_loaded
 
 
