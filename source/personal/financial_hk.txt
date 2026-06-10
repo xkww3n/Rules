@@ -1,6 +1,14 @@
 #@Domain
+.asia.ccb.com
 .bochk.com
-.ncb.com.hk
 .cncbinternational.com
+.elebank.com
+.fusionbank.com
 .hsbc.com.hk
 .icbcasia.com
+.ncb.com.hk
+.welab.bank
+.za.group
+.zainvest.group
+.zajourney.com
+.zaticdn.com
