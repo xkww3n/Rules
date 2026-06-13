@@ -140,3 +140,6 @@ ADD:wup.imtt.qq.com
 
 ADD:logu.lebo.cn
 ADD:rps.lebo.cn
+
+ADD:et.tanx.com
+ADD:sdk-config.tanx.com
