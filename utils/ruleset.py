@@ -53,7 +53,7 @@ def load(src: Path) -> RuleSet:
     return ruleset_loaded
 
 
-def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
+def dump(src: RuleSet, target: str, dst: Path, filename: str, rules: list[Rule] | None = None) -> None:
     if target not in config.TARGETS:
         raise TypeError("Invalid target.")
     
@@ -65,17 +65,18 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
     }
     file = filename + ext_map.get(target, ".txt")
     dst.mkdir(parents=True, exist_ok=True)
+    rules_to_write = rules if rules is not None else src
 
     def generate_content():
         if target in {"text", "text-plus"}:
-            for rule in src:
+            for rule in rules_to_write:
                 prefix = "+." if target == "text-plus" and rule.type == RuleType.DomainSuffix else ("." if rule.type == RuleType.DomainSuffix else "")
                 yield f"{prefix}{rule.payload}\n"
         
         elif target in {"classical", "yaml"}:
             if target == "yaml":
                 yield "payload:\n"
-            for rule in src:
+            for rule in rules_to_write:
                 if target == "yaml" and src.type != RuleSetType.Combined:
                     to_write = f"+.{rule.payload}" if rule.type == RuleType.DomainSuffix else rule.payload
                 else:
@@ -88,7 +89,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                 yield f"{to_write}\n"
         
         elif target == "geosite":
-            for rule in src:
+            for rule in rules_to_write:
                 prefix = "" if rule.type == RuleType.DomainSuffix else "full:" if rule.type == RuleType.DomainFull else None
                 if prefix is not None:
                     yield f"{prefix}{rule.payload}\n"
@@ -100,7 +101,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                 RuleType.DomainSuffix: "domain_suffix"
             }
             
-            for rule in src:
+            for rule in rules_to_write:
                 key = key_map.get(rule.type, "ip_cidr")
                 if key not in ruleset["rules"][0]:
                     ruleset["rules"][0][key] = []
@@ -115,7 +116,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str) -> None:
                 RuleType.IPCIDR: "ip-cidr",
                 RuleType.IPCIDR6: "ip6-cidr"
             }
-            for rule in src:
+            for rule in rules_to_write:
                 to_write = f"{qx_types_map.get(rule.type)}, {rule.payload}, policy"
                 if rule.tag:
                     to_write += f", {rule.tag}"
@@ -143,8 +144,9 @@ def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> No
     for target in compatible_targets:
         (dst_path/target).mkdir(parents=True, exist_ok=True)
 
+    rules = list(src)
     for target in compatible_targets:
-        dump(src, target, dst_path/target, filename)
+        dump(src, target, dst_path/target, filename, rules)
 
 
 def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleSet:
@@ -155,6 +157,23 @@ def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleS
         logging.warning(f'Patch "{name + ".txt"}" not found.')
         return src
     logging.info(f'Apply patch "{name + ".txt"}"')
+    pending_removals = []
+
+    def flush_pending_removals() -> None:
+        if not pending_removals:
+            return
+        rules_to_remove = []
+        rules_to_remove_set = set()
+        for rule in pending_removals:
+            if rule in rules_to_remove_set or rule not in src:
+                logging.warning(f"Not found: {rule}")
+                continue
+            rules_to_remove.append(rule)
+            rules_to_remove_set.add(rule)
+            logging.debug(f'Removed: "{rule}"')
+        src.remove_many(rules_to_remove)
+        pending_removals.clear()
+
     for line in loaded_patch:
         if not line or line.startswith("#"):
             continue
@@ -164,16 +183,14 @@ def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleS
         else:
             rule = Rule(RuleType.DomainFull, parsed_line[1])
         if parsed_line[0] == "ADD":
+            flush_pending_removals()
             if rule not in src:
                 src.add(rule)
                 logging.debug(f'Added: "{rule}"')
             else:
                 logging.warning(f"Already exist: {rule}")
         elif parsed_line[0] == "REM":
-            if rule in src:
-                src.remove(rule)
-                logging.debug(f'Removed: "{rule}"')
-            else:
-                logging.warning(f"Not found: {rule}")
+            pending_removals.append(rule)
+    flush_pending_removals()
     logging.info(f'Patch "{name + ".txt"}" applied.')
     return src

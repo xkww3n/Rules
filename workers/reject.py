@@ -1,13 +1,12 @@
 import logging
 
-from abp.filters.parser import parse_filterlist
 from requests import Session
 
 import config
 from models.rule import Rule, RuleType
 from models.ruleset import RuleSet, RuleSetType
 from utils.log_decorator import log
-from utils.rule import count_domain_level, strip_adblock
+from utils.rule import parse_adblock_domain_rules
 from utils.ruleset import batch_dump, patch
 
 
@@ -51,6 +50,32 @@ def apply_allowlist(ruleset_rejections: RuleSet, ruleset_exclusions: RuleSet) ->
     return filtered_rejections
 
 
+def add_parsed_adblock_rules(
+    lines: list[str],
+    set_psl: set[str],
+    ruleset_rejections: RuleSet,
+    ruleset_exclusions: RuleSet,
+    source_name: str,
+    force_exclusion: bool = False
+) -> None:
+    skipped_count, parsed_rules = parse_adblock_domain_rules(lines, set_psl)
+    logging.info(f"{skipped_count} {source_name} rule lines skipped before parsing.")
+
+    for action, text, domain, include_subdomains in parsed_rules:
+        if include_subdomains:
+            rule = Rule(RuleType.DomainSuffix, domain)
+        else:
+            # If a domain's level is bigger than 2, this domain mostly doesn't have any other subdomain.
+            rule = Rule(RuleType.DomainFull, domain)
+
+        if force_exclusion or action == "allow":
+            ruleset_exclusions.add(rule)
+            logging.debug(f'Exclude: Added "{text}" -> "{rule}"')
+        elif action == "block":
+            ruleset_rejections.add(rule)
+            logging.debug(f'Reject: Added "{text}" -> "{rule}".')
+
+
 @log
 def build():
     """
@@ -84,38 +109,8 @@ def build():
     ruleset_rejections = RuleSet(RuleSetType.Domain)
     ruleset_exclusions = RuleSet(RuleSetType.Domain)
 
-    for line in parse_filterlist(src_rejections):
-        line_stripped = strip_adblock(line)
-        if not line_stripped:
-            continue
-        if line_stripped.startswith("."):
-            line_stripped = line_stripped.strip(".")
-        domain_level = count_domain_level(line_stripped, set_psl)
-        if domain_level <= 2:
-            rule = Rule(RuleType.DomainSuffix, line_stripped)
-        else:
-            # If a domain's level is bigger than 2, this domain mostly doesn't have any other subdomain.
-            rule = Rule(RuleType.DomainFull, line_stripped)
-        if line.action == "block":
-            ruleset_rejections.add(rule)
-            logging.debug(f'Reject: Added "{line.text}" -> "{rule}".')
-        elif line.action == "allow":
-            ruleset_exclusions.add(rule)
-            logging.debug(f'Exclude: Added "{line.text}" -> "{rule}"')
-
-    for line in parse_filterlist(src_exclusions):
-        line_stripped = strip_adblock(line)
-        if not line_stripped:
-            continue
-        if line_stripped.startswith("."):
-            line_stripped = line_stripped.strip(".")
-        domain_level = count_domain_level(line_stripped, set_psl)
-        if domain_level <= 2:
-            rule = Rule(RuleType.DomainSuffix, line_stripped)
-        else:
-            rule = Rule(RuleType.DomainFull, line_stripped)
-        ruleset_exclusions.add(rule)
-        logging.debug(f'Exclude: Added "{line.text}" -> "{rule}"')
+    add_parsed_adblock_rules(src_rejections, set_psl, ruleset_rejections, ruleset_exclusions, "reject")
+    add_parsed_adblock_rules(src_exclusions, set_psl, ruleset_rejections, ruleset_exclusions, "exclude", True)
 
     logging.debug("Use deduplicated raw reject and allowlist rulesets.")
 

@@ -213,11 +213,74 @@ class TestMisc:
         assert not rule.is_domain(invalid_domain_4)
         assert not rule.is_domain(ipv4addr)
 
+    def test_parse_adblock_psl(self):
+        psl = {".org.cn", ".co.uk", ".example.co.uk", ".unused.example"}
+
+        skipped, parsed = rule.parse_adblock_domain_rules([
+            "||www.example.org.cn^",
+            "||a.b.example.co.uk^",
+            "||example.com^",
+        ], psl)
+
+        assert skipped == 0
+        assert parsed == [
+            ("block", "||www.example.org.cn^", "www.example.org.cn", True),
+            ("block", "||a.b.example.co.uk^", "a.b.example.co.uk", True),
+            ("block", "||example.com^", "example.com", True),
+        ]
+
+    def test_parse_adblock_keeps_supported(self):
+        skipped, parsed = rule.parse_adblock_domain_rules([
+            "||example.com^",
+            "@@||example.net^",
+            "||example.org^$document",
+        ], {".com", ".net", ".org"})
+
+        assert skipped == 0
+        assert parsed == [
+            ("block", "||example.com^", "example.com", True),
+            ("allow", "@@||example.net^", "example.net", True),
+            ("block", "||example.org^$document", "example.org", True),
+        ]
+
+    def test_parse_adblock_skips_unsupported(self):
+        skipped, parsed = rule.parse_adblock_domain_rules([
+            "! comment",
+            "example.com##.ad",
+            "/banner-ad/",
+            "||example.com^$third-party",
+            "||*.example.com^",
+        ], {".com"})
+
+        assert skipped == 5
+        assert parsed == []
+
     def test_patch(self):
         test_src_patch = Path("tests/src/patch/")
         test_ruleset = make_ruleset(RuleSetType.Domain, [Rule(RuleType.DomainFull, "example.com")])
         ruleset.patch(test_ruleset, "patch", test_src_patch)
         assert test_ruleset == make_ruleset(RuleSetType.Domain, [Rule(RuleType.DomainSuffix, "example.com")])
+
+    def test_patch_batches_removals(self, tmp_path):
+        (tmp_path/"batch.txt").write_text(
+            "REM:foo.example.com\n"
+            "REM:foo.example.com\n"
+            "ADD:.foo.example.com\n"
+            "REM:bar.example.com\n",
+            encoding="utf-8"
+        )
+        test_ruleset = make_ruleset(RuleSetType.Domain, [
+            Rule(RuleType.DomainFull, "foo.example.com"),
+            Rule(RuleType.DomainFull, "bar.example.com"),
+            Rule(RuleType.DomainSuffix, "keep.example.com"),
+        ])
+
+        ruleset.patch(test_ruleset, "batch", tmp_path)
+
+        assert test_ruleset == make_ruleset(RuleSetType.Domain, [
+            Rule(RuleType.DomainSuffix, "foo.example.com"),
+            Rule(RuleType.DomainSuffix, "keep.example.com"),
+        ])
 
     def test_domain_ruleset_dedups_on_add(self):
         test_rule_1 = Rule(RuleType.DomainSuffix, "1.example.com")

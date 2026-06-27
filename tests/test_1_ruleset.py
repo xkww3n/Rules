@@ -73,6 +73,14 @@ class Test:
         test_ruleset.remove(test_rule_2)
         assert test_ruleset == make_ruleset(RuleSetType.Domain, [test_rule_1])
 
+    def test_remove_many(self):
+        test_rule_1 = Rule(RuleType.DomainSuffix, "a.example.com")
+        test_rule_2 = Rule(RuleType.DomainSuffix, "b.example.com")
+        test_rule_3 = Rule(RuleType.DomainSuffix, "c.example.com")
+        test_ruleset = make_ruleset(RuleSetType.Domain, [test_rule_1, test_rule_2, test_rule_3])
+        test_ruleset.remove_many([test_rule_1, test_rule_3])
+        assert test_ruleset == make_ruleset(RuleSetType.Domain, [test_rule_2])
+
     def test_domain_ruleset_dedups_on_add(self):
         test_ruleset = RuleSet(RuleSetType.Domain)
         test_ruleset.add(Rule(RuleType.DomainFull, "a.example.com"))

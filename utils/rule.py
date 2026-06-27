@@ -1,5 +1,9 @@
 # noinspection PyProtectedMember
-from abp.filters.parser import Filter
+from abp.filters.parser import parse_filterlist
+
+DOMAIN_BLACKLIST_CHARS = frozenset("/,*=~?#,: ()[]|@^")
+ADBLOCK_UNSUPPORTED_CHARS = frozenset("*,=~? ()[]")
+ADBLOCK_ALLOWED_OPTIONS = {"all", "document", "popup"}
 
 
 def is_ipv4addr(addr: str) -> bool:
@@ -13,36 +17,58 @@ def is_ipv4addr(addr: str) -> bool:
 
 
 def is_domain(addr: str) -> bool:
-    blacklist_chars = frozenset("/,*=~?#,: ()[]|@^")
-    if (any(char in blacklist_chars for char in addr)
+    if (not DOMAIN_BLACKLIST_CHARS.isdisjoint(addr)
             or addr.startswith("-")
             or addr.startswith("_")
             or addr.endswith(".")
             or addr.endswith("-")
             or addr.endswith("_")
-            or is_ipv4addr(addr)):
+            or addr.count(".") == 3 and addr[0].isdigit() and is_ipv4addr(addr)):
         return False
     return True
 
 
-def strip_adblock(filter_to_strip: Filter) -> str | None:
-    if (filter_to_strip.type != "filter"
-            or filter_to_strip.selector["type"] != "url-pattern"
-            or filter_to_strip.options and filter_to_strip.options not in (
-                [("all", True)],
-                [("document", True)],
-                [("popup", True)]
-            )
-            or filter_to_strip.text.startswith("^")):
-        return
-    stripped = filter_to_strip.selector["value"].strip("@").strip("|").strip("^")
-    if is_domain(stripped):
-        return stripped
-    return
+def parse_adblock_domain_rules(lines: list[str], psl: set[str]) -> tuple[int, list[tuple[str, str, str, bool]]]:
+    filtered_lines = []
+    skipped_count = 0
+    for line in lines:
+        stripped = line.strip()
+        if (not stripped
+                or stripped.startswith(("!", "#", "^", "/"))
+                or "##" in stripped
+                or "#@#" in stripped
+                or "#$#" in stripped
+                or not ADBLOCK_UNSUPPORTED_CHARS.isdisjoint(stripped)
+                or "/" in stripped and "://" not in stripped):
+            skipped_count += 1
+            continue
 
-def count_domain_level(domain: str, psl: set) -> int:
-    domain_level = domain.count(".")
-    for ps in psl:
-        if domain.endswith(ps):
-            domain_level -= ps.count(".") - 1
-    return domain_level
+        if "$" in stripped and stripped.split("$", 1)[1] not in ADBLOCK_ALLOWED_OPTIONS:
+            skipped_count += 1
+            continue
+
+        filtered_lines.append(line)
+
+    rules = []
+    for parsed_filter in parse_filterlist(filtered_lines):
+        if (parsed_filter.type != "filter"
+                or parsed_filter.selector["type"] != "url-pattern"
+                or parsed_filter.text.startswith("^")):
+            continue
+
+        domain = parsed_filter.selector["value"].strip("@").strip("|").strip("^")
+        if not is_domain(domain):
+            continue
+        domain = domain.strip(".")
+
+        labels = domain.split(".")
+        matched_psl_dot_count = 0
+        for index in range(len(labels)):
+            suffix = "." + ".".join(labels[index:])
+            if suffix in psl:
+                matched_psl_dot_count = suffix.count(".")
+                break
+        domain_level = domain.count(".") - max(0, matched_psl_dot_count - 1)
+        rules.append((parsed_filter.action, parsed_filter.text, domain, domain_level <= 2))
+
+    return skipped_count, rules

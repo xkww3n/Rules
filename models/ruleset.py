@@ -227,6 +227,25 @@ class RuleSet:
             return
         self._combined_rules.remove(rule)
 
+    def remove_many(self, rules):
+        if not rules:
+            return
+        for rule in rules:
+            self._validate_rule(rule)
+
+        rules_to_remove = set(rules)
+        if self.type == RuleSetType.Domain:
+            payload = [rule for rule in self if rule not in rules_to_remove]
+            self._domain_trie = DomainTrie()
+            for item in payload:
+                self.add(item)
+            return
+        if self.type == RuleSetType.IPCIDR:
+            for rule in rules_to_remove:
+                self._ip_networks[self._ip_index(rule.type)].remove(ip_network(rule.payload, strict=False))
+            return
+        self._combined_rules = [rule for rule in self._combined_rules if rule not in rules_to_remove]
+
     def find_covering(self, rule: Rule) -> Rule | None:
         if self.type != RuleSetType.Domain:
             raise TypeError("Only domain-type rulesets support domain coverage lookup.")
