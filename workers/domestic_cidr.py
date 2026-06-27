@@ -1,5 +1,3 @@
-import logging
-
 from requests import Session
 
 import config

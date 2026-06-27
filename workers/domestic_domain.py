@@ -17,7 +17,7 @@ def build():
 
     connection = Session()
 
-    ruleset_domestic = geosite_parse(config.PATH_SOURCE_GEOSITE/"geolocation-cn", None, ["!cn"])
+    ruleset_domestic = geosite_parse(config.PATH_SOURCE_GEOSITE/"geolocation-cn", None, None, ["!cn"])
     logging.info(f"{len(ruleset_domestic)} domestic rules recieved from v2fly geolocation-cn list.")
 
     tld_overseas = (".hk", ".kr", ".my", ".sg", ".au", ".tw", ".in", ".ru", ".us", ".fr", ".th", ".id", ".jp")
