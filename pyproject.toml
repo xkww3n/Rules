@@ -10,7 +10,7 @@ dependencies = [
     "requests~=2.31",
     "python-abp>=0.2.0",
 ]
-requires-python = "==3.11.*"
+requires-python = "==3.12.*"
 readme = "README.md"
 license = {text = "MIT"}
 
