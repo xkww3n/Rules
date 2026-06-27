@@ -16,8 +16,10 @@ def is_domain(addr: str) -> bool:
     blacklist_chars = frozenset("/,*=~?#,: ()[]|@^")
     if (any(char in blacklist_chars for char in addr)
             or addr.startswith("-")
+            or addr.startswith("_")
             or addr.endswith(".")
             or addr.endswith("-")
+            or addr.endswith("_")
             or is_ipv4addr(addr)):
         return False
     return True
