@@ -1,13 +1,8 @@
 REM:.adsense.google.cn
-REM:.crashlyticsreports-pa.googleapis.com
-REM:.dig.bdurl.net
-REM:.jiguang.cn
 REM:.optimus-ads.amap.com
 REM:.polaris.zijieapi.com
-REM:.shouji.sogou.com
 REM:a0.app.xiaomi.com
 REM:.h5.hpplay.com.cn
-REM:.saas.hpplay.cn
 REM:.vipauth.hpplay.cn
 
 ADD:.17admob.com
@@ -42,7 +37,6 @@ ADD:.ctobsnssdk.com
 ADD:.domob.cn
 ADD:.dratio.com
 ADD:.dreport.meituan.net
-ADD:.e67repidwnfu7gcha.com
 ADD:.eshiqi.com
 ADD:.fanglinad.com
 ADD:.fwosapp.com
@@ -61,12 +55,10 @@ ADD:.lydass.cn
 ADD:.lydass.com.cn
 ADD:.lydass.net
 ADD:.maplehaze.cn
-ADD:.mc7clurd09pla4nrtat7ion.com
 ADD:.mediav.com
 ADD:.miaozhen.com
 ADD:.mobmore.com
 ADD:.mobrtb.com
-ADD:.moloco.com
 ADD:.motowoo.com
 ADD:.partner.gifshow.com
 ADD:.partwithner.com
@@ -75,9 +67,7 @@ ADD:.puata.info
 ADD:.qchannel01.com
 ADD:.readgps.com
 ADD:.rhinokeen.com
-ADD:.rxeosevsso.com
 ADD:.slyxmobi.com
-ADD:.smadex.com
 ADD:.tianmu.mobi
 ADD:.tuia.cn
 ADD:.ugdtimg.com
@@ -95,7 +85,6 @@ ADD:.unityads.unitychina.cn
 ADD:.uyunad.com
 ADD:.whalecloud.com
 ADD:.wrating.com
-ADD:.wuzbhjpvsf.com
 ADD:.xdplt.com
 ADD:.xinduoad.com
 ADD:.xixikf.com
@@ -109,7 +98,6 @@ ADD:adtrack.e.kuaishou.com
 ADD:api-v3.mentamob.com
 ADD:click-bes.baidu.com
 ADD:dig.bdurl.net
-ADD:et.tanx.com
 ADD:extlog.snssdk.com
 ADD:guide2.bianxianmao.com
 ADD:h-adashx.m.taobao.com
@@ -141,5 +129,6 @@ ADD:wup.imtt.qq.com
 ADD:logu.lebo.cn
 ADD:rps.lebo.cn
 
-ADD:et.tanx.com
 ADD:sdk-config.tanx.com
+
+ADD:.d.meituan.net
