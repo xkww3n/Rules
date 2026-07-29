@@ -23,12 +23,20 @@ LIST_REJECT_URL = [
     "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/rules.txt",
     # EasyList China
     "https://easylist-downloads.adblockplus.org/easylistchina.txt",
-    # EasyList third-party
-    "https://raw.githubusercontent.com/easylist/easylist/master/easylist/easylist_thirdparty.txt",
-    # EasyList adult third-party
-    "https://raw.githubusercontent.com/easylist/easylist/master/easylist_adult/adult_thirdparty.txt",
+    # EasyList
+    "https://raw.githubusercontent.com/easylist/easylist/refs/heads/master/easylist/easylist_adservers.txt",
+    "https://raw.githubusercontent.com/easylist/easylist/refs/heads/master/easylist/easylist_adservers_popup.txt",
+    "https://raw.githubusercontent.com/easylist/easylist/refs/heads/master/easylist/easylist_thirdparty.txt",
+    "https://raw.githubusercontent.com/easylist/easylist/refs/heads/master/easylist/easylist_thirdparty_popup.txt",
+    "https://raw.githubusercontent.com/easylist/easylist/refs/heads/master/easylist/easylist_specific_block.txt",
+    "https://raw.githubusercontent.com/easylist/easylist/refs/heads/master/easylist/easylist_specific_block_popup.txt",
+    # EasyList adult
+    "https://raw.githubusercontent.com/easylist/easylist/refs/heads/master/easylist_adult/adult_thirdparty.txt",
+    "https://raw.githubusercontent.com/easylist/easylist/refs/heads/master/easylist_adult/adult_thirdparty_popup.txt",
+    "https://raw.githubusercontent.com/easylist/easylist/refs/heads/master/easylist_adult/adult_adservers_popup.txt",
+    "https://raw.githubusercontent.com/easylist/easylist/refs/heads/master/easylist_adult/adult_specific_block.txt",
     # AWAvenue 秋风广告规则
-    "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/AWAvenue-Ads-Rule.txt",
+    "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Adguard-Only.Ads.txt",
     # NoCoin
     "https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/nocoin.txt",
 ]
@@ -37,7 +45,6 @@ LIST_REJECT_URL = [
 LIST_EXCL_URL = [
     "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt",
     "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exclusions.txt",
-    "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/BaseFilter/sections/allowlist.txt"
 ]
 
 URL_DOMESTIC_IP_V4 = "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt"
