@@ -111,12 +111,9 @@ def build():
 
     add_parsed_adblock_rules(src_rejections, set_psl, ruleset_rejections, ruleset_exclusions, "reject")
     add_parsed_adblock_rules(src_exclusions, set_psl, ruleset_rejections, ruleset_exclusions, "exclude", True)
-
-    logging.debug("Use deduplicated raw reject and allowlist rulesets.")
+    ruleset_rejections = apply_allowlist(ruleset_rejections, ruleset_exclusions)
 
     ruleset_rejections = patch(ruleset_rejections, "reject")
-
-    ruleset_rejections = apply_allowlist(ruleset_rejections, ruleset_exclusions)
     
     batch_dump(ruleset_rejections, config.TARGETS, config.PATH_DIST, "reject")
     logging.info(f"{len(ruleset_rejections)} reject rules generated.")
