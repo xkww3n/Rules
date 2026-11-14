@@ -2,8 +2,11 @@ REM:.adsense.google.cn
 REM:.optimus-ads.amap.com
 REM:.polaris.zijieapi.com
 REM:a0.app.xiaomi.com
-REM:.h5.hpplay.com.cn
 REM:.vipauth.hpplay.cn
+
+ADD:.ingest.sentry.io
+ADD:.ingest.us.sentry.io
+ADD:.ingest.de.sentry.io
 
 ADD:.17admob.com
 ADD:.1rtb.net
@@ -12,7 +15,6 @@ ADD:.adfunlink.com
 ADD:.adhub.com.cn
 ADD:.admobile.mobi
 ADD:.admobile.net.cn
-ADD:.admobile.top
 ADD:.admobile.vip
 ADD:.adn-plus.com.cn
 ADD:.adnplus.com.cn
