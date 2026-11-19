@@ -3,7 +3,7 @@ from pathlib import Path
 import config
 from models.rule import Rule, RuleType
 from models.ruleset import RuleSet, RuleSetType
-from utils import rule, ruleset
+from utils import geosite, rule, ruleset
 from workers.reject import apply_allowlist
 
 
@@ -232,6 +232,33 @@ class TestMisc:
             ("block", "||a.b.c.example.co.uk^", "a.b.c.example.co.uk", False),
             ("block", "||a.b.c.d.example.com^", "a.b.c.d.example.com", False),
         ]
+
+    def test_geosite_nested_import_tags(self, tmp_path):
+        (tmp_path/"root").write_text(
+            "full:ads.example.com @root\n"
+            "include:child @chosen\n"
+            "full:local.example.org @root\n",
+            encoding="utf-8",
+        )
+        (tmp_path/"child").write_text(
+            "example.com @chosen\n"
+            "include:grandchild @-root\n"
+            "full:other.example.net @other\n",
+            encoding="utf-8",
+        )
+        (tmp_path/"grandchild").write_text(
+            "full:allowed.example.net @chosen\n"
+            "full:blocked.example.net @root\n",
+            encoding="utf-8",
+        )
+
+        parsed = geosite.parse(tmp_path/"root", only_tags=["root"])
+
+        assert parsed == make_ruleset(RuleSetType.Domain, [
+            Rule(RuleType.DomainSuffix, "example.com"),
+            Rule(RuleType.DomainFull, "allowed.example.net"),
+            Rule(RuleType.DomainFull, "local.example.org"),
+        ])
 
     def test_parse_adblock_keeps_supported(self):
         skipped, parsed = rule.parse_adblock_domain_rules([

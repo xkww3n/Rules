@@ -125,8 +125,7 @@ def dump(src: RuleSet, target: str, dst: Path, filename: str, rules: list[Rule] 
             
 
     with open(dst/file, mode="w", encoding="utf-8", buffering=8192) as dist:
-        for chunk in generate_content():
-            dist.write(chunk)
+        dist.writelines(generate_content())
 
 
 def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> None:
@@ -140,9 +139,6 @@ def batch_dump(src: RuleSet, targets: list, dst_path: Path, filename: str) -> No
 
     if not compatible_targets:
         return
-
-    for target in compatible_targets:
-        (dst_path/target).mkdir(parents=True, exist_ok=True)
 
     rules = list(src)
     for target in compatible_targets:
