@@ -261,7 +261,7 @@ class TestMisc:
         ruleset.patch(test_ruleset, "patch", test_src_patch)
         assert test_ruleset == make_ruleset(RuleSetType.Domain, [Rule(RuleType.DomainSuffix, "example.com")])
 
-    def test_patch_batches_removals(self, tmp_path):
+    def test_patch_applies_removals_and_additions_in_order(self, tmp_path):
         (tmp_path/"batch.txt").write_text(
             "REM:foo.example.com\n"
             "REM:foo.example.com\n"
@@ -361,10 +361,12 @@ class TestMisc:
     def test_reject_allowlist_semantic_conflict_detection(self):
         safe_rejection = Rule(RuleType.DomainSuffix, "ads.example.com")
         conflicting_rejection = Rule(RuleType.DomainSuffix, "example.net")
+        retained_rejection = Rule(RuleType.DomainSuffix, "ads.example.org")
         ruleset_rejections = make_ruleset(RuleSetType.Domain, [
             safe_rejection,
             Rule(RuleType.DomainFull, "tracker.example.com"),
             conflicting_rejection,
+            retained_rejection,
         ])
         ruleset_exclusions = make_ruleset(RuleSetType.Domain, [
             Rule(RuleType.DomainSuffix, "example.com"),
@@ -373,6 +375,7 @@ class TestMisc:
             Rule(RuleType.DomainFull, "safe.example.net"),
         ])
 
-        ruleset_rejections = apply_allowlist(ruleset_rejections, ruleset_exclusions)
+        filtered_rejections = apply_allowlist(ruleset_rejections, ruleset_exclusions)
 
-        assert ruleset_rejections == RuleSet(RuleSetType.Domain)
+        assert list(filtered_rejections) == [retained_rejection]
+        assert len(ruleset_rejections) == 4

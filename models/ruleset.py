@@ -14,8 +14,7 @@ class RuleSetType(Enum):
 class DomainTrieNode:
     def __init__(self):
         self.children: dict[str, DomainTrieNode] = {}
-        self.suffix_rule = False
-        self.full_rule = False
+        self.rule_type: RuleType | None = None
         self.subtree_rule_count = 0
 
 
@@ -44,71 +43,86 @@ class DomainTrie:
         path = [self.root]
 
         for part in parts:
-            if node.suffix_rule:
+            if node.rule_type is RuleType.DomainSuffix:
                 self._mark_domain_covered(rule)
                 return
-            if part not in node.children:
-                node.children[part] = DomainTrieNode()
-            node = node.children[part]
+            child = node.children.get(part)
+            if child is None:
+                child = node.children[part] = DomainTrieNode()
+            node = child
             path.append(node)
 
-        if node.suffix_rule and rule.type == RuleType.DomainSuffix:
+        if node.rule_type is rule.type:
             self._mark_domain_duplicate(rule)
             return
-        if node.suffix_rule:
+        if node.rule_type is RuleType.DomainSuffix:
             self._mark_domain_covered(rule)
             return
 
-        if rule.type == RuleType.DomainSuffix:
+        if rule.type is RuleType.DomainSuffix:
             self._insert_suffix(rule, node, path)
-        elif rule.type == RuleType.DomainFull:
-            self._insert_full(rule, node, path)
+        else:
+            self._insert_full(node, path)
 
     def find_covering(self, rule: Rule) -> Rule | None:
         self._validate_rule(rule)
         node = self.root
         parts = self._parts(rule.payload)
-        traversed = []
 
-        for part in parts:
-            if node.suffix_rule:
-                return Rule(RuleType.DomainSuffix, self._payload(traversed))
-            if part not in node.children:
+        for depth, part in enumerate(parts):
+            if node.rule_type is RuleType.DomainSuffix:
+                return Rule(RuleType.DomainSuffix, self._payload(parts[:depth]))
+            node = node.children.get(part)
+            if node is None:
                 return None
-            node = node.children[part]
-            traversed.append(part)
 
-        if node.suffix_rule:
+        if node.rule_type is RuleType.DomainSuffix:
             return Rule(RuleType.DomainSuffix, rule.payload)
-        if rule.type == RuleType.DomainFull and node.full_rule:
-            return Rule(RuleType.DomainFull, rule.payload)
+        if node.rule_type is rule.type:
+            return Rule(rule.type, rule.payload)
         return None
 
     def contains_exact(self, rule: Rule) -> bool:
         self._validate_rule(rule)
         node = self.root
         for part in self._parts(rule.payload):
-            if part not in node.children:
+            node = node.children.get(part)
+            if node is None:
                 return False
-            node = node.children[part]
 
-        if rule.type == RuleType.DomainSuffix:
-            return node.suffix_rule
-        if rule.type == RuleType.DomainFull:
-            return node.full_rule
-        return False
+        return node.rule_type is rule.type
+
+    def discard(self, rule: Rule) -> bool:
+        self._validate_rule(rule)
+        node = self.root
+        path = []
+        for part in self._parts(rule.payload):
+            child = node.children.get(part)
+            if child is None:
+                return False
+            path.append((node, part))
+            node = child
+        if node.rule_type is not rule.type:
+            return False
+
+        node.rule_type = None
+        node.subtree_rule_count -= 1
+        for parent, part in reversed(path):
+            if node.subtree_rule_count == 0:
+                del parent.children[part]
+            parent.subtree_rule_count -= 1
+            node = parent
+        return True
 
     def to_rules(self) -> list[Rule]:
         result = []
 
         def walk(node: DomainTrieNode, parts: list[str]) -> None:
-            if node.suffix_rule:
-                result.append(Rule(RuleType.DomainSuffix, self._payload(parts)))
-                return
-            if node.full_rule:
-                result.append(Rule(RuleType.DomainFull, self._payload(parts)))
-            for part in sorted(node.children):
-                walk(node.children[part], parts + [part])
+            if node.rule_type is not None:
+                result.append(Rule(node.rule_type, self._payload(parts)))
+            if node.children:
+                for part in sorted(node.children):
+                    walk(node.children[part], parts + [part])
 
         for part in sorted(self.root.children):
             walk(self.root.children[part], [part])
@@ -119,18 +133,14 @@ class DomainTrie:
         if covered_count:
             logging.debug(f'Remove {covered_count} domain rules: included in "{rule}".')
 
-        node.suffix_rule = True
-        node.full_rule = False
+        node.children.clear()
+        node.rule_type = RuleType.DomainSuffix
         node.subtree_rule_count = 1
         for ancestor in path[:-1]:
             ancestor.subtree_rule_count += 1 - covered_count
 
-    def _insert_full(self, rule: Rule, node: DomainTrieNode, path: list[DomainTrieNode]) -> None:
-        if node.full_rule:
-            self._mark_domain_duplicate(rule)
-            return
-
-        node.full_rule = True
+    def _insert_full(self, node: DomainTrieNode, path: list[DomainTrieNode]) -> None:
+        node.rule_type = RuleType.DomainFull
         for item in path:
             item.subtree_rule_count += 1
 
@@ -142,7 +152,7 @@ class DomainTrie:
 
     @staticmethod
     def _validate_rule(rule: Rule) -> None:
-        if rule.type not in {RuleType.DomainSuffix, RuleType.DomainFull}:
+        if rule.type not in (RuleType.DomainSuffix, RuleType.DomainFull):
             raise ValueError(f"{rule.type.value} rule found in a domain trie.")
         if rule.tag:
             raise ValueError(f'Tagged rule "{rule}" found in a domain trie.')
@@ -201,10 +211,10 @@ class RuleSet:
         return iter(self._combined_rules)
 
     def add(self, rule):
-        self._validate_rule(rule)
         if self.type == RuleSetType.Domain:
             self._domain_trie.insert(rule)
             return
+        self._validate_rule(rule)
         if self.type == RuleSetType.IPCIDR:
             if rule.type is RuleType.IPCIDR:
                 self._ipv4_networks.add(IPv4Network(rule.payload, strict=False))
@@ -216,11 +226,8 @@ class RuleSet:
 
     def remove(self, rule):
         if self.type == RuleSetType.Domain:
-            payload = list(self)
-            payload.remove(rule)
-            self._domain_trie = DomainTrie()
-            for item in payload:
-                self.add(item)
+            if not self._domain_trie.discard(rule):
+                raise ValueError(f"Rule not found: {rule}")
             return
         if self.type == RuleSetType.IPCIDR:
             self._validate_rule(rule)
@@ -234,15 +241,12 @@ class RuleSet:
     def remove_many(self, rules):
         if not rules:
             return
-        for rule in rules:
-            self._validate_rule(rule)
-
         rules_to_remove = set(rules)
+        for rule in rules_to_remove:
+            self._validate_rule(rule)
         if self.type == RuleSetType.Domain:
-            payload = [rule for rule in self if rule not in rules_to_remove]
-            self._domain_trie = DomainTrie()
-            for item in payload:
-                self.add(item)
+            for rule in rules_to_remove:
+                self._domain_trie.discard(rule)
             return
         if self.type == RuleSetType.IPCIDR:
             for rule in rules_to_remove:
@@ -281,7 +285,7 @@ class RuleSet:
 
     def _validate_rule(self, rule: Rule) -> None:
         if self.type == RuleSetType.Domain:
-            if rule.type not in {RuleType.DomainSuffix, RuleType.DomainFull}:
+            if rule.type not in (RuleType.DomainSuffix, RuleType.DomainFull):
                 raise ValueError(f"{rule.type.value} rule found in a domain-type ruleset.")
             if rule.tag:
                 raise ValueError(f'Tagged rule "{rule}" found in a domain-type ruleset.')

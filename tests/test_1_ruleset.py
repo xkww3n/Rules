@@ -81,6 +81,25 @@ class Test:
         test_ruleset.remove_many([test_rule_1, test_rule_3])
         assert test_ruleset == make_ruleset(RuleSetType.Domain, [test_rule_2])
 
+    def test_remove_domain_branches(self):
+        ancestor = Rule(RuleType.DomainFull, "example.com")
+        suffix = Rule(RuleType.DomainSuffix, "ads.example.com")
+        covered = Rule(RuleType.DomainFull, "tracker.ads.example.com")
+        sibling = Rule(RuleType.DomainSuffix, "safe.example.com")
+        ruleset = make_ruleset(RuleSetType.Domain, [covered, ancestor, sibling, suffix])
+
+        assert list(ruleset) == [ancestor, suffix, sibling]
+        assert [rule for rule in (ancestor, covered, suffix, sibling) if rule in ruleset] == [ancestor, suffix, sibling]
+        assert ruleset.find_covering(covered) == suffix
+        ruleset.remove(ancestor)
+        assert list(ruleset) == [suffix, sibling]
+
+        ruleset.remove_many([suffix, covered])
+        replacement = Rule(RuleType.DomainFull, "new.ads.example.com")
+        ruleset.add(replacement)
+        assert len(ruleset) == 2
+        assert list(ruleset) == [replacement, sibling]
+
     def test_remove_mixed_ipcidr_rules(self):
         ipv4 = Rule(RuleType.IPCIDR, "192.0.2.1/24")
         ipv6 = Rule(RuleType.IPCIDR6, "2001:db8::1/64")

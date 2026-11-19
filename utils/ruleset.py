@@ -157,23 +157,6 @@ def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleS
         logging.warning(f'Patch "{name + ".txt"}" not found.')
         return src
     logging.info(f'Apply patch "{name + ".txt"}"')
-    pending_removals = []
-
-    def flush_pending_removals() -> None:
-        if not pending_removals:
-            return
-        rules_to_remove = []
-        rules_to_remove_set = set()
-        for rule in pending_removals:
-            if rule in rules_to_remove_set or rule not in src:
-                logging.warning(f"Not found: {rule}")
-                continue
-            rules_to_remove.append(rule)
-            rules_to_remove_set.add(rule)
-            logging.debug(f'Removed: "{rule}"')
-        src.remove_many(rules_to_remove)
-        pending_removals.clear()
-
     for line in loaded_patch:
         if not line or line.startswith("#"):
             continue
@@ -183,14 +166,16 @@ def patch(src: RuleSet, name: str, override_patch_loc: Path = Path("")) -> RuleS
         else:
             rule = Rule(RuleType.DomainFull, parsed_line[1])
         if parsed_line[0] == "ADD":
-            flush_pending_removals()
             if rule not in src:
                 src.add(rule)
                 logging.debug(f'Added: "{rule}"')
             else:
                 logging.warning(f"Already exist: {rule}")
         elif parsed_line[0] == "REM":
-            pending_removals.append(rule)
-    flush_pending_removals()
+            if rule in src:
+                src.remove(rule)
+                logging.debug(f'Removed: "{rule}"')
+            else:
+                logging.warning(f"Not found: {rule}")
     logging.info(f'Patch "{name + ".txt"}" applied.')
     return src

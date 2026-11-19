@@ -23,10 +23,10 @@ def build():
     tld_overseas = (".hk", ".kr", ".my", ".sg", ".au", ".tw", ".in", ".ru", ".us", ".fr", ".th", ".id", ".jp")
     items_to_remove = [
         item for item in ruleset_domestic 
-        if any(item.payload.endswith(os_tld) for os_tld in tld_overseas)
+        if item.payload.endswith(tld_overseas)
     ]
+    ruleset_domestic.remove_many(items_to_remove)
     for item in items_to_remove:
-        ruleset_domestic.remove(item)
         logging.debug(f"{item} removed for having a overseas TLD.")
 
     # Import dnsmasq-china-list

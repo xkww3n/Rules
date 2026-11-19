@@ -29,12 +29,7 @@ def apply_allowlist(ruleset_rejections: RuleSet, ruleset_exclusions: RuleSet) ->
             conflicts.append((rule, covering_block))
 
     blocking_rules_to_remove = {blocking_rule for _, blocking_rule in conflicts}
-    if blocking_rules_to_remove:
-        resolved_rejections = RuleSet(RuleSetType.Domain)
-        for rule in filtered_rejections:
-            if rule not in blocking_rules_to_remove:
-                resolved_rejections.add(rule)
-        filtered_rejections = resolved_rejections
+    filtered_rejections.remove_many(blocking_rules_to_remove)
 
     if removed_by_allowlist:
         logging.info(f"{removed_by_allowlist} reject rules removed by allowlist.")
