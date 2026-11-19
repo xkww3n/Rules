@@ -1,6 +1,6 @@
 import logging
 from enum import Enum
-from ipaddress import IPv4Network, IPv6Network, collapse_addresses, ip_network
+from ipaddress import IPv4Network, IPv6Network, collapse_addresses
 
 from models.rule import Rule, RuleType
 
@@ -153,16 +153,13 @@ class RuleSet:
 
     def __init__(self, ruleset_type: RuleSetType):
         self.type = ruleset_type
-        self._domain_trie = None
-        self._ip_networks: list[set[IPv4Network] | set[IPv6Network]] | None = None
-        self._combined_rules: list[Rule] = []
-
-        if self.type == RuleSetType.Domain:
+        if ruleset_type == RuleSetType.Domain:
             self._domain_trie = DomainTrie()
-        elif self.type == RuleSetType.IPCIDR:
-            self._ip_networks = [set(), set()]
+        elif ruleset_type == RuleSetType.IPCIDR:
+            self._ipv4_networks: set[IPv4Network] = set()
+            self._ipv6_networks: set[IPv6Network] = set()
         else:
-            self._combined_rules = []
+            self._combined_rules: list[Rule] = []
 
     def __hash__(self):
         return hash((self.type, tuple(self)))
@@ -176,7 +173,7 @@ class RuleSet:
         if self.type == RuleSetType.Domain:
             return len(self._domain_trie)
         if self.type == RuleSetType.IPCIDR:
-            return len(self._ip_networks[0]) + len(self._ip_networks[1])
+            return len(self._ipv4_networks) + len(self._ipv6_networks)
         return len(self._combined_rules)
 
     def __or__(self, other):
@@ -191,8 +188,9 @@ class RuleSet:
             return self._domain_trie.contains_exact(item)
         if self.type == RuleSetType.IPCIDR:
             self._validate_rule(item)
-            network = ip_network(item.payload, strict=False)
-            return network in self._ip_networks[self._ip_index(item.type)]
+            if item.type is RuleType.IPCIDR:
+                return IPv4Network(item.payload, strict=False) in self._ipv4_networks
+            return IPv6Network(item.payload, strict=False) in self._ipv6_networks
         return item in self._combined_rules
 
     def __iter__(self):
@@ -208,7 +206,10 @@ class RuleSet:
             self._domain_trie.insert(rule)
             return
         if self.type == RuleSetType.IPCIDR:
-            self._ip_networks[self._ip_index(rule.type)].add(ip_network(rule.payload, strict=False))
+            if rule.type is RuleType.IPCIDR:
+                self._ipv4_networks.add(IPv4Network(rule.payload, strict=False))
+            else:
+                self._ipv6_networks.add(IPv6Network(rule.payload, strict=False))
             return
         if rule not in self._combined_rules:
             self._combined_rules.append(rule)
@@ -223,7 +224,10 @@ class RuleSet:
             return
         if self.type == RuleSetType.IPCIDR:
             self._validate_rule(rule)
-            self._ip_networks[self._ip_index(rule.type)].remove(ip_network(rule.payload, strict=False))
+            if rule.type is RuleType.IPCIDR:
+                self._ipv4_networks.remove(IPv4Network(rule.payload, strict=False))
+            else:
+                self._ipv6_networks.remove(IPv6Network(rule.payload, strict=False))
             return
         self._combined_rules.remove(rule)
 
@@ -242,7 +246,7 @@ class RuleSet:
             return
         if self.type == RuleSetType.IPCIDR:
             for rule in rules_to_remove:
-                self._ip_networks[self._ip_index(rule.type)].remove(ip_network(rule.payload, strict=False))
+                self.remove(rule)
             return
         self._combined_rules = [rule for rule in self._combined_rules if rule not in rules_to_remove]
 
@@ -254,30 +258,26 @@ class RuleSet:
     def dedup_ipcidr(self) -> None:
         if self.type != RuleSetType.IPCIDR:
             raise TypeError("Only IPCIDR-type rulesets support CIDR deduplication.")
-        self._ip_networks = [
-            set(collapse_addresses(self._ip_networks[0])),
-            set(collapse_addresses(self._ip_networks[1])),
-        ]
+        self._ipv4_networks, self._ipv6_networks = (
+            set(collapse_addresses(self._ipv4_networks)),
+            set(collapse_addresses(self._ipv6_networks)),
+        )
 
     def _ip_rules(self) -> list[Rule]:
         return [
             *[
                 Rule(RuleType.IPCIDR, network.with_prefixlen)
-                for network in self._sorted_networks(self._ip_networks[0])
+                for network in self._sorted_networks(self._ipv4_networks)
             ],
             *[
                 Rule(RuleType.IPCIDR6, network.with_prefixlen)
-                for network in self._sorted_networks(self._ip_networks[1])
+                for network in self._sorted_networks(self._ipv6_networks)
             ],
         ]
 
     @staticmethod
     def _sorted_networks(networks):
         return sorted(networks, key=lambda network: (int(network.network_address), network.prefixlen))
-
-    @staticmethod
-    def _ip_index(rule_type: RuleType) -> int:
-        return 0 if rule_type == RuleType.IPCIDR else 1
 
     def _validate_rule(self, rule: Rule) -> None:
         if self.type == RuleSetType.Domain:

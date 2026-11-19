@@ -81,6 +81,18 @@ class Test:
         test_ruleset.remove_many([test_rule_1, test_rule_3])
         assert test_ruleset == make_ruleset(RuleSetType.Domain, [test_rule_2])
 
+    def test_remove_mixed_ipcidr_rules(self):
+        ipv4 = Rule(RuleType.IPCIDR, "192.0.2.1/24")
+        ipv6 = Rule(RuleType.IPCIDR6, "2001:db8::1/64")
+        remaining = Rule(RuleType.IPCIDR6, "2001:db8:1::/64")
+        ruleset = make_ruleset(RuleSetType.IPCIDR, [ipv4, ipv6, remaining])
+
+        assert ipv4 in ruleset and ipv6 in ruleset
+        ruleset.remove(ipv4)
+        ruleset.remove_many([ipv6, ipv6])
+        assert len(ruleset) == 1
+        assert list(ruleset) == [remaining]
+
     def test_domain_ruleset_dedups_on_add(self):
         test_ruleset = RuleSet(RuleSetType.Domain)
         test_ruleset.add(Rule(RuleType.DomainFull, "a.example.com"))
