@@ -18,11 +18,8 @@ def is_ipv4addr(addr: str) -> bool:
 
 def is_domain(addr: str) -> bool:
     if (not DOMAIN_BLACKLIST_CHARS.isdisjoint(addr)
-            or addr.startswith("-")
-            or addr.startswith("_")
-            or addr.endswith(".")
-            or addr.endswith("-")
-            or addr.endswith("_")
+            or addr.startswith(("-", "_"))
+            or addr.endswith((".", "-", "_"))
             or addr.count(".") == 3 and addr[0].isdigit() and is_ipv4addr(addr)):
         return False
     return True
@@ -61,14 +58,14 @@ def parse_adblock_domain_rules(lines: list[str], psl: set[str]) -> tuple[int, li
             continue
         domain = domain.strip(".")
 
-        labels = domain.split(".")
-        matched_psl_dot_count = 0
-        for index in range(len(labels)):
-            suffix = "." + ".".join(labels[index:])
-            if suffix in psl:
-                matched_psl_dot_count = suffix.count(".")
-                break
-        domain_level = domain.count(".") - max(0, matched_psl_dot_count - 1)
-        rules.append((parsed_filter.action, parsed_filter.text, domain, domain_level <= 2))
+        include_subdomains = domain.count(".") <= 2
+        if not include_subdomains:
+            # Only suffixes starting within the first three labels can reduce the level to two.
+            first_dot = domain.index(".")
+            second_dot = domain.index(".", first_dot + 1)
+            include_subdomains = (
+                f".{domain}" in psl or domain[first_dot:] in psl or domain[second_dot:] in psl
+            )
+        rules.append((parsed_filter.action, parsed_filter.text, domain, include_subdomains))
 
     return skipped_count, rules

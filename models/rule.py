@@ -20,7 +20,7 @@ class Rule:
         self.type = rule_type
         self.tag = tag
 
-        if rule_type in {RuleType.DomainSuffix, RuleType.DomainFull}:
+        if rule_type in (RuleType.DomainSuffix, RuleType.DomainFull):
             if not is_domain(payload):
                 raise ValueError(f"Invalid domain: {payload}")
         else:

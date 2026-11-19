@@ -220,6 +220,8 @@ class TestMisc:
             "||www.example.org.cn^",
             "||a.b.example.co.uk^",
             "||example.com^",
+            "||a.b.c.example.co.uk^",
+            "||a.b.c.d.example.com^",
         ], psl)
 
         assert skipped == 0
@@ -227,6 +229,8 @@ class TestMisc:
             ("block", "||www.example.org.cn^", "www.example.org.cn", True),
             ("block", "||a.b.example.co.uk^", "a.b.example.co.uk", True),
             ("block", "||example.com^", "example.com", True),
+            ("block", "||a.b.c.example.co.uk^", "a.b.c.example.co.uk", False),
+            ("block", "||a.b.c.d.example.com^", "a.b.c.d.example.com", False),
         ]
 
     def test_parse_adblock_keeps_supported(self):
